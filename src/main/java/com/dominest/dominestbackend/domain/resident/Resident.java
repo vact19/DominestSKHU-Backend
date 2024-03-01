@@ -3,7 +3,7 @@ package com.dominest.dominestbackend.domain.resident;
 import com.dominest.dominestbackend.domain.common.BaseEntity;
 import com.dominest.dominestbackend.domain.resident.component.ResidenceSemester;
 import com.dominest.dominestbackend.domain.room.Room;
-import com.dominest.dominestbackend.global.util.TimeUtil;
+import com.dominest.dominestbackend.global.util.DatePatternParser;
 import lombok.*;
 
 import javax.persistence.*;
@@ -101,7 +101,7 @@ public class Resident extends BaseEntity {
         this.studentId = studentId;
         this.major = major;
         this.grade = grade;
-        this.dateOfBirth = TimeUtil.parseyyMMddToLocalDate(dateOfBirth);
+        this.dateOfBirth = DatePatternParser.parseyyMMddToLocalDate(dateOfBirth);
         this.semester = semester;
         this.residenceSemester = residenceSemester;
         this.currentStatus = currentStatus;
@@ -129,7 +129,7 @@ public class Resident extends BaseEntity {
                 .semester(data.get(3))
                 .residenceSemester(residenceSemester)
                 .currentStatus(data.get(4))
-                .dateOfBirth(TimeUtil.parseyyMMddToLocalDate(data.get(5)))
+                .dateOfBirth(DatePatternParser.parseyyMMddToLocalDate(data.get(5)))
                 .room(room)
                 .major(data.get(7))
                 .grade(data.get(8))

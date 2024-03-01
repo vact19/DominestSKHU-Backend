@@ -8,7 +8,7 @@ import java.time.ZoneId;
 import java.util.Date;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class DateTimeUtils {
+public class DateConverter {
 
     public static LocalDateTime convertToLocalDateTime(Date dateToConvert) {
         return dateToConvert.toInstant()

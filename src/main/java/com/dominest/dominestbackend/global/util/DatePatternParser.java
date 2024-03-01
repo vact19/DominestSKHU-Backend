@@ -6,15 +6,8 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-@NoArgsConstructor(access = AccessLevel.PACKAGE)
-public class TimeUtil {
-    /**
-     *  작성 시점 시간 230715.
-     *  000101 -> 2000-01-01
-     *  240101 -> 1924-01-01
-     *  800101 -> 1980-01-01
-     *  990101 -> 1999-01-01
-     */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class DatePatternParser {
     public static LocalDate parseyyMMddToLocalDate(String yyMMdd) {
         LocalDate localDate = LocalDate.parse(yyMMdd, DateTimeFormatter.ofPattern("yyMMdd"));
         int year = localDate.getYear();

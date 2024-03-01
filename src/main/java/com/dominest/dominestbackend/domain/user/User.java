@@ -4,7 +4,7 @@ import com.dominest.dominestbackend.domain.common.BaseEntity;
 import com.dominest.dominestbackend.domain.user.component.Role;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.exceptions.auth.JwtAuthException;
-import com.dominest.dominestbackend.global.util.DateTimeUtils;
+import com.dominest.dominestbackend.global.util.DateConverter;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -65,7 +65,7 @@ public class User extends BaseEntity implements UserDetails {
 
     public void updateRefreshTokenAndExp(String refreshToken, Date refreshTokenExp) {
         this.refreshToken = refreshToken;
-        this.tokenExp = DateTimeUtils.convertToLocalDateTime(refreshTokenExp);
+        this.tokenExp = DateConverter.convertToLocalDateTime(refreshTokenExp);
     }
 
     public void logout(){
