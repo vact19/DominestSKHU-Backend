@@ -13,6 +13,7 @@ import com.dominest.dominestbackend.domain.post.undeliveredparcel.UndeliveredPar
 import com.dominest.dominestbackend.domain.post.undeliveredparcel.component.UndeliveredParcelService;
 import com.dominest.dominestbackend.global.util.PageableUtil;
 import com.dominest.dominestbackend.global.util.PrincipalUtil;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -92,7 +93,7 @@ public class UndeliveredParcelController {
 
     @NoArgsConstructor
     @Getter
-    private static class PostTitleRequest {
+    public static class PostTitleRequest {
         @NotBlank(message = "변경할 제목을 입력해주세요.")
         private String title;
     }
