@@ -1,6 +1,6 @@
 package com.dominest.dominestbackend.api.post.recent.controller;
 
-import com.dominest.dominestbackend.api.common.RspTemplate;
+import com.dominest.dominestbackend.api.common.ResponseTemplate;
 import com.dominest.dominestbackend.api.post.recent.dto.RecentPostListDto;
 import com.dominest.dominestbackend.domain.post.common.RecentPost;
 import com.dominest.dominestbackend.domain.post.common.RecentPostService;
@@ -20,7 +20,7 @@ public class RecentPostController {
     private final RecentPostService recentPostService;
 
     @GetMapping("/recent-posts")
-    public RspTemplate<RecentPostListDto.Res> handleGetRecentPosts(@RequestParam(defaultValue = "1") int page) {
+    public ResponseTemplate<RecentPostListDto.Res> handleGetRecentPosts(@RequestParam(defaultValue = "1") int page) {
         final int IMAGE_TYPE_PAGE_SIZE = 20;
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
         Pageable pageable = PageableUtil.of(page, IMAGE_TYPE_PAGE_SIZE, sort);
@@ -28,7 +28,7 @@ public class RecentPostController {
         Page<RecentPost> recentPost = recentPostService.getRecentPosts(pageable);
 
         RecentPostListDto.Res resDto = RecentPostListDto.Res.from(recentPost);
-        return new RspTemplate<>(HttpStatus.OK, "최근등록게시물 카테고리 링크 - 내림차순 조회", resDto);
+        return new ResponseTemplate<>(HttpStatus.OK, "최근등록게시물 카테고리 링크 - 내림차순 조회", resDto);
     }
 }
 

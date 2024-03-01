@@ -1,6 +1,6 @@
 package com.dominest.dominestbackend.api.post.manual.controller;
 
-import com.dominest.dominestbackend.api.common.RspTemplate;
+import com.dominest.dominestbackend.api.common.ResponseTemplate;
 import com.dominest.dominestbackend.api.post.manual.dto.CreateManualPostDto;
 import com.dominest.dominestbackend.api.post.manual.dto.ManualPostListDto;
 import com.dominest.dominestbackend.api.post.manual.dto.ReadManualDto;
@@ -43,7 +43,7 @@ public class ManualPostController {
 
     //게시글 작성
     @PostMapping("/categories/{categoryId}/posts/manual")
-    public ResponseEntity<RspTemplate<Void>> handleCreateManual(
+    public ResponseEntity<ResponseTemplate<Void>> handleCreateManual(
             @PathVariable Long categoryId, Principal principal, @Valid CreateManualPostDto.Req reqDto
 
     ) {
@@ -51,14 +51,14 @@ public class ManualPostController {
 
         long manualPostId = manualPostService.create(categoryId, reqDto, email);
 
-        RspTemplate<Void> rspTemplate = new RspTemplate<>(HttpStatus.CREATED,
+        ResponseTemplate<Void> responseTemplate = new ResponseTemplate<>(HttpStatus.CREATED,
                 manualPostId + "번 게시글 작성");
-        return ResponseEntity.status(HttpStatus.CREATED).body(rspTemplate);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseTemplate);
     }
 
     //게시글 목록 조회
     @GetMapping("/categories/{categoryId}/posts/manual")
-    public RspTemplate<ManualPostListDto.Res> handleGetManualPostList(
+    public ResponseTemplate<ManualPostListDto.Res> handleGetManualPostList(
             @PathVariable Long categoryId, @RequestParam(defaultValue = "1") int page) {
         final int MANUAL_TYPE_PAGE_SIZE = 20;
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
@@ -68,43 +68,43 @@ public class ManualPostController {
         Page<ManualPost> postsPage = manualPostService.getPage(category.getId(), pageable);
 
         ManualPostListDto.Res resDto = ManualPostListDto.Res.from(postsPage, category);
-        return new RspTemplate<>(HttpStatus.OK
+        return new ResponseTemplate<>(HttpStatus.OK
                 , "페이지 게시글 목록 조회 - " + resDto.getPage().getCurrentPage() + "페이지"
                 ,resDto);
     }
 
     //게시글 삭제
     @DeleteMapping("/posts/manual/{manualPostId}")
-    public ResponseEntity<RspTemplate<Void>> handleDeleteManualPost(
+    public ResponseEntity<ResponseTemplate<Void>> handleDeleteManualPost(
             @PathVariable Long manualPostId
     ) {
         long deletedPostId = manualPostService.delete(manualPostId);
 
-        RspTemplate<Void> rspTemplate = new RspTemplate<>(HttpStatus.OK, deletedPostId + "번 게시글 삭제");
-        return ResponseEntity.ok(rspTemplate);
+        ResponseTemplate<Void> responseTemplate = new ResponseTemplate<>(HttpStatus.OK, deletedPostId + "번 게시글 삭제");
+        return ResponseEntity.ok(responseTemplate);
     }
 
     //게시글 수정
     @PatchMapping("/posts/manual/{manualPostId}")
-    public ResponseEntity<RspTemplate<Void>> handleUpdateManualPost(
+    public ResponseEntity<ResponseTemplate<Void>> handleUpdateManualPost(
             @PathVariable Long manualPostId, @Valid UpdateManualPostDto.Req reqDto
     ) {
         long updatedPostId = manualPostService.update(manualPostId, reqDto);
 
-        RspTemplate<Void> rspTemplate = new RspTemplate<>(HttpStatus.OK, updatedPostId + "번 게시글 수정");
-        return ResponseEntity.ok(rspTemplate);
+        ResponseTemplate<Void> responseTemplate = new ResponseTemplate<>(HttpStatus.OK, updatedPostId + "번 게시글 수정");
+        return ResponseEntity.ok(responseTemplate);
     }
 
     //게시글 읽기
     //categoryId와 manualId가 맞지 않는 경우에 보안 조치는 굳이 안해도 될 것 같아서 생략
     @GetMapping("/categories/{categoryId}/posts/manual/{manualId}")
-    public RspTemplate<ReadManualDto.Res> handleManualPost(
+    public ResponseTemplate<ReadManualDto.Res> handleManualPost(
             @PathVariable Long manualId, @RequestParam(defaultValue = "1") int page) {
 
         ManualPost post = manualPostService.getByIdIncludeAllColumn(manualId);
 
         ReadManualDto.Res resDto = ReadManualDto.Res.from(post, page);
-        return new RspTemplate<>(HttpStatus.OK
+        return new ResponseTemplate<>(HttpStatus.OK
                 , "manual 게시글 조회 - " + post.getId() + "번 게시글"
                 ,resDto);
 

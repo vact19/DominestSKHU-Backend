@@ -1,6 +1,6 @@
 package com.dominest.dominestbackend.domain.post.sanitationcheck.floor.checkedroom;
 
-import com.dominest.dominestbackend.api.post.sanitationcheck.dto.UpdateCheckedRoomDto;
+import com.dominest.dominestbackend.api.post.sanitationcheck.request.UpdateCheckedRoomRequest;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.exceptions.BusinessException;
 import com.dominest.dominestbackend.global.util.EntityUtil;
@@ -41,17 +41,17 @@ public class CheckedRoomService {
     }
 
     @Transactional
-    public void update(Long checkedRoomId, UpdateCheckedRoomDto.Req reqDto) { // api 호출 편의성을 위해 이 ReqDto는 값 검증하지 않았음.
+    public void update(Long checkedRoomId, UpdateCheckedRoomRequest request) { // api 호출 편의성을 위해 이 ReqDto는 값 검증하지 않았음.
         CheckedRoom checkedRoom = getByIdFetchResident(checkedRoomId);
         // Null이 아닌 값만 업데이트
         checkedRoom.updateValuesOnlyNotNull(
-                reqDto.getIndoor()
-                , reqDto.getLeavedTrash()
-                , reqDto.getToilet()
-                , reqDto.getShower()
-                , reqDto.getProhibitedItem()
-                , reqDto.getPassState()
-                , reqDto.getEtc()
+                request.getIndoor()
+                , request.getLeavedTrash()
+                , request.getToilet()
+                , request.getShower()
+                , request.getProhibitedItem()
+                , request.getPassState()
+                , request.getEtc()
         );
     }
 

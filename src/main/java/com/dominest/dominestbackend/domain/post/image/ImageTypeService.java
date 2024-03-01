@@ -1,6 +1,6 @@
 package com.dominest.dominestbackend.domain.post.image;
 
-import com.dominest.dominestbackend.api.post.image.dto.SaveImageTypeDto;
+import com.dominest.dominestbackend.api.post.image.request.SaveImageTypeRequest;
 import com.dominest.dominestbackend.domain.post.common.RecentPost;
 import com.dominest.dominestbackend.domain.post.common.RecentPostService;
 import com.dominest.dominestbackend.domain.post.component.category.Category;
@@ -30,7 +30,7 @@ public class ImageTypeService {
     private final RecentPostService recentPostService;
 
     @Transactional
-    public Long create(SaveImageTypeDto.Req reqDto
+    public Long create(SaveImageTypeRequest request
                                     , Long categoryId, String uploaderEmail) {
         Category category = categoryService.getById(categoryId);
         // 이미지 게시물이 작성될 카테고리의 타입 검사
@@ -38,8 +38,8 @@ public class ImageTypeService {
 
         User writer = userService.getUserByEmail(uploaderEmail);
 
-        List<String> savedImgUrls = fileService.save(FileService.FilePrefix.POST_IMAGE_TYPE, reqDto.getPostImages());
-        ImageType imageType = reqDto.toEntity(savedImgUrls, writer, category);
+        List<String> savedImgUrls = fileService.save(FileService.FilePrefix.POST_IMAGE_TYPE, request.getPostImages());
+        ImageType imageType = request.toEntity(savedImgUrls, writer, category);
 
 
         ImageType saved = imageTypeRepository.save(imageType);
@@ -63,10 +63,10 @@ public class ImageTypeService {
     }
 
     @Transactional
-    public long update(SaveImageTypeDto.Req reqDto, Long imageTypeId) {
+    public long update(SaveImageTypeRequest request, Long imageTypeId) {
         ImageType imageType = EntityUtil.mustNotNull(imageTypeRepository.findById(imageTypeId), ErrorCode.POST_NOT_FOUND);
 
-        List<String> savedImgUrls = fileService.save(FileService.FilePrefix.POST_IMAGE_TYPE, reqDto.getPostImages());
+        List<String> savedImgUrls = fileService.save(FileService.FilePrefix.POST_IMAGE_TYPE, request.getPostImages());
         imageType.setImageUrls(savedImgUrls);
         return imageType.getId();
     }

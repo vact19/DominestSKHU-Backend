@@ -1,8 +1,13 @@
 package com.dominest.dominestbackend.api.resident.controller;
 
 
-import com.dominest.dominestbackend.api.common.RspTemplate;
-import com.dominest.dominestbackend.api.resident.dto.*;
+import com.dominest.dominestbackend.api.common.ResponseTemplate;
+import com.dominest.dominestbackend.api.resident.request.ExcelUploadRequest;
+import com.dominest.dominestbackend.api.resident.request.SaveResidentRequest;
+import com.dominest.dominestbackend.api.resident.response.ExcelUploadResponse;
+import com.dominest.dominestbackend.api.resident.response.PdfBulkUploadResponse;
+import com.dominest.dominestbackend.api.resident.response.ResidentListResponse;
+import com.dominest.dominestbackend.api.resident.response.ResidentPdfListResponse;
 import com.dominest.dominestbackend.api.resident.util.PdfType;
 import com.dominest.dominestbackend.domain.resident.Resident;
 import com.dominest.dominestbackend.domain.resident.ResidentService;
@@ -34,66 +39,68 @@ public class ResidentController {
 
     // 엑셀로 업로드
     @PostMapping("/residents/upload-excel")
-    public ResponseEntity<RspTemplate<ExcelUploadDto.Res>> handleFileUpload(@ModelAttribute @Valid ExcelUploadDto.Req reqDto){
-
+    public ResponseEntity<ResponseTemplate<ExcelUploadResponse>> handleFileUpload(
+            @ModelAttribute @Valid ExcelUploadRequest request
+    ){
         // 엑셀 파싱
-        List<List<String>> sheet= ExcelUtil.parseExcel(reqDto.getFile());
+        List<List<String>> sheet= ExcelUtil.parseExcel(request.getFile());
         ExcelUtil.checkResidentColumnCount(sheet);
 
-        ExcelUploadDto.Res resDto = residentService.excelUpload(sheet, reqDto.getResidenceSemester());
-        String resultMsg = resDto.getResultMsg();
+        ExcelUploadResponse response = residentService.excelUpload(sheet, request.getResidenceSemester());
+        String resultMsg = response.getResultMsg();
 
-        if (resDto.getSuccessRow() <= 0) {
+        if (response.getSuccessRow() <= 0) {
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(
-                            new RspTemplate<>(HttpStatus.OK, resultMsg));
+                            new ResponseTemplate<>(HttpStatus.OK, resultMsg));
         } else {
             return ResponseEntity
                     .status(HttpStatus.CREATED)
                     .body(
-                            new RspTemplate<>(HttpStatus.CREATED, resultMsg)
+                            new ResponseTemplate<>(HttpStatus.CREATED, resultMsg)
                     );
         }
     }
 
     // 전체조회
     @GetMapping("/residents")
-    public RspTemplate<ResidentListDto.Res> handleGetAllResident(@RequestParam(required = true) ResidenceSemester residenceSemester){
-
+    public ResponseTemplate<ResidentListResponse> handleGetAllResident(
+            @RequestParam(required = true) ResidenceSemester residenceSemester
+    ){
         List<Resident> residents = residentService.getAllResidentByResidenceSemesterFetchRoom(residenceSemester);
 
-        ResidentListDto.Res resDto = ResidentListDto.Res.from(residents);
-        return new RspTemplate<>(HttpStatus.OK, "입사생 목록 조회 성공", resDto);
+        ResidentListResponse response = ResidentListResponse.from(residents);
+        return new ResponseTemplate<>(HttpStatus.OK, "입사생 목록 조회 성공", response);
     }
 
     // (테스트용) 입사생 데이터 전체삭제
     @DeleteMapping("/residents")
-    public ResponseEntity<RspTemplate<Void>> handleDeleteAllResident(){
+    public ResponseEntity<ResponseTemplate<Void>> handleDeleteAllResident(){
         residentService.deleteAllResident();
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     // 입사생 단건 등록. 단순 DTO 변환 후 저장만 하면 될듯
     @PostMapping("/residents")
-    public ResponseEntity<RspTemplate<Void>> handleSaveResident(@RequestBody @Valid SaveResidentDto.Req reqDto){
-        residentService.save(reqDto);
+    public ResponseEntity<ResponseTemplate<Void>> handleSaveResident(@RequestBody @Valid SaveResidentRequest request){
+        residentService.save(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     // 입사생 수정
     @PatchMapping("/residents/{id}")
-    public ResponseEntity<RspTemplate<Void>> handleUpdateResident(
-            @PathVariable Long id, @RequestBody @Valid SaveResidentDto.Req reqDto
+    public ResponseEntity<ResponseTemplate<Void>> handleUpdateResident(
+            @PathVariable Long id, @RequestBody @Valid SaveResidentRequest request
     ){
-        residentService.updateResident(id, reqDto);
+        residentService.updateResident(id, request);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     // 입사생 삭제
     @DeleteMapping("/residents/{id}")
-    public ResponseEntity<RspTemplate<Void>> handleDeleteResident(@PathVariable Long id){
+    public ResponseEntity<ResponseTemplate<Void>> handleDeleteResident(@PathVariable Long id){
         residentService.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
@@ -123,41 +130,43 @@ public class ResidentController {
 
     // PDF 단건 업로드
     @PostMapping("/residents/{id}/pdf")
-    public ResponseEntity<RspTemplate<String>> handlePdfUpload(@PathVariable Long id, @RequestParam(required = true) MultipartFile pdf,
-                                                               @RequestParam(required = true) PdfType pdfType){
+    public ResponseEntity<ResponseTemplate<String>> handlePdfUpload(@PathVariable Long id, @RequestParam(required = true) MultipartFile pdf,
+                                                                    @RequestParam(required = true) PdfType pdfType){
         FileService.FilePrefix filePrefix = pdfType.toFilePrefix();
 
         residentService.uploadPdf(id, filePrefix, pdf);
-        RspTemplate<String> rspTemplate = new RspTemplate<>(HttpStatus.CREATED, "pdf 업로드 완료");
+        ResponseTemplate<String> responseTemplate = new ResponseTemplate<>(HttpStatus.CREATED, "pdf 업로드 완료");
         return ResponseEntity
                 .created(URI.create("/residents/"+id+"/pdf"))
-                .body(rspTemplate);
+                .body(responseTemplate);
     }
 
     // PDF 전체 업로드
     @PostMapping("/residents/pdf")
-    public ResponseEntity<RspTemplate<PdfBulkUploadDto.Res>> handlePdfUpload(@RequestParam(required = true) List<MultipartFile> pdfs
-                                                                                                                    , @RequestParam(required = true) ResidenceSemester residenceSemester
-                                                                                                                    , @RequestParam(required = true) PdfType pdfType){
+    public ResponseEntity<ResponseTemplate<PdfBulkUploadResponse>> handlePdfUpload(
+            @RequestParam(required = true) List<MultipartFile> pdfs
+            , @RequestParam(required = true) ResidenceSemester residenceSemester
+            , @RequestParam(required = true) PdfType pdfType
+    ){
         FileService.FilePrefix filePrefix = pdfType.toFilePrefix();
-        PdfBulkUploadDto.Res resDto = residentService.uploadPdfs(filePrefix, pdfs, residenceSemester);
+        PdfBulkUploadResponse response = residentService.uploadPdfs(filePrefix, pdfs, residenceSemester);
 
-        RspTemplate<PdfBulkUploadDto.Res> rspTemplate = new RspTemplate<>(HttpStatus.CREATED,
-                "pdf 업로드 완료. 저장된 파일 수: " + resDto.getSuccessCount() + "개", resDto);
+        ResponseTemplate<PdfBulkUploadResponse> responseTemplate = new ResponseTemplate<>(HttpStatus.CREATED,
+                "pdf 업로드 완료. 저장된 파일 수: " + response.getSuccessCount() + "개", response);
         return ResponseEntity
                 .created(URI.create("/residents/pdf"))
-                .body(rspTemplate);
+                .body(responseTemplate);
     }
 
     // 해당차수 입사생 전체 PDF 조회
     @GetMapping("/residents/pdf")
-    public RspTemplate<ResidentPdfListDto.Res> handleGetAllPdfs(@RequestParam(required = true) ResidenceSemester residenceSemester){
+    public ResponseTemplate<ResidentPdfListResponse> handleGetAllPdfs(@RequestParam(required = true) ResidenceSemester residenceSemester){
 
         List<Resident> residents = residentService.findAllByResidenceSemester(residenceSemester);
 
-        ResidentPdfListDto.Res resDto = ResidentPdfListDto.Res.from(residents);
-        return new RspTemplate<>(HttpStatus.OK
+        ResidentPdfListResponse response = ResidentPdfListResponse.from(residents);
+        return new ResponseTemplate<>(HttpStatus.OK
                 , "pdf url 조회 성공"
-                , resDto);
+                , response);
     }
 }

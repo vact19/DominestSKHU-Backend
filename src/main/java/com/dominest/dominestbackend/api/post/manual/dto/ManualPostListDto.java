@@ -1,8 +1,8 @@
 package com.dominest.dominestbackend.api.post.manual.dto;
 
 import com.dominest.dominestbackend.api.common.AuditLog;
-import com.dominest.dominestbackend.api.common.CategoryDto;
-import com.dominest.dominestbackend.api.common.PageInfoDto;
+import com.dominest.dominestbackend.api.common.CategoryResponse;
+import com.dominest.dominestbackend.api.common.PageInfo;
 import com.dominest.dominestbackend.domain.post.component.category.Category;
 import com.dominest.dominestbackend.domain.post.manual.ManualPost;
 import lombok.AccessLevel;
@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -20,22 +19,22 @@ import java.util.stream.Collectors;
 public class ManualPostListDto {
     @Getter
     public static class Res {
-        CategoryDto category;
-        PageInfoDto page;
+        CategoryResponse category;
+        PageInfo page;
 
         Set<ManualPostDto> posts;
 
         public static Res from(Page<ManualPost> postPage, Category category){
-            CategoryDto categoryDto = CategoryDto.from(category);
-            PageInfoDto pageInfoDto = PageInfoDto.from(postPage);
+            CategoryResponse categoryResponse = CategoryResponse.from(category);
+            PageInfo pageInfo = PageInfo.from(postPage);
 
             Set<ManualPostDto> posts
                     = ManualPostDto.from(postPage);
 
-            return new Res(pageInfoDto, posts, categoryDto);
+            return new Res(pageInfo, posts, categoryResponse);
         }
 
-        Res(PageInfoDto page, Set<ManualPostDto> posts, CategoryDto category) {
+        Res(PageInfo page, Set<ManualPostDto> posts, CategoryResponse category) {
             this.page = page;
             this.posts = posts;
             this.category = category;

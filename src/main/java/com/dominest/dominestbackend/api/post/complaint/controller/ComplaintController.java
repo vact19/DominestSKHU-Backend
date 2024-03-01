@@ -1,9 +1,9 @@
 package com.dominest.dominestbackend.api.post.complaint.controller;
 
-import com.dominest.dominestbackend.api.common.RspTemplate;
-import com.dominest.dominestbackend.api.post.complaint.dto.ComplaintListDto;
-import com.dominest.dominestbackend.api.post.complaint.dto.CreateComplaintDto;
-import com.dominest.dominestbackend.api.post.complaint.dto.UpdateComplaintDto;
+import com.dominest.dominestbackend.api.common.ResponseTemplate;
+import com.dominest.dominestbackend.api.post.complaint.response.ComplaintListResponse;
+import com.dominest.dominestbackend.api.post.complaint.request.CreateComplaintRequest;
+import com.dominest.dominestbackend.api.post.complaint.request.UpdateComplaintRequest;
 import com.dominest.dominestbackend.domain.post.complaint.Complaint;
 import com.dominest.dominestbackend.domain.post.complaint.ComplaintRepository;
 import com.dominest.dominestbackend.domain.post.complaint.ComplaintService;
@@ -39,43 +39,42 @@ public class ComplaintController {
 
     // 민원 등록
     @PostMapping("/categories/{categoryId}/posts/complaint")
-    public ResponseEntity<RspTemplate<Void>> handleCreateComplaint(
-            @RequestBody @Valid CreateComplaintDto.Req reqDto
+    public ResponseEntity<ResponseTemplate<Void>> handleCreateComplaint(
+            @RequestBody @Valid CreateComplaintRequest request
             , @PathVariable Long categoryId, Principal principal
     ) {
         String email = PrincipalUtil.toEmail(principal);
-        long complaintId = complaintService.create(reqDto, categoryId, email);
-        RspTemplate<Void> rspTemplate = new RspTemplate<>(HttpStatus.CREATED, complaintId + "번 민원 작성");
+        long complaintId = complaintService.create(request, categoryId, email);
+        ResponseTemplate<Void> responseTemplate = new ResponseTemplate<>(HttpStatus.CREATED, complaintId + "번 민원 작성");
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(rspTemplate);
+                .body(responseTemplate);
     }
 
     // 민원 수정
     @PatchMapping("/complaints/{complaintId}")
-    public RspTemplate<Void> handleUpdateComplaint(
-            @PathVariable Long complaintId, @RequestBody @Valid UpdateComplaintDto.Req reqDto
+    public ResponseTemplate<Void> handleUpdateComplaint(
+            @PathVariable Long complaintId, @RequestBody @Valid UpdateComplaintRequest request
     ) {
-        // parcelId 조회, 값 바꿔치기, 저장하기
-        long updatedId = complaintService.update(complaintId, reqDto);
+        long updatedId = complaintService.update(complaintId, request);
 
-        return new RspTemplate<>(HttpStatus.OK, updatedId + "번 민원내역 수정");
+        return new ResponseTemplate<>(HttpStatus.OK, updatedId + "번 민원내역 수정");
     }
 
     // 민원 삭제
     @DeleteMapping("/complaints/{complaintId}")
-    public RspTemplate<Void> handleDeleteComplaint(
+    public ResponseTemplate<Void> handleDeleteComplaint(
             @PathVariable Long complaintId
     ) {
         long deleteId = complaintService.delete(complaintId);
 
-        return new RspTemplate<>(HttpStatus.OK, deleteId + "번 민원내역 삭제");
+        return new ResponseTemplate<>(HttpStatus.OK, deleteId + "번 민원내역 삭제");
     }
 
     // 민원 목록 조회. 최신등록순
     @GetMapping("/categories/{categoryId}/posts/complaint")
-    public RspTemplate<ComplaintListDto.Res> handleGetComplaints(
+    public ResponseTemplate<ComplaintListResponse> handleGetComplaints(
             @PathVariable Long categoryId, @RequestParam(defaultValue = "1") int page
             , @RequestParam(required = false) String roomNoSch
             , @RequestParam(required = false) String complSchText
@@ -88,10 +87,10 @@ public class ComplaintController {
 
         Page<Complaint> complaintPage = complaintService.getPage(category.getId(), pageable, complSchText, roomNoSch);
 
-        ComplaintListDto.Res resDto = ComplaintListDto.Res.from(complaintPage, category);
-        return new RspTemplate<>(HttpStatus.OK
-                , "(생성일자 내림차순) 페이지  목록 조회 - " + resDto.getPage().getCurrentPage() + "페이지"
-                ,resDto);
+        ComplaintListResponse response = ComplaintListResponse.from(complaintPage, category);
+        return new ResponseTemplate<>(HttpStatus.OK
+                , "(생성일자 내림차순) 페이지  목록 조회 - " + response.getPage().getCurrentPage() + "페이지"
+                , response);
     }
 
     @GetMapping("/categories/{categoryId}/posts/complaint/xlsx")

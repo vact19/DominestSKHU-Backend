@@ -1,7 +1,7 @@
 package com.dominest.dominestbackend.api.favorite.controller;
 
-import com.dominest.dominestbackend.api.common.RspTemplate;
-import com.dominest.dominestbackend.api.favorite.dto.FavoriteListDto;
+import com.dominest.dominestbackend.api.common.ResponseTemplate;
+import com.dominest.dominestbackend.api.favorite.response.FavoriteListResponse;
 import com.dominest.dominestbackend.domain.favorite.Favorite;
 import com.dominest.dominestbackend.domain.favorite.FavoriteService;
 import com.dominest.dominestbackend.global.util.PrincipalUtil;
@@ -24,24 +24,24 @@ public class FavoriteController {
 
     // 즐겨찾기 추가 / 취소
     @PostMapping("/categories/{categoryId}/favorites")
-    public RspTemplate<String> handleAddOrUndoFavorite(@PathVariable Long categoryId, Principal principal) {
+    public ResponseTemplate<String> handleAddOrUndoFavorite(@PathVariable Long categoryId, Principal principal) {
 
         boolean isOn = favoriteService.addOrUndo(categoryId, PrincipalUtil.toEmail(principal));
 
         String resMsg = isOn ? "즐겨찾기 추가" : "즐겨찾기 취소";
-        return new RspTemplate<>(HttpStatus.OK, resMsg);
+        return new ResponseTemplate<>(HttpStatus.OK, resMsg);
     }
 
     // 토큰을 소유한 유저의 즐찾목록 전체 조회
     @GetMapping("/favorites")
-    public RspTemplate<FavoriteListDto.Res> handleGetAllFavorites(@NotNull(message = "인증 정보가 없습니다.") Principal principal) {
+    public ResponseTemplate<FavoriteListResponse> handleGetAllFavorites(@NotNull(message = "인증 정보가 없습니다.") Principal principal) {
 
         Sort sort = Sort.by(Sort.Direction.DESC, "lastModifiedTime");
         List<Favorite> favorites = favoriteService.getAllByUserEmail(PrincipalUtil.toEmail(principal), sort);
 
-        FavoriteListDto.Res resDto = FavoriteListDto.Res.from(favorites);
-        return new RspTemplate<>(HttpStatus.OK, "즐겨찾기 목록 조회"
-                , resDto);
+        FavoriteListResponse response = FavoriteListResponse.from(favorites);
+        return new ResponseTemplate<>(HttpStatus.OK, "즐겨찾기 목록 조회"
+                , response);
     }
 }
 

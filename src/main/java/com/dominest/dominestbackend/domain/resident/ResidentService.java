@@ -1,12 +1,11 @@
 package com.dominest.dominestbackend.domain.resident;
 
-import com.dominest.dominestbackend.api.resident.dto.ExcelUploadDto;
-import com.dominest.dominestbackend.api.resident.dto.PdfBulkUploadDto;
-import com.dominest.dominestbackend.api.resident.dto.SaveResidentDto;
+import com.dominest.dominestbackend.api.resident.response.ExcelUploadResponse;
+import com.dominest.dominestbackend.api.resident.response.PdfBulkUploadResponse;
+import com.dominest.dominestbackend.api.resident.request.SaveResidentRequest;
 import com.dominest.dominestbackend.domain.resident.component.ResidenceSemester;
 import com.dominest.dominestbackend.domain.room.Room;
 import com.dominest.dominestbackend.domain.room.RoomService;
-import com.dominest.dominestbackend.domain.room.roomhistory.RoomHistory;
 import com.dominest.dominestbackend.domain.room.roomhistory.RoomHistoryService;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.exceptions.BusinessException;
@@ -36,7 +35,7 @@ public class ResidentService {
     private final RoomHistoryService roomHistoryService;
     private final ResidentFileManager residentFileManager;
 
-    /** @return 저장한 파일명 */
+    /** return 저장한 파일명 */
     @Transactional
     public void uploadPdf(Long id, FileService.FilePrefix filePrefix, MultipartFile pdf) {
         if (fileService.isInvalidFileExtension(pdf.getOriginalFilename(), FileService.FileExt.PDF)) {
@@ -56,8 +55,8 @@ public class ResidentService {
     }
 
     @Transactional
-    public PdfBulkUploadDto.Res uploadPdfs(FileService.FilePrefix filePrefix, List<MultipartFile> pdfs, ResidenceSemester residenceSemester) {
-        PdfBulkUploadDto.Res res = new PdfBulkUploadDto.Res();
+    public PdfBulkUploadResponse uploadPdfs(FileService.FilePrefix filePrefix, List<MultipartFile> pdfs, ResidenceSemester residenceSemester) {
+        PdfBulkUploadResponse response = new PdfBulkUploadResponse();
         for (MultipartFile pdf : pdfs) {
             // 빈 객체면 continue
             if (pdf.isEmpty()) {
@@ -76,7 +75,7 @@ public class ResidentService {
 
             // 파일명에 해당하는 학생이 없으면 continue
             if (resident == null) {
-                res.addToDtoList(filename, "FAILED", "학생명이 파일명과 일치하지 않습니다.");
+                response.addToDtoList(filename, "FAILED", "학생명이 파일명과 일치하지 않습니다.");
                 continue;
             }
 
@@ -86,20 +85,20 @@ public class ResidentService {
             String prevFilename = residentFileManager.getPdfFilename(resident, filePrefix);
             residentFileManager.setPdfFilenameToResident(resident, filePrefix, fileNameToUpload);
 
-            res.addToDtoList(filename, "OK", null);
-            res.addSuccessCount();
+            response.addToDtoList(filename, "OK", null);
+            response.addSuccessCount();
 
             if (prevFilename != null)
                 fileService.deleteFile(filePrefix, prevFilename);
         }
         // 한 건도 업로드하지 못했으면 예외발생
-        if (res.getSuccessCount() == 0)
+        if (response.getSuccessCount() == 0)
             throw new BusinessException(ErrorCode.NO_FILE_UPLOADED);
-        return res;
+        return response;
     }
 
     @Transactional
-    public ExcelUploadDto.Res excelUpload(List<List<String>> sheet, ResidenceSemester residenceSemester) {
+    public ExcelUploadResponse excelUpload(List<List<String>> sheet, ResidenceSemester residenceSemester) {
         // 첫 3줄 제거 후 유효 데이터만 추출
         sheet.remove(0); sheet.remove(0);sheet.remove(0);
 
@@ -134,7 +133,7 @@ public class ResidentService {
             save(resident);
             successRow++;
         }
-        return ExcelUploadDto.Res.of(originalRow, successRow);
+        return ExcelUploadResponse.of(originalRow, successRow);
     }
 
     public List<Resident> getAllResidentByResidenceSemesterFetchRoom(ResidenceSemester residenceSemester) {
@@ -149,17 +148,17 @@ public class ResidentService {
 
     // 단건 등록용
     @Transactional
-    public void save(SaveResidentDto.Req reqDto) {
-        Room room = roomService.getByAssignedRoom(reqDto.getAssignedRoom());
-        Resident resident = reqDto.toEntity(room);
+    public void save(SaveResidentRequest request) {
+        Room room = roomService.getByAssignedRoom(request.getAssignedRoom());
+        Resident resident = request.toEntity(room);
 
         save(resident);
     }
 
     @Transactional
-    public void updateResident(Long id, SaveResidentDto.Req reqDto) {
-        Room room = roomService.getByAssignedRoom(reqDto.getAssignedRoom());
-        Resident resident = reqDto.toEntity(room);
+    public void updateResident(Long id, SaveResidentRequest request) {
+        Room room = roomService.getByAssignedRoom(request.getAssignedRoom());
+        Resident resident = request.toEntity(room);
 
         Resident residentToUpdate = findById(id);
         residentToUpdate.updateValueFrom(resident);

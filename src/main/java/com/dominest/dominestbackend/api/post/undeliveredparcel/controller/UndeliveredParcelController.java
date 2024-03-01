@@ -1,10 +1,10 @@
 package com.dominest.dominestbackend.api.post.undeliveredparcel.controller;
 
-import com.dominest.dominestbackend.api.common.RspTemplate;
-import com.dominest.dominestbackend.api.post.undeliveredparcel.dto.CreateUndelivParcelDto;
-import com.dominest.dominestbackend.api.post.undeliveredparcel.dto.UndelivParcelPostDetailDto;
-import com.dominest.dominestbackend.api.post.undeliveredparcel.dto.UndelivParcelPostListDto;
-import com.dominest.dominestbackend.api.post.undeliveredparcel.dto.UpdateUndelivParcelDto;
+import com.dominest.dominestbackend.api.common.ResponseTemplate;
+import com.dominest.dominestbackend.api.post.undeliveredparcel.request.CreateUndelivParcelRequest;
+import com.dominest.dominestbackend.api.post.undeliveredparcel.response.UndelivParcelPostDetailResponse;
+import com.dominest.dominestbackend.api.post.undeliveredparcel.response.UndelivParcelPostListResponse;
+import com.dominest.dominestbackend.api.post.undeliveredparcel.request.UpdateUndelivParcelDtoRequest;
 import com.dominest.dominestbackend.domain.post.component.category.Category;
 import com.dominest.dominestbackend.domain.post.component.category.component.Type;
 import com.dominest.dominestbackend.domain.post.component.category.service.CategoryService;
@@ -37,21 +37,21 @@ public class UndeliveredParcelController {
 
     // 게시글 등록
     @PostMapping("/categories/{categoryId}/posts/undelivered-parcel")
-    public ResponseEntity<RspTemplate<Void>> handleCreateParcelPost(
+    public ResponseEntity<ResponseTemplate<Void>> handleCreateParcelPost(
             @PathVariable Long categoryId, Principal principal
     ) {
         String email = PrincipalUtil.toEmail(principal);
         long unDeliParcelId = undelivParcelPostService.create(categoryId, email);
-        RspTemplate<Void> rspTemplate = new RspTemplate<>(HttpStatus.CREATED, unDeliParcelId + "번 게시글 작성");
+        ResponseTemplate<Void> responseTemplate = new ResponseTemplate<>(HttpStatus.CREATED, unDeliParcelId + "번 게시글 작성");
 
         return ResponseEntity
                 .created(URI.create("/categories/"+categoryId+"/posts/undelivered-parcel/" + unDeliParcelId))
-                .body(rspTemplate);
+                .body(responseTemplate);
     }
 
     //  게시글 목록 조회
     @GetMapping("/categories/{categoryId}/posts/undelivered-parcel")
-    public RspTemplate<UndelivParcelPostListDto.Res> handleGetParcelPosts(
+    public ResponseTemplate<UndelivParcelPostListResponse> handleGetParcelPosts(
             @PathVariable Long categoryId, @RequestParam(defaultValue = "1") int page
     ) {
         final int IMAGE_TYPE_PAGE_SIZE = 20;
@@ -61,81 +61,85 @@ public class UndeliveredParcelController {
         Category category = categoryService.validateCategoryType(categoryId, Type.UNDELIVERED_PARCEL_REGISTER);
         Page<UndeliveredParcelPost> postsPage = undelivParcelPostService.getPage(category.getId(), pageable);
 
-        UndelivParcelPostListDto.Res resDto = UndelivParcelPostListDto.Res.from(postsPage, category);
-        return new RspTemplate<>(HttpStatus.OK
-                , "페이지 게시글 목록 조회 - " + resDto.getPage().getCurrentPage() + "페이지"
-                ,resDto);
+        UndelivParcelPostListResponse response = UndelivParcelPostListResponse.from(postsPage, category);
+        return new ResponseTemplate<>(HttpStatus.OK
+                , "페이지 게시글 목록 조회 - " + response.getPage().getCurrentPage() + "페이지"
+                , response);
     }
 
     // 게시글 상세 조회
     @GetMapping("/posts/undelivered-parcel/{undelivParcelPostId}")
-    public RspTemplate<UndelivParcelPostDetailDto.Res> handleGetParcels(
+    public ResponseTemplate<UndelivParcelPostDetailResponse> handleGetParcels(
             @PathVariable Long undelivParcelPostId
     ) {
         UndeliveredParcelPost undelivParcelPost = undelivParcelPostService.getByIdFetchParcels(undelivParcelPostId);
 
-        UndelivParcelPostDetailDto.Res resDto = UndelivParcelPostDetailDto.Res.from(undelivParcelPost);
-        return new RspTemplate<>(HttpStatus.OK, "택배 관리대장 게시물 상세조회", resDto);
+        UndelivParcelPostDetailResponse response = UndelivParcelPostDetailResponse.from(undelivParcelPost);
+        return new ResponseTemplate<>(HttpStatus.OK, "택배 관리대장 게시물 상세조회", response);
     }
 
     // 제목 변경
     @PatchMapping("/posts/undelivered-parcel/{undelivParcelPostId}")
-    public RspTemplate<UndelivParcelPostDetailDto.Res> handleRenamePost(
-            @PathVariable Long undelivParcelPostId, @RequestBody @Valid PostTitleDto reqDto
+    public ResponseTemplate<UndelivParcelPostDetailResponse> handleRenamePost(
+            @PathVariable Long undelivParcelPostId,
+            @RequestBody @Valid UndeliveredParcelController.PostTitleRequest request
     ) {
-        undelivParcelPostService.renameTitle(undelivParcelPostId, reqDto.getTitle());
-        return new RspTemplate<>(HttpStatus.OK, String.format("제목 변경 -> %s", reqDto.getTitle())) ;
+        undelivParcelPostService.renameTitle(undelivParcelPostId, request.getTitle());
+        return new ResponseTemplate<>(HttpStatus.OK,
+                String.format("제목 변경 -> %s", request.getTitle())
+        );
     }
 
     @NoArgsConstructor
     @Getter
-    static class PostTitleDto {
+    private static class PostTitleRequest {
         @NotBlank(message = "변경할 제목을 입력해주세요.")
         private String title;
     }
 
     // 게시글 삭제
     @DeleteMapping("/posts/undelivered-parcel/{undelivParcelPostId}")
-    public ResponseEntity<RspTemplate<Void>> handleDeleteParcelPost(
+    public ResponseEntity<ResponseTemplate<Void>> handleDeleteParcelPost(
             @PathVariable Long undelivParcelPostId
     ) {
         long deletedPostId = undelivParcelPostService.delete(undelivParcelPostId);
 
-        RspTemplate<Void> rspTemplate = new RspTemplate<>(HttpStatus.OK, deletedPostId + "번 게시글 삭제");
-        return ResponseEntity.ok(rspTemplate);
+        ResponseTemplate<Void> responseTemplate = new ResponseTemplate<>(HttpStatus.OK, deletedPostId + "번 게시글 삭제");
+        return ResponseEntity.ok(responseTemplate);
     }
 
     // 게시글 내부 관리목록에 관리물품 등록
     @PostMapping("/posts/undelivered-parcel/{undelivParcelPostId}")
-    public ResponseEntity<RspTemplate<Void>> handleCreateParcel(
-                @PathVariable Long undelivParcelPostId, @RequestBody @Valid CreateUndelivParcelDto.Req reqDto
-            ) {
-        Long undelivParcelId = undeliveredParcelService.create(undelivParcelPostId, reqDto);
+    public ResponseEntity<ResponseTemplate<Void>> handleCreateParcel(
+                @PathVariable Long undelivParcelPostId,
+                @RequestBody @Valid CreateUndelivParcelRequest request
+    ) {
+        Long undelivParcelId = undeliveredParcelService.create(undelivParcelPostId, request);
 
-        RspTemplate<Void> rspTemplate = new RspTemplate<>(HttpStatus.CREATED,
+        ResponseTemplate<Void> responseTemplate = new ResponseTemplate<>(HttpStatus.CREATED,
                 undelivParcelPostId + "번 관리대장 게시글에" +  undelivParcelId + "번 관리물품 작성");
-        return ResponseEntity.status(HttpStatus.CREATED).body(rspTemplate);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseTemplate);
     }
 
     // 관리물품 단건 수정
     @PatchMapping("/undeliv-parcels/{undelivParcelId}")
-    public RspTemplate<Void> handleUpdateParcel(
-            @PathVariable Long undelivParcelId, @RequestBody @Valid UpdateUndelivParcelDto.Req reqDto
+    public ResponseTemplate<Void> handleUpdateParcel(
+            @PathVariable Long undelivParcelId, @RequestBody @Valid UpdateUndelivParcelDtoRequest request
     ) {
         // parcelId 조회, 값 바꿔치기, 저장하기
-        long updatedId = undeliveredParcelService.update(undelivParcelId, reqDto);
+        long updatedId = undeliveredParcelService.update(undelivParcelId, request);
 
-        return new RspTemplate<>(HttpStatus.OK, updatedId + "번 관리물품 수정");
+        return new ResponseTemplate<>(HttpStatus.OK, updatedId + "번 관리물품 수정");
     }
 
     // 관리물품 단건 삭제
     @DeleteMapping("/undeliv-parcels/{undelivParcelId}")
-    public RspTemplate<Void> handleDeleteParcel(
+    public ResponseTemplate<Void> handleDeleteParcel(
             @PathVariable Long undelivParcelId
     ) {
         long deleteId = undeliveredParcelService.delete(undelivParcelId);
 
-        return new RspTemplate<>(HttpStatus.OK, deleteId + "번 관리물품 삭제");
+        return new ResponseTemplate<>(HttpStatus.OK, deleteId + "번 관리물품 삭제");
     }
 
 }

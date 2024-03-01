@@ -42,11 +42,10 @@ public class Resident extends BaseEntity {
     @Column(nullable = false)
     private String major; // 전공. 매학년 바뀔 수도 있으니 enum 사용하지 않는 걸로
     @Column(nullable = false)
-    private String grade; // '3학년' 과 같은 식으로 저장된다, //todo 이거 숫자로 바꿀 생각도 해보자
+    private String grade; // '3학년' 과 같은 식으로 저장된다
     @Column(length = 30)
     private String phoneNumber; // '010-1234-5678' 형식으로 저장
     // 엑셀데이터는 6자리로 저장되긴 하는데, 날짜 필터링 걸려면 날짜타입 사용해야 할 듯
-    // Todo: 날짜타입 유지하면서 6자리로 표시할 수 있는지?
     @Column(nullable = false)
     private LocalDate dateOfBirth;
 
@@ -54,14 +53,12 @@ public class Resident extends BaseEntity {
     @Column(nullable = false)
     private String semester; // 차수. '2023SMSK02' 형식
     @Column(nullable = false)
-    private String currentStatus;  // 현재상태,   Todo: 'A', 'I' 말고 다른 상태가 있는지 확인필요
+    private String currentStatus;  // 현재상태
 
     private String period; // 기간. 'LY' 'AY' 'VY' 'YY'
 
     // 호실(1, 2), 배정방, 기숙사(A, B) 3개가 물리적인 위치에 관여
     /** 날짜정보 */
-    // 엑셀데이터는 8자리로 저장되긴 하는데, 날짜 필터링 걸려면 날짜타입 사용해야 할 듯
-    // Todo: 날짜타입 유지하면서 8자리로 표시할 수 있는지?
     // 아래의 날짜들은 '20191106' 형식으로 저장됨
     private LocalDate admissionDate; // 입사일.
     @Column(nullable = true)
@@ -73,11 +70,9 @@ public class Resident extends BaseEntity {
     private String socialName; // 사회명
 
     private String zipCode; // 우편번호
-    private String address; // 주소. 이거 거주지별로 분류할 일이 생기나?
+    private String address; // 주소.
 
-    /** 아래는 학생정보 페이지에 표시되지 않는 정보들
-     *
-     * */
+    /** 아래는 학생정보 페이지에 표시되지 않는 정보들 */
     //ResidenceSemester를 Room에도 둘까 했으나, 여기서 조인해서 쓰면 됨.
     @Enumerated(EnumType.STRING)
     @Column(length = 30, nullable = false)
@@ -85,10 +80,10 @@ public class Resident extends BaseEntity {
 
     @Column(nullable = true)
     @Setter
-    private String admissionPdfFileName; // UUID로 저장된다.
+    private String admissionPdfFileName;
     @Column(nullable = true)
     @Setter
-    private String departurePdfFileName; // UUID로 저장된다.
+    private String departurePdfFileName;
 
     // 방 정보는 하나지만 학생데이터는 학기마다 추가됨. N : 1
     @ManyToOne(fetch = FetchType.LAZY)

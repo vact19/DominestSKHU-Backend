@@ -4,7 +4,7 @@ import com.dominest.dominestbackend.api.user.request.ChangePasswordRequest;
 import com.dominest.dominestbackend.api.user.request.JoinRequest;
 import com.dominest.dominestbackend.api.user.request.LoginRequest;
 import com.dominest.dominestbackend.api.user.response.JoinResponse;
-import com.dominest.dominestbackend.api.common.RspTemplate;
+import com.dominest.dominestbackend.api.common.ResponseTemplate;
 import com.dominest.dominestbackend.api.schedule.response.UserScheduleResponse;
 import com.dominest.dominestbackend.api.todo.response.TodoUserResponse;
 import com.dominest.dominestbackend.domain.jwt.dto.TokenDto;
@@ -34,41 +34,41 @@ public class UserController {
     private final TodoService todoService;
 
     @PostMapping("/join") // 회원가입
-    public RspTemplate<JoinResponse> signUp(@RequestBody @Valid final JoinRequest request){
+    public ResponseTemplate<JoinResponse> signUp(@RequestBody @Valid final JoinRequest request){
         JoinResponse joinResponse = userService.create(request);
 
-        return new RspTemplate<>(HttpStatus.OK, "회원가입에 성공하였습니다.", joinResponse);
+        return new ResponseTemplate<>(HttpStatus.OK, "회원가입에 성공하였습니다.", joinResponse);
 
     }
 
     @PostMapping("/login") // 로그인
-    public RspTemplate<TokenDto> login(@RequestBody @Valid final LoginRequest request) {
+    public ResponseTemplate<TokenDto> login(@RequestBody @Valid final LoginRequest request) {
         TokenDto tokenDto = userService.loginTemp(request.getEmail(), request.getPassword());
 
-        return new RspTemplate<>(HttpStatus.OK, "로그인 성공", tokenDto);
+        return new ResponseTemplate<>(HttpStatus.OK, "로그인 성공", tokenDto);
     }
 
     @PostMapping("/login/short-token-exp") // 로그인
-    public RspTemplate<TokenDto> loginV2(@RequestBody @Valid final LoginRequest request) {
+    public ResponseTemplate<TokenDto> loginV2(@RequestBody @Valid final LoginRequest request) {
         TokenDto tokenDto = userService.login(request.getEmail(), request.getPassword());
 
-        return new RspTemplate<>(HttpStatus.OK, "로그인 성공", tokenDto);
+        return new ResponseTemplate<>(HttpStatus.OK, "로그인 성공", tokenDto);
     }
 
     // 로그아웃
     @PostMapping("/logout")
-    public RspTemplate<Void> logout(Principal principal) {
+    public ResponseTemplate<Void> logout(Principal principal) {
         // 액세스 토큰 검증은 필터에서 거치므로 바로 로그아웃 처리
         userService.logout(PrincipalUtil.toEmail(principal));
 
-        return new RspTemplate<>(HttpStatus.OK, "로그아웃 성공");
+        return new ResponseTemplate<>(HttpStatus.OK, "로그아웃 성공");
     }
 
     /**
      *   refresh 토큰을 이용, access 토큰을 재발급하는 메소드
      */
     @PostMapping(value = "/token/reissue")
-    public RspTemplate<TokenDto> accessToken(HttpServletRequest httpServletRequest){
+    public ResponseTemplate<TokenDto> accessToken(HttpServletRequest httpServletRequest){
 
         String authorizationHeader = httpServletRequest.getHeader("Authorization");
 
@@ -77,29 +77,29 @@ public class UserController {
         String refreshToken = authorizationHeader.split(" ")[1];
         TokenDto tokenDto = userService.reissueByRefreshToken(refreshToken);
 
-        return new RspTemplate<>(HttpStatus.OK, "토큰 재발급", tokenDto);
+        return new ResponseTemplate<>(HttpStatus.OK, "토큰 재발급", tokenDto);
     }
 
     @PostMapping("/myPage/password") // 비밀번호 변경
-    public RspTemplate<Void> changePassword(@RequestBody ChangePasswordRequest request
+    public ResponseTemplate<Void> changePassword(@RequestBody ChangePasswordRequest request
             , Principal principal) {
         String logInUserEmail = PrincipalUtil.toEmail(principal);
 
         userService.changePassword(logInUserEmail, request.getPassword(), request.getNewPassword());
 
-        return new RspTemplate<>(HttpStatus.OK, "비밀번호를 성공적으로 변경하였습니다.");
+        return new ResponseTemplate<>(HttpStatus.OK, "비밀번호를 성공적으로 변경하였습니다.");
     }
 
     @GetMapping("/schedule-userinfo") // 유저 이름, 번호 가져오기
-    public RspTemplate<List<UserScheduleResponse>> getUserInfoSchedule() {
+    public ResponseTemplate<List<UserScheduleResponse>> getUserInfoSchedule() {
         List<UserScheduleResponse> userResponses = scheduleService.getUserInfo();
-        return new RspTemplate<>(HttpStatus.OK, "유저의 이름과 번호를 성공적으로 불러왔습니다.", userResponses);
+        return new ResponseTemplate<>(HttpStatus.OK, "유저의 이름과 번호를 성공적으로 불러왔습니다.", userResponses);
     }
 
     @GetMapping("/todo-userinfo") // 투두 근로자 불러오기
-    public RspTemplate<List<TodoUserResponse>> getUserInfoTodo() {
+    public ResponseTemplate<List<TodoUserResponse>> getUserInfoTodo() {
         List<TodoUserResponse> nameResponse = todoService.getUserNameTodo();
-        return new RspTemplate<>(HttpStatus.OK, "유저의 이름을 모두 불러오는데 성공했습니다.", nameResponse);
+        return new ResponseTemplate<>(HttpStatus.OK, "유저의 이름을 모두 불러오는데 성공했습니다.", nameResponse);
     }
 
 }

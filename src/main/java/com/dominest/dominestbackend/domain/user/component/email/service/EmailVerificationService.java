@@ -3,7 +3,6 @@ package com.dominest.dominestbackend.domain.user.component.email.service;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -15,8 +14,6 @@ public class EmailVerificationService {
     private final Cache<String, String> codeExpirationCache; // <email, verification code>. thread-safe map.
     private final Cache<String, Boolean> emailVerificationStatusCache; // <email, verification status>. thread-safe map.
 
-
-    @Autowired
     public EmailVerificationService() {
         codeExpirationCache = Caffeine.newBuilder()
                 .expireAfterWrite(20, TimeUnit.MINUTES)
@@ -49,9 +46,5 @@ public class EmailVerificationService {
         }
 
         return isValid;
-    }
-
-    public boolean isEmailVerified(String email) {
-        return emailVerificationStatusCache.getIfPresent(email) != null;
     }
 }

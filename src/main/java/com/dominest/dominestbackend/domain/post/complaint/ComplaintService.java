@@ -1,7 +1,7 @@
 package com.dominest.dominestbackend.domain.post.complaint;
 
-import com.dominest.dominestbackend.api.post.complaint.dto.CreateComplaintDto;
-import com.dominest.dominestbackend.api.post.complaint.dto.UpdateComplaintDto;
+import com.dominest.dominestbackend.api.post.complaint.request.CreateComplaintRequest;
+import com.dominest.dominestbackend.api.post.complaint.request.UpdateComplaintRequest;
 import com.dominest.dominestbackend.domain.post.common.RecentPost;
 import com.dominest.dominestbackend.domain.post.common.RecentPostService;
 import com.dominest.dominestbackend.domain.post.component.category.Category;
@@ -18,8 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.List;
-
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
@@ -30,13 +28,13 @@ public class ComplaintService {
     private final RecentPostService recentPostService;
 
     @Transactional
-    public long create(CreateComplaintDto.Req reqDto, Long categoryId, String email) {
+    public long create(CreateComplaintRequest request, Long categoryId, String email) {
         // Complaint 연관 객체인 category, user 찾기
         User user = userService.getUserByEmail(email);
         // Complaint 연관 객체인 category 찾기
         Category category = categoryService.validateCategoryType(categoryId, Type.COMPLAINT);
 
-        Complaint complaint = reqDto.toEntity(user, category);
+        Complaint complaint = request.toEntity(user, category);
 
 
         Complaint compl = complaintRepository.save(complaint);
@@ -53,16 +51,16 @@ public class ComplaintService {
     }
 
     @Transactional
-    public long update(Long complaintId, UpdateComplaintDto.Req reqDto) {
+    public long update(Long complaintId, UpdateComplaintRequest request) {
         Complaint complaint = getById(complaintId);
 
         complaint.updateValues(
-                reqDto.getName()
-                , reqDto.getRoomNo()
-                , reqDto.getComplaintCause()
-                , reqDto.getComplaintResolution()
-                , reqDto.getProcessState()
-                , reqDto.getDate()
+                request.getName()
+                , request.getRoomNo()
+                , request.getComplaintCause()
+                , request.getComplaintResolution()
+                , request.getProcessState()
+                , request.getDate()
         );
         return complaint.getId();
     }

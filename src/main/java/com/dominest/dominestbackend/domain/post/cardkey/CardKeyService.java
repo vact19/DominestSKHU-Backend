@@ -1,7 +1,7 @@
 package com.dominest.dominestbackend.domain.post.cardkey;
 
-import com.dominest.dominestbackend.api.post.cardkey.dto.CreateCardKeyDto;
-import com.dominest.dominestbackend.api.post.cardkey.dto.UpdateCardKeyDto;
+import com.dominest.dominestbackend.api.post.cardkey.request.CreateCardKeyRequest;
+import com.dominest.dominestbackend.api.post.cardkey.request.UpdateCardKeyRequest;
 import com.dominest.dominestbackend.domain.post.common.RecentPost;
 import com.dominest.dominestbackend.domain.post.common.RecentPostService;
 import com.dominest.dominestbackend.domain.post.component.category.Category;
@@ -28,14 +28,14 @@ public class CardKeyService {
     private final RecentPostService recentPostService;
 
     @Transactional
-    public long create(CreateCardKeyDto.Req reqDto, Long categoryId, String email) {
+    public long create(CreateCardKeyRequest request, Long categoryId, String email) {
         // CardKey 연관 객체인 category, user 찾기
         User user = userService.getUserByEmail(email);
         // CardKey 연관 객체인 category 찾기
         Category category = categoryService.validateCategoryType(categoryId, Type.CARD_KEY);
 
         // CardKey 객체 생성 후 저장
-        CardKey cardKey = reqDto.toEntity(user, category);
+        CardKey cardKey = request.toEntity(user, category);
 
         CardKey key = cardKeyRepository.save(cardKey);
 
@@ -51,16 +51,16 @@ public class CardKeyService {
     }
 
     @Transactional
-    public long update(Long cardKeyId, UpdateCardKeyDto.Req reqDto) {
+    public long update(Long cardKeyId, UpdateCardKeyRequest request) {
         CardKey cardKey = getById(cardKeyId);
 
         cardKey.updateValues(
-                reqDto.getIssuedDate()
-                , reqDto.getRoomNo()
-                , reqDto.getName()
-                , reqDto.getDateOfBirth()
-                , reqDto.getReIssueCnt()
-                , reqDto.getEtc()
+                request.getIssuedDate()
+                , request.getRoomNo()
+                , request.getName()
+                , request.getDateOfBirth()
+                , request.getReIssueCnt()
+                , request.getEtc()
         );
         return cardKey.getId();
     }

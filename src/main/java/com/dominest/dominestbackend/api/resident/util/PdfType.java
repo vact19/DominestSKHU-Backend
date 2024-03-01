@@ -9,6 +9,7 @@ public enum PdfType {
     public static PdfType from(String pdfType){
         return PdfType.valueOf(pdfType.toUpperCase());
     }
+
     public FileService.FilePrefix toFilePrefix(){
         if (this.equals(ADMISSION)){
             return FileService.FilePrefix.RESIDENT_ADMISSION;
