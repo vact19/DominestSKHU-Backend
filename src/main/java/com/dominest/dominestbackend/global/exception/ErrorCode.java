@@ -29,9 +29,6 @@ public enum ErrorCode {
     NOT_VALID_TOKEN(401, "유효하지 않은 토큰입니다."),
     NO_ACCESS_USER(403, "권한이 없습니다."),
 
-    // 사용자
-    USER_NOT_FOUND(404, "해당 사용자가 존재하지 않습니다."),
-
     // 엑셀 업로드
     COLUMN_COUNT_MISMATCHED(400, "컬럼의 개수가 일치하지 않습니다."),
     INVALID_FILE_EXTENSION(400, "파일 확장자가 유효하지 않습니다."),
@@ -47,14 +44,7 @@ public enum ErrorCode {
     FOLDER_CANNOT_BE_DELETED(500, "재귀적으로 파일을 삭제하는 과정에서 오류가 발생했습니다."),
     FOLDER_CANNOT_BE_CREATED(500, "폴더를 생성하는 과정에서 오류가 발생했습니다."),
 
-    // 입사자
-    RESIDENT_NOT_FOUND(404, "해당 입사자가 존재하지 않습니다."),
-    ERROR_CATEGORY_CREATE(500, "카테고리 생성 중 오류가 발생했습니다."),
-    ERROR_UPDATE_CATEGORY(500, "카테고리 업데이트 중 오류가 발생했습니다."),
-    ERROR_DELETE_CATEGORY(500, "카테고리 삭제 중 오류가 발생했습니다."),
-
     // 카테고리
-    CATEGORY_NOT_FOUND(404, "해당 카테고리가 존재하지 않습니다."),
     CATEGORY_TYPE_MISMATCHED(400, "해당 카테고리의 타입이 일치하지 않습니다."),
     CATEGORY_ORDER_KEY_DUPLICATED(400, "카테고리의 orderKey가 중복됩니다."),
     CANNOT_DELETE_ASSOCIATED_POST(409, "해당 카테고리에 연관된 게시글이 존재합니다."),
@@ -63,35 +53,10 @@ public enum ErrorCode {
     TODO_NOT_FOUND(404, "해당 투두가 존재하지 않습니다."),
 
     // 스케줄
-    SCHEDULE_NOT_FOUND(404, "해당하는 스케줄이 존재하지 않습니다."),
-    DAY_NOT_FOUND(404, "해당 요일이 존재하지 않습니다."),
     USER_NOT_FOUND_IN_SCHEDULE(404, "해당 시간대에 저장된 유저가 존재하지 않습니다."),
 
-    // 게시글 공통
-    POST_NOT_FOUND(404, "해당 게시글이 존재하지 않습니다."),
-
-    // 즐겨찾기
-    FAVORITE_NOT_FOUND(404, "해당 즐겨찾기가 존재하지 않습니다."),
-
-    // 미수령 택배
-    UNDELIVERED_PARCEL_NOT_FOUND(404, "해당 관리물품이 존재하지 않습니다."),
-
-    // 민원내역
-    COMPLAINT_NOT_FOUND(404, "해당 민원이 존재하지 않습니다."),
-    CARD_KEY_NOT_FOUND(404, "카드키를 찾을 수 없습니다."),
-    ROOM_NOT_FOUND_BY_ROOM_CODE(404, "방 코드로 방을 찾을 수 없습니다.")
-    , CHECKED_ROOM_NOT_FOUND(404, "해당 방역점검 방이 존재하지 않습니다.")
-
-
-    // 캘린터
-    , CALENDAR_NOT_FOUND(404, "데이터가 존재하지 않습니다.")
-
     // 알림
-    ,NOTICE_NOT_FOUND(404, "해당 알림이 존재하지 않습니다.")
-    ,NOT_CORRECT_DAY(404, "요일 정보가 잘못되었습니다. 1(월요일)에서 7(일요일) 사이의 숫자를 입력해주세요.")
-
-    // 5XX
-    , INTERNAL_SERVER_ERROR(500, "서버 오류가 발생하였습니다.");
+    NOT_CORRECT_DAY(400, "요일 정보가 잘못되었습니다. 1(월요일)에서 7(일요일) 사이의 숫자를 입력해주세요.")
     ;
 
 
