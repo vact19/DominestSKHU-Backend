@@ -6,9 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface ImageTypeRepository extends JpaRepository<ImageType, Long> {
     @Query("SELECT i FROM ImageType i JOIN FETCH i.writer LEFT JOIN FETCH i.imageUrls WHERE i.id = :imageTypeId")
-    ImageType findByIdFetchWriterAndImageUrls(@Param("imageTypeId") Long imageTypeId);
+    Optional<ImageType> findByIdFetchWriterAndImageUrls(@Param("imageTypeId") Long imageTypeId);
 
     @Query(value = "SELECT i FROM ImageType i" +
             " WHERE i.category.id = :categoryId" +
@@ -19,7 +21,7 @@ public interface ImageTypeRepository extends JpaRepository<ImageType, Long> {
     @Query("SELECT i FROM ImageType i" +
             " LEFT JOIN FETCH i.imageUrls" +
             " WHERE i.id = :imageTypeId")
-    ImageType findByIdFetchImageUrls(@Param("imageTypeId") Long imageTypeId);
+    Optional<ImageType> findByIdFetchImageUrls(@Param("imageTypeId") Long imageTypeId);
 
     void deleteByCategoryId(Long categoryId);
 }

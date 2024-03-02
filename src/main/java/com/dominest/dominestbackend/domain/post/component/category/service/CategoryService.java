@@ -1,6 +1,7 @@
 package com.dominest.dominestbackend.domain.post.component.category.service;
 
 import com.dominest.dominestbackend.api.category.request.CategoryUpdateRequest;
+import com.dominest.dominestbackend.domain.common.Datasource;
 import com.dominest.dominestbackend.domain.post.cardkey.CardKeyRepository;
 import com.dominest.dominestbackend.domain.post.complaint.ComplaintRepository;
 import com.dominest.dominestbackend.domain.post.component.category.Category;
@@ -10,8 +11,8 @@ import com.dominest.dominestbackend.domain.post.image.ImageTypeRepository;
 import com.dominest.dominestbackend.domain.post.manual.ManualPostRepository;
 import com.dominest.dominestbackend.domain.post.undeliveredparcel.UndeliveredParcelPostRepository;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
-import com.dominest.dominestbackend.global.exception.exceptions.BusinessException;
-import com.dominest.dominestbackend.global.util.EntityUtil;
+import com.dominest.dominestbackend.global.exception.exceptions.domain.DomainException;
+import com.dominest.dominestbackend.global.exception.exceptions.external.common.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -33,7 +34,6 @@ public class CategoryService {
 
     @Transactional
     public Category create(String categoryName, Type categoryType, String explanation) {
-
         Category category = Category.builder()
                 .name(categoryName)
                 .type(categoryType)
@@ -44,7 +44,7 @@ public class CategoryService {
         try {
             return categoryRepository.save(category); // Identity 전략이므로 즉시 flush
         } catch (DataIntegrityViolationException e) {
-            throw new BusinessException("카테고리 저장 실패, name 중복 혹은 값의 누락을 확인해주세요", HttpStatus.BAD_REQUEST, e);
+            throw new DomainException("카테고리 저장 실패, name 중복 혹은 값의 누락을 확인해주세요", HttpStatus.BAD_REQUEST, e);
         }
     }
 
@@ -52,11 +52,12 @@ public class CategoryService {
      * @return 변경 요청이 들어온 카테고리의 개수
      */
     @Transactional
-    public int update(CategoryUpdateRequest reqDto) {
+    public int update(CategoryUpdateRequest request) {
         // forEach, update
-        reqDto.getCategories().forEach(
+        request.getCategories().forEach(
                 categoryDto -> {
-            Category category = EntityUtil.mustNotNull(categoryRepository.findById(categoryDto.getId()), ErrorCode.CATEGORY_NOT_FOUND);
+            Category category = categoryRepository.findById(categoryDto.getId())
+                    .orElseThrow(() -> new ResourceNotFoundException(Datasource.CATEGORY, categoryDto.getId()));
             category.updateValues(categoryDto.getCategoryName(), categoryDto.getExplanation(), categoryDto.getOrderKey());
             }
         );
@@ -69,15 +70,16 @@ public class CategoryService {
             // If this set already contains the element, the call leaves the set unchanged and returns false
             // nullable false. orderKeys에 null 없음
             if (!set.add(key)) {
-                throw new BusinessException(ErrorCode.CATEGORY_ORDER_KEY_DUPLICATED);
+                throw new DomainException(ErrorCode.CATEGORY_ORDER_KEY_DUPLICATED);
             }
         });
 
-        return reqDto.getCategories().size();
+        return request.getCategories().size();
     }
 
-    public Category getById(Long categoryId) {
-        return EntityUtil.mustNotNull(categoryRepository.findById(categoryId), ErrorCode.CATEGORY_NOT_FOUND);
+    public Category getById(Long id) {
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(Datasource.CATEGORY, id));
     }
 
     public List<Long> getIdAllByUserEmail(String email) {
@@ -86,11 +88,11 @@ public class CategoryService {
     }
 
     @Transactional
-    public void deleteById(Long categoryId) {
-        Category category = EntityUtil.mustNotNull(categoryRepository.findById(categoryId), ErrorCode.CATEGORY_NOT_FOUND);
+    public void deleteById(Long id) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(Datasource.CATEGORY, id));
 
-        deletePosts(categoryId, category.getType()); // 카테고리를 참조하는 연관 게시글 함께 삭제
-
+        deletePosts(id, category.getType()); // 카테고리를 참조하는 연관 게시글 함께 삭제
         categoryRepository.delete(category);
     }
 
@@ -106,7 +108,7 @@ public class CategoryService {
         } else if(Type.MANUAL.equals(type)) {
             manualPostRepository.deleteByCategoryId(categoryId);
         }
-        throw new BusinessException(ErrorCode.CANNOT_DELETE_ASSOCIATED_POST);
+        throw new DomainException(ErrorCode.CANNOT_DELETE_ASSOCIATED_POST);
     }
 
     public Category validateCategoryType(Long categoryId, Type type) {

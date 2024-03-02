@@ -2,6 +2,7 @@ package com.dominest.dominestbackend.domain.post.complaint;
 
 import com.dominest.dominestbackend.api.post.complaint.request.CreateComplaintRequest;
 import com.dominest.dominestbackend.api.post.complaint.request.UpdateComplaintRequest;
+import com.dominest.dominestbackend.domain.common.Datasource;
 import com.dominest.dominestbackend.domain.post.common.RecentPost;
 import com.dominest.dominestbackend.domain.post.common.RecentPostService;
 import com.dominest.dominestbackend.domain.post.component.category.Category;
@@ -9,8 +10,7 @@ import com.dominest.dominestbackend.domain.post.component.category.component.Typ
 import com.dominest.dominestbackend.domain.post.component.category.service.CategoryService;
 import com.dominest.dominestbackend.domain.user.User;
 import com.dominest.dominestbackend.domain.user.service.UserService;
-import com.dominest.dominestbackend.global.exception.ErrorCode;
-import com.dominest.dominestbackend.global.util.EntityUtil;
+import com.dominest.dominestbackend.global.exception.exceptions.external.common.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -66,7 +66,8 @@ public class ComplaintService {
     }
 
     public Complaint getById(Long id) {
-        return EntityUtil.mustNotNull(complaintRepository.findById(id), ErrorCode.COMPLAINT_NOT_FOUND);
+        return complaintRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(Datasource.COMPLAINT, id));
     }
 
     @Transactional

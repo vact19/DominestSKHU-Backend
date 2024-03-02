@@ -2,10 +2,10 @@ package com.dominest.dominestbackend.domain.post.undeliveredparcel.component;
 
 import com.dominest.dominestbackend.api.post.undeliveredparcel.request.CreateUndelivParcelRequest;
 import com.dominest.dominestbackend.api.post.undeliveredparcel.request.UpdateUndelivParcelDtoRequest;
+import com.dominest.dominestbackend.domain.common.Datasource;
 import com.dominest.dominestbackend.domain.post.undeliveredparcel.UndeliveredParcelPost;
 import com.dominest.dominestbackend.domain.post.undeliveredparcel.UndeliveredParcelPostService;
-import com.dominest.dominestbackend.global.exception.ErrorCode;
-import com.dominest.dominestbackend.global.util.EntityUtil;
+import com.dominest.dominestbackend.global.exception.exceptions.external.common.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,9 +51,9 @@ public class UndeliveredParcelService {
         return undelivParcel.getId();
     }
 
-    public UndeliveredParcel getById(Long undelivParcelId) {
-        return EntityUtil.mustNotNull(undeliveredParcelRepository.findById(undelivParcelId)
-                , ErrorCode.UNDELIVERED_PARCEL_NOT_FOUND);
+    public UndeliveredParcel getById(Long id) {
+        return undeliveredParcelRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(Datasource.UNDELIVERED_PARCEL, id));
     }
 
     @Transactional

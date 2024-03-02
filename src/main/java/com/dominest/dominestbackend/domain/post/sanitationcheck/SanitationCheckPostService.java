@@ -1,5 +1,6 @@
 package com.dominest.dominestbackend.domain.post.sanitationcheck;
 
+import com.dominest.dominestbackend.domain.common.Datasource;
 import com.dominest.dominestbackend.domain.post.common.RecentPost;
 import com.dominest.dominestbackend.domain.post.common.RecentPostService;
 import com.dominest.dominestbackend.domain.post.component.category.Category;
@@ -16,8 +17,7 @@ import com.dominest.dominestbackend.domain.room.Room;
 import com.dominest.dominestbackend.domain.room.RoomRepository;
 import com.dominest.dominestbackend.domain.user.User;
 import com.dominest.dominestbackend.domain.user.service.UserService;
-import com.dominest.dominestbackend.global.exception.ErrorCode;
-import com.dominest.dominestbackend.global.util.EntityUtil;
+import com.dominest.dominestbackend.global.exception.exceptions.external.common.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -44,7 +44,8 @@ public class SanitationCheckPostService {
     private final RecentPostService recentPostService;
 
     public SanitationCheckPost getById(Long id) {
-        return EntityUtil.mustNotNull(sanitationCheckPostRepository.findById(id), ErrorCode.POST_NOT_FOUND);
+        return sanitationCheckPostRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(Datasource.SANITATION_CHECK_POST, id));
     }
     /**
      * 방역점검 게시글 생성한다.
@@ -134,8 +135,9 @@ public class SanitationCheckPostService {
         return sanitationCheckPostRepository.findAllByCategory(categoryId, pageable);
     }
 
-    public SanitationCheckPost getByIdFetchCategory(Long postId) {
-        return EntityUtil.mustNotNull(sanitationCheckPostRepository.findByIdFetchCategory(postId), ErrorCode.POST_NOT_FOUND);
+    public SanitationCheckPost getByIdFetchCategory(Long id) {
+        return sanitationCheckPostRepository.findByIdFetchCategory(id)
+                .orElseThrow(() -> new ResourceNotFoundException(Datasource.SANITATION_CHECK_POST, id));
     }
 
 }

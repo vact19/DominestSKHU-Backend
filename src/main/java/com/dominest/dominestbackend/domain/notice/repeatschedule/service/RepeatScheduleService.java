@@ -9,7 +9,7 @@ import com.dominest.dominestbackend.domain.notice.repeatnotice.repository.Repeat
 import com.dominest.dominestbackend.domain.notice.repeatschedule.RepeatSchedule;
 import com.dominest.dominestbackend.domain.notice.repeatschedule.repository.RepeatScheduleRepository;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
-import com.dominest.dominestbackend.global.exception.exceptions.BusinessException;
+import com.dominest.dominestbackend.global.exception.exceptions.domain.DomainException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,7 +42,7 @@ public class RepeatScheduleService {
         return repeatNoticeIds.stream()
                 .map(repeatNoticeRepository::findById)
                 .map(optionalRepeatNotice -> optionalRepeatNotice
-                        .orElseThrow(() -> new BusinessException(ErrorCode.NOTICE_NOT_FOUND)))
+                        .orElseThrow(() -> new DomainException(ErrorCode.NOTICE_NOT_FOUND)))
                 .collect(Collectors.toList());
     }
 
@@ -98,7 +98,7 @@ public class RepeatScheduleService {
 
     public RepeatScheduleResponse getRepeatScheduleById(Long id) { // 해당 반복일정 글 상세조회
         RepeatSchedule repeatSchedule = repeatScheduleRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.NOTICE_NOT_FOUND));
+                .orElseThrow(() -> new DomainException(ErrorCode.NOTICE_NOT_FOUND));
 
         List<RepeatNotice> repeatNotices = repeatNoticeRepository.findAllByRepeatSchedule(repeatSchedule);
 

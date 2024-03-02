@@ -13,7 +13,7 @@ import com.dominest.dominestbackend.domain.resident.Resident;
 import com.dominest.dominestbackend.domain.resident.ResidentService;
 import com.dominest.dominestbackend.domain.resident.component.ResidenceSemester;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
-import com.dominest.dominestbackend.global.exception.exceptions.file.FileIOException;
+import com.dominest.dominestbackend.global.exception.exceptions.external.file.FileIOException;
 import com.dominest.dominestbackend.global.util.ExcelUtil;
 import com.dominest.dominestbackend.global.util.FileService;
 import lombok.RequiredArgsConstructor;

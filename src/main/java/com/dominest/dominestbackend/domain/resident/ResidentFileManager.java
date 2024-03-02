@@ -1,6 +1,6 @@
 package com.dominest.dominestbackend.domain.resident;
 
-import com.dominest.dominestbackend.global.exception.exceptions.BusinessException;
+import com.dominest.dominestbackend.global.exception.exceptions.domain.DomainException;
 import com.dominest.dominestbackend.global.util.FileService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class ResidentFileManager {
         } else if (filePrefix.equals(RESIDENT_DEPARTURE)) {
             resident.setDeparturePdfFileName(uploadedFilename);
         } else { // 입사신청서, 퇴사신청서가 아닌 다른 FilePrefix 값일 때
-            throw new BusinessException("잘못된 FilePrefix 값입니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new DomainException("잘못된 FilePrefix 값입니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

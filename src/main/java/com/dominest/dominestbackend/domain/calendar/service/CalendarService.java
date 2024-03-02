@@ -4,8 +4,8 @@ import com.dominest.dominestbackend.api.calendar.request.CalendarSaveRequest;
 import com.dominest.dominestbackend.api.calendar.response.CalendarMonthResponse;
 import com.dominest.dominestbackend.domain.calendar.Calendar;
 import com.dominest.dominestbackend.domain.calendar.repository.CalendarRepository;
-import com.dominest.dominestbackend.global.exception.ErrorCode;
-import com.dominest.dominestbackend.global.exception.exceptions.BusinessException;
+import com.dominest.dominestbackend.domain.common.Datasource;
+import com.dominest.dominestbackend.global.exception.exceptions.external.common.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,16 +52,12 @@ public class CalendarService {
         Set<LocalDate> eventDates = monthEvents.stream().map(Calendar::getDate).collect(Collectors.toSet());
 
         // 1일 ~ 해당 월의 마지막 날까지 스트림 생성 -> CalendarMonthResponse로 변환
-        List<CalendarMonthResponse> events = IntStream.rangeClosed(1, yearMonth.lengthOfMonth())
+        // 해당 월에 대한 일정이 없을 때는 빈 리스트 반환하도록 에러 처리 X
+        return IntStream.rangeClosed(1, yearMonth.lengthOfMonth())
                 .mapToObj(day -> LocalDate.of(yearMonth.getYear(), yearMonth.getMonthValue(), day))
                 .map(date -> new CalendarMonthResponse(date.getDayOfMonth(), eventDates.contains(date)))
                 .collect(Collectors.toList());
-
-        return events;
-
-        // 해당 월에 대한 일정이 없을 때는 빈 리스트 반환하도록 에러 처리 X
     }
-
 
     @Transactional
     public void deleteEventsByDate(String dateString) { // 해당 날짜에 대한 일정 삭제
@@ -70,7 +66,7 @@ public class CalendarService {
 
         // 해당 날짜의 일정이 없다면
         if(events.isEmpty()) {
-            throw new BusinessException(ErrorCode.CALENDAR_NOT_FOUND);
+            throw new ResourceNotFoundException(Datasource.CALENDAR, "날짜", dateString);
         }
 
         calendarRepository.deleteByDate(date);

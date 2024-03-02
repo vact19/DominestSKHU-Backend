@@ -21,7 +21,8 @@ public enum Datasource {
     , UNDELIVERED_PARCEL("장기 미수령 택배")
     , MANUAL_POST("공지사항")
     , RESIDENT("입사자")
-    , SCHEDULE("일정")
+    , SCHEDULE("근무시간표")
+    , CALENDAR("일정")
     , TODO("할 일")
 
     ;

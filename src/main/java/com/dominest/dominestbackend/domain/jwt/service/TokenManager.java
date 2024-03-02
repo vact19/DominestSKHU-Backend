@@ -5,7 +5,7 @@ import com.dominest.dominestbackend.domain.jwt.constant.AuthScheme;
 import com.dominest.dominestbackend.domain.jwt.constant.TokenType;
 import com.dominest.dominestbackend.domain.jwt.dto.TokenDto;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
-import com.dominest.dominestbackend.global.exception.exceptions.auth.JwtAuthException;
+import com.dominest.dominestbackend.global.exception.exceptions.external.auth.JwtAuthException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

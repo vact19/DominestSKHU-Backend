@@ -11,7 +11,7 @@ import com.dominest.dominestbackend.domain.post.component.category.service.Categ
 import com.dominest.dominestbackend.domain.post.manual.ManualPost;
 import com.dominest.dominestbackend.domain.post.manual.ManualPostService;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
-import com.dominest.dominestbackend.global.exception.exceptions.file.FileIOException;
+import com.dominest.dominestbackend.global.exception.exceptions.external.file.FileIOException;
 import com.dominest.dominestbackend.global.util.FileService;
 import com.dominest.dominestbackend.global.util.PageableUtil;
 import com.dominest.dominestbackend.global.util.PrincipalUtil;

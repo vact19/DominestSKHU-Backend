@@ -1,9 +1,9 @@
 package com.dominest.dominestbackend.domain.post.sanitationcheck.floor.checkedroom;
 
 import com.dominest.dominestbackend.api.post.sanitationcheck.request.UpdateCheckedRoomRequest;
-import com.dominest.dominestbackend.global.exception.ErrorCode;
-import com.dominest.dominestbackend.global.exception.exceptions.BusinessException;
-import com.dominest.dominestbackend.global.util.EntityUtil;
+import com.dominest.dominestbackend.domain.common.Datasource;
+import com.dominest.dominestbackend.global.exception.exceptions.domain.DomainException;
+import com.dominest.dominestbackend.global.exception.exceptions.external.common.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -23,13 +23,14 @@ public class CheckedRoomService {
         try {
             return checkedRoomRepository.saveAll(checkedRooms);
         } catch (DataIntegrityViolationException e) {
-            throw new BusinessException("CheckedRoom 저장 실패, 중복 혹은 값의 누락을 확인해주세요"
+            throw new DomainException("CheckedRoom 저장 실패, 중복 혹은 값의 누락을 확인해주세요"
                     , HttpStatus.BAD_REQUEST, e);
         }
     }
 
     public CheckedRoom getById(Long id) {
-        return EntityUtil.mustNotNull(checkedRoomRepository.findById(id), ErrorCode.CHECKED_ROOM_NOT_FOUND);
+        return checkedRoomRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(Datasource.CHECKED_ROOM, id));
     }
 
     public List<CheckedRoom> getAllByFloorId(Long floorId) {

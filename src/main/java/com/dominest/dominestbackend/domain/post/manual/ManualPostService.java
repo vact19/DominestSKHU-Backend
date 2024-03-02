@@ -2,13 +2,13 @@ package com.dominest.dominestbackend.domain.post.manual;
 
 import com.dominest.dominestbackend.api.post.manual.dto.CreateManualPostDto;
 import com.dominest.dominestbackend.api.post.manual.dto.UpdateManualPostDto;
+import com.dominest.dominestbackend.domain.common.Datasource;
 import com.dominest.dominestbackend.domain.post.component.category.Category;
 import com.dominest.dominestbackend.domain.post.component.category.component.Type;
 import com.dominest.dominestbackend.domain.post.component.category.service.CategoryService;
 import com.dominest.dominestbackend.domain.user.User;
 import com.dominest.dominestbackend.domain.user.service.UserService;
-import com.dominest.dominestbackend.global.exception.ErrorCode;
-import com.dominest.dominestbackend.global.util.EntityUtil;
+import com.dominest.dominestbackend.global.exception.exceptions.external.common.ResourceNotFoundException;
 import com.dominest.dominestbackend.global.util.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

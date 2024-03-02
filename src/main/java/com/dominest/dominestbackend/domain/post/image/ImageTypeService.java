@@ -1,6 +1,7 @@
 package com.dominest.dominestbackend.domain.post.image;
 
 import com.dominest.dominestbackend.api.post.image.request.SaveImageTypeRequest;
+import com.dominest.dominestbackend.domain.common.Datasource;
 import com.dominest.dominestbackend.domain.post.common.RecentPost;
 import com.dominest.dominestbackend.domain.post.common.RecentPostService;
 import com.dominest.dominestbackend.domain.post.component.category.Category;
@@ -8,8 +9,7 @@ import com.dominest.dominestbackend.domain.post.component.category.component.Typ
 import com.dominest.dominestbackend.domain.post.component.category.service.CategoryService;
 import com.dominest.dominestbackend.domain.user.User;
 import com.dominest.dominestbackend.domain.user.service.UserService;
-import com.dominest.dominestbackend.global.exception.ErrorCode;
-import com.dominest.dominestbackend.global.util.EntityUtil;
+import com.dominest.dominestbackend.global.exception.exceptions.external.common.ResourceNotFoundException;
 import com.dominest.dominestbackend.global.util.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -55,7 +55,8 @@ public class ImageTypeService {
     }
 
     public ImageType getById(Long imageTypeId) {
-        return EntityUtil.mustNotNull(imageTypeRepository.findByIdFetchWriterAndImageUrls(imageTypeId), ErrorCode.POST_NOT_FOUND);
+        return imageTypeRepository.findByIdFetchWriterAndImageUrls(imageTypeId)
+                .orElseThrow(() -> new ResourceNotFoundException(Datasource.IMAGE_TYPE, imageTypeId));
     }
 
     public Page<ImageType> getPage(Long categoryId, Pageable pageable) {
@@ -63,8 +64,9 @@ public class ImageTypeService {
     }
 
     @Transactional
-    public long update(SaveImageTypeRequest request, Long imageTypeId) {
-        ImageType imageType = EntityUtil.mustNotNull(imageTypeRepository.findById(imageTypeId), ErrorCode.POST_NOT_FOUND);
+    public long update(SaveImageTypeRequest request, Long id) {
+        ImageType imageType = imageTypeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(Datasource.IMAGE_TYPE, id));
 
         List<String> savedImgUrls = fileService.save(FileService.FilePrefix.POST_IMAGE_TYPE, request.getPostImages());
         imageType.setImageUrls(savedImgUrls);
@@ -73,9 +75,9 @@ public class ImageTypeService {
 
     @Transactional
     public ImageType deleteById(Long imageTypeId) {
-        ImageType imageType = EntityUtil.mustNotNull(imageTypeRepository.findByIdFetchImageUrls(imageTypeId), ErrorCode.POST_NOT_FOUND);
+        ImageType imageType = imageTypeRepository.findByIdFetchImageUrls(imageTypeId)
+                        .orElseThrow(() -> new ResourceNotFoundException(Datasource.IMAGE_TYPE, imageTypeId));
         imageTypeRepository.delete(imageType);
-
         return imageType;
     }
 }

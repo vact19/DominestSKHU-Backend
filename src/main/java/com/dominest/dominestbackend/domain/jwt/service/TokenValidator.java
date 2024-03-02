@@ -3,7 +3,7 @@ package com.dominest.dominestbackend.domain.jwt.service;
 
 import com.dominest.dominestbackend.domain.jwt.constant.AuthScheme;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
-import com.dominest.dominestbackend.global.exception.exceptions.auth.JwtAuthException;
+import com.dominest.dominestbackend.global.exception.exceptions.external.auth.JwtAuthException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;

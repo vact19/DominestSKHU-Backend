@@ -10,7 +10,7 @@ import com.dominest.dominestbackend.domain.schedule.repository.ScheduleRepositor
 import com.dominest.dominestbackend.domain.user.User;
 import com.dominest.dominestbackend.domain.user.repository.UserRepository;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
-import com.dominest.dominestbackend.global.exception.exceptions.BusinessException;
+import com.dominest.dominestbackend.global.exception.exceptions.domain.DomainException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -107,7 +107,7 @@ public class ScheduleService {
         // 요일과 시간대로 스케줄 조회
         Optional<Schedule> optionalSchedule = scheduleRepository.findByDayOfWeekAndTimeSlot(dayOfWeek, Schedule.TimeSlot.fromString(timeSlot));
         if (optionalSchedule.isEmpty()) {  // 결과가 없다면
-            throw new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND);
+            throw new DomainException(ErrorCode.SCHEDULE_NOT_FOUND);
         }
 
         Schedule schedule = optionalSchedule.get();
@@ -115,7 +115,7 @@ public class ScheduleService {
         boolean removed = schedule.getUsernames().remove(username); // 스케줄에서 사용자 제거
 
         if (!removed) {  // 해당 사용자가 스케줄에 존재하지 않는다면
-            throw new BusinessException(ErrorCode.USER_NOT_FOUND_IN_SCHEDULE);
+            throw new DomainException(ErrorCode.USER_NOT_FOUND_IN_SCHEDULE);
         }
     }
 

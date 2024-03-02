@@ -3,22 +3,22 @@ package com.dominest.dominestbackend.domain.user.service;
 
 import com.dominest.dominestbackend.api.user.request.JoinRequest;
 import com.dominest.dominestbackend.api.user.response.JoinResponse;
+import com.dominest.dominestbackend.domain.common.Datasource;
 import com.dominest.dominestbackend.domain.jwt.dto.TokenDto;
 import com.dominest.dominestbackend.domain.jwt.service.TokenManager;
 import com.dominest.dominestbackend.domain.user.User;
 import com.dominest.dominestbackend.domain.user.component.Role;
 import com.dominest.dominestbackend.domain.user.repository.UserRepository;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
-import com.dominest.dominestbackend.global.exception.exceptions.BusinessException;
-import com.dominest.dominestbackend.global.util.EntityUtil;
+import com.dominest.dominestbackend.global.exception.exceptions.domain.DomainException;
+import com.dominest.dominestbackend.global.exception.exceptions.external.common.ResourceNotFoundException;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.Optional;
-
 
 @Service
 @RequiredArgsConstructor
@@ -48,11 +48,10 @@ public class UserService {
     @Transactional
     public TokenDto login(String email, String rawPassword) {
         // loadUserByUsername() 을 사용하지 않는다.
-        Optional<User> optionalUser = userRepository.findByEmail(email);
-        User user = EntityUtil.mustNotNull(optionalUser, ErrorCode.USER_NOT_FOUND);
+        User user = getUserByEmail(email);
 
         if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
-            throw new BusinessException(ErrorCode.MISMATCHED_SIGNIN_INFO);
+            throw new DomainException(ErrorCode.MISMATCHED_SIGNIN_INFO);
         }
         // audience 는 email + ":" + name 으로 구성
         String audience = user.getEmail() + ":" + user.getName();
@@ -70,11 +69,10 @@ public class UserService {
     // 테스트용 14일 유효기간 토큰 발급
     public TokenDto loginTemp(String email, String rawPassword) {
         // loadUserByUsername() 을 사용하지 않는다.
-        Optional<User> optionalUser = userRepository.findByEmail(email);
-        User user = EntityUtil.mustNotNull(optionalUser, ErrorCode.USER_NOT_FOUND);
+        User user = getUserByEmail(email);
 
         if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
-            throw new BusinessException(ErrorCode.MISMATCHED_SIGNIN_INFO);
+            throw new DomainException(ErrorCode.MISMATCHED_SIGNIN_INFO);
         }
         // audience 는 email + ":" + name 으로 구성
         String audience = user.getEmail() + ":" + user.getName();
@@ -106,33 +104,34 @@ public class UserService {
     }
 
     private User findByRefreshToken(String refreshToken) {
-        return EntityUtil.mustNotNull(userRepository.findByRefreshToken(refreshToken), ErrorCode.REFRESH_TOKEN_NOT_FOUND);
+        return userRepository.findByRefreshToken(refreshToken)
+                .orElseThrow(() -> new ResourceNotFoundException(Datasource.USER
+                        , "refreshToken", refreshToken));
     }
 
     public boolean validateUserPassword(String currentPassword, String loggedInUserPassword) {
         return passwordEncoder.matches(currentPassword, loggedInUserPassword);
     }
 
-
     public User getUserByEmail(String email) {
-        return EntityUtil.mustNotNull(userRepository.findByEmail(email), ErrorCode.USER_NOT_FOUND);
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException(Datasource.USER, "email", email));
     }
 
     @Transactional
     public void logout(String email) {
-        Optional<User> optionalUser = userRepository.findByEmail(email);
-        User user = EntityUtil.mustNotNull(optionalUser, ErrorCode.USER_NOT_FOUND);
+        User user = getUserByEmail(email);
         user.logout();
     }
 
     public void changePassword(String email, String oldPassword, String newPassword) {
-        User user = EntityUtil.mustNotNull(userRepository.findByEmail(email), ErrorCode.USER_NOT_FOUND);
+        User user = getUserByEmail(email);
 
         if (validateUserPassword(oldPassword, user.getPassword())) {
             user.changePassword(passwordEncoder.encode(newPassword));
             userRepository.save(user);
         } else {
-            throw new BusinessException(ErrorCode.EMAIL_VERIFICATION_CODE_MISMATCHED);
+            throw new DomainException(ErrorCode.EMAIL_VERIFICATION_CODE_MISMATCHED);
         }
     }
 }

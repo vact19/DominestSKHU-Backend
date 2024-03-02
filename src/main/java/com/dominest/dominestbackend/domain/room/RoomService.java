@@ -1,10 +1,8 @@
 package com.dominest.dominestbackend.domain.room;
 
-import com.dominest.dominestbackend.domain.common.DomainName;
-import com.dominest.dominestbackend.global.exception.exceptions.domain.EntityNotFoundException;
-import com.dominest.dominestbackend.global.util.EntityUtil;
+import com.dominest.dominestbackend.domain.common.Datasource;
+import com.dominest.dominestbackend.global.exception.exceptions.external.common.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,13 +13,12 @@ public class RoomService {
     private final RoomRepository roomRepository;
 
     public Room getByAssignedRoom(String assignedRoom) {
-        return EntityUtil.mustNotNull(
-                roomRepository.findByAssignedRoom(assignedRoom)
-                , String.format("방 코드 -> %s <- 로 방을 찾을 수 없습니다", assignedRoom), HttpStatus.NOT_FOUND);
+        return roomRepository.findByAssignedRoom(assignedRoom)
+                .orElseThrow(() -> new ResourceNotFoundException(Datasource.ROOM, "방 코드", assignedRoom));
     }
 
     public Room getById(long id) {
         return roomRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(DomainName.ROOM, id, HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(Datasource.ROOM, id));
     }
 }

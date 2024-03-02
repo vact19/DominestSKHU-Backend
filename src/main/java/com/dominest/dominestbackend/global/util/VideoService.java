@@ -1,7 +1,7 @@
 package com.dominest.dominestbackend.global.util;
 
 import com.dominest.dominestbackend.global.exception.ErrorCode;
-import com.dominest.dominestbackend.global.exception.exceptions.file.FileIOException;
+import com.dominest.dominestbackend.global.exception.exceptions.external.file.FileIOException;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;

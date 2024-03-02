@@ -1,5 +1,6 @@
 package com.dominest.dominestbackend.domain.post.undeliveredparcel;
 
+import com.dominest.dominestbackend.domain.common.Datasource;
 import com.dominest.dominestbackend.domain.post.common.RecentPost;
 import com.dominest.dominestbackend.domain.post.common.RecentPostService;
 import com.dominest.dominestbackend.domain.post.component.category.Category;
@@ -7,8 +8,7 @@ import com.dominest.dominestbackend.domain.post.component.category.component.Typ
 import com.dominest.dominestbackend.domain.post.component.category.service.CategoryService;
 import com.dominest.dominestbackend.domain.user.User;
 import com.dominest.dominestbackend.domain.user.service.UserService;
-import com.dominest.dominestbackend.global.exception.ErrorCode;
-import com.dominest.dominestbackend.global.util.EntityUtil;
+import com.dominest.dominestbackend.global.exception.exceptions.external.common.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -60,12 +60,14 @@ public class UndeliveredParcelPostService {
         post.setTitle(title);
     }
 
-    public UndeliveredParcelPost getById(Long undelivParcelPostId) {
-        return EntityUtil.mustNotNull(undelivParcelPostRepository.findById(undelivParcelPostId), ErrorCode.POST_NOT_FOUND);
+    public UndeliveredParcelPost getById(Long id) {
+        return undelivParcelPostRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(Datasource.UNDELIVERED_PARCEL_POST, id));
     }
 
-    public UndeliveredParcelPost getByIdFetchParcels(Long undelivParcelPostId) {
-        return EntityUtil.mustNotNull(undelivParcelPostRepository.findByIdFetchParcels(undelivParcelPostId), ErrorCode.POST_NOT_FOUND);
+    public UndeliveredParcelPost getByIdFetchParcels(Long id) {
+        return undelivParcelPostRepository.findByIdFetchParcels(id)
+                .orElseThrow(() -> new ResourceNotFoundException(Datasource.UNDELIVERED_PARCEL_POST, id));
     }
 
     @Transactional

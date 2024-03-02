@@ -2,9 +2,8 @@ package com.dominest.dominestbackend.global.exception.handler;
 
 import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.dto.ErrorResponseDto;
-import com.dominest.dominestbackend.global.exception.exceptions.AppServiceException;
-import com.dominest.dominestbackend.global.exception.exceptions.BusinessException;
-import com.dominest.dominestbackend.global.util.LoggingUtil;
+import com.dominest.dominestbackend.global.exception.exceptions.external.ExternalServiceException;
+import com.dominest.dominestbackend.global.exception.exceptions.domain.DomainException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -70,7 +69,7 @@ public class GlobalExceptionHandler {
 
         StringBuilder sb = new StringBuilder();
         Map<String, String> errorInfoMap = new HashMap<>();
-        for (ConstraintViolation constraintViolation : constraintViolations) {
+        for (ConstraintViolation<?> constraintViolation : constraintViolations) {
             String errorMsg = sb
                     .append(constraintViolation.getMessage())
                     .append(". 입력값: ")
@@ -98,16 +97,16 @@ public class GlobalExceptionHandler {
         return createErrorResponse(ErrorCode.HTTP_MESSAGE_NOT_READABLE);
     }
 
-    // BusinessException 을 상속한 다른 Custom Exception 에도 적용된다.
-    @ExceptionHandler({BusinessException.class})
-    public ResponseEntity<ErrorResponseDto<String>> handleBusinessException(BusinessException e, HttpServletRequest request){
+    // DomainException 을 상속한 다른 Custom Exception 에도 적용된다.
+    @ExceptionHandler({DomainException.class})
+    public ResponseEntity<ErrorResponseDto<String>> handleBusinessException(DomainException e, HttpServletRequest request){
         printLog(e, request);
         return createErrorResponse(e.getHttpStatus(), e.getMessage());
     }
 
     // 비즈니스 로직이 아닌 애플리케이션 서비스 로직상 예외
-    @ExceptionHandler({AppServiceException.class})
-    public ResponseEntity<ErrorResponseDto<String>> handleAppServiceException(AppServiceException e, HttpServletRequest request){
+    @ExceptionHandler({ExternalServiceException.class})
+    public ResponseEntity<ErrorResponseDto<String>> handleAppServiceException(ExternalServiceException e, HttpServletRequest request){
         printLog(e, request);
         return createErrorResponse(e.getHttpStatus(), e.getMessage());
     }

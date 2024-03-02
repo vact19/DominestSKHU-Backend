@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface UndeliveredParcelPostRepository extends JpaRepository<UndeliveredParcelPost, Long> {
 
     @Query(value = "SELECT p FROM UndeliveredParcelPost p" +
@@ -16,7 +18,7 @@ public interface UndeliveredParcelPostRepository extends JpaRepository<Undeliver
     @Query("SELECT p FROM UndeliveredParcelPost p" +
             " LEFT JOIN FETCH p.undelivParcels" +
             " WHERE p.id = :postId")
-    UndeliveredParcelPost findByIdFetchParcels(@Param("postId") Long undelivParcelPostId);
+    Optional<UndeliveredParcelPost> findByIdFetchParcels(@Param("postId") Long undelivParcelPostId);
 
     void deleteByCategoryId(Long categoryId);
 }

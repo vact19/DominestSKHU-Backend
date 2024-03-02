@@ -3,7 +3,7 @@ package com.dominest.dominestbackend.domain.user.component.email.service;
 import com.dominest.dominestbackend.domain.user.User;
 import com.dominest.dominestbackend.domain.user.repository.UserRepository;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
-import com.dominest.dominestbackend.global.exception.exceptions.AppServiceException;
+import com.dominest.dominestbackend.global.exception.exceptions.external.ExternalServiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -70,7 +70,7 @@ public class EmailService {
             message.setFrom(setFrom);
             message.setText(n,"utf-8", "html");
         } catch (MessagingException e) {
-            throw new AppServiceException(ErrorCode.EMAIL_CANNOT_BE_CREATED, e);
+            throw new ExternalServiceException(ErrorCode.EMAIL_CANNOT_BE_CREATED, e);
         }
         return message;
     }
@@ -175,7 +175,7 @@ public class EmailService {
             message.setFrom(setFrom);
             message.setText(n, "utf-8", "html");
         } catch (MessagingException e) {
-            throw new AppServiceException(ErrorCode.EMAIL_CANNOT_BE_CREATED, e);
+            throw new ExternalServiceException(ErrorCode.EMAIL_CANNOT_BE_CREATED, e);
         }
 
         return message;
@@ -187,7 +187,7 @@ public class EmailService {
         try{
             emailSender.send((message));
         } catch(MailException e){
-            throw new AppServiceException(ErrorCode.EMAIL_CANNOT_BE_SENT, e);
+            throw new ExternalServiceException(ErrorCode.EMAIL_CANNOT_BE_SENT, e);
         }
     }
 
@@ -196,7 +196,7 @@ public class EmailService {
         try{
             emailSender.send((message));
         } catch(MailException e){
-            throw new AppServiceException(ErrorCode.EMAIL_CANNOT_BE_SENT, e);
+            throw new ExternalServiceException(ErrorCode.EMAIL_CANNOT_BE_SENT, e);
         }
     }
 }

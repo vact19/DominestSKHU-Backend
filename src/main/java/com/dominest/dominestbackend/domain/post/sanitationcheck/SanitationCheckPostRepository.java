@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface SanitationCheckPostRepository extends JpaRepository<SanitationCheckPost, Long> {
 
     @Query(value = "SELECT p FROM SanitationCheckPost p" +
@@ -16,5 +18,5 @@ public interface SanitationCheckPostRepository extends JpaRepository<SanitationC
     @Query(value = "SELECT p FROM SanitationCheckPost p" +
             " JOIN FETCH p.category" +
             " WHERE p.id = :postId")
-    SanitationCheckPost findByIdFetchCategory(@Param("postId") Long postId);
+    Optional<SanitationCheckPost> findByIdFetchCategory(@Param("postId") Long postId);
 }

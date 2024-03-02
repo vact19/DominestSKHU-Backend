@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 
 public interface ManualPostRepository extends JpaRepository<ManualPost, Long> {
 
@@ -17,6 +19,6 @@ public interface ManualPostRepository extends JpaRepository<ManualPost, Long> {
     @Query(value = "SELECT m FROM ManualPost m left join fetch m.imageUrls left join fetch m.writer " +
             "left join fetch m.attachmentUrls left join fetch m.videoUrls" +
             " WHERE m.id = :manualId" )
-    ManualPost findManualPostIncludeAllColumn(long manualId);
+    Optional<ManualPost> findManualPostIncludeAllColumn(long manualId);
     void deleteByCategoryId(Long categoryId);
 }

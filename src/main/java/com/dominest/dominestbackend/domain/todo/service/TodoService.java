@@ -7,7 +7,7 @@ import com.dominest.dominestbackend.domain.todo.repository.TodoRepository;
 import com.dominest.dominestbackend.domain.user.User;
 import com.dominest.dominestbackend.domain.user.repository.UserRepository;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
-import com.dominest.dominestbackend.global.exception.exceptions.BusinessException;
+import com.dominest.dominestbackend.global.exception.exceptions.domain.DomainException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,7 +71,7 @@ public class TodoService {
         Optional<Todo> todo = todoRepository.findById(todoId);
 
         if (todo.isEmpty()) {
-            throw new BusinessException(ErrorCode.TODO_NOT_FOUND);
+            throw new DomainException(ErrorCode.TODO_NOT_FOUND);
         }
 
         todoRepository.delete(todo.get());
