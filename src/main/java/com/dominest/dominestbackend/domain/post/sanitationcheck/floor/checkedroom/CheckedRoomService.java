@@ -36,13 +36,9 @@ public class CheckedRoomService {
         return checkedRoomRepository.findAllByFloorIdFetchResidentAndRoom(floorId);
     }
 
-    public CheckedRoom getByIdFetchResident(Long id) {
-        return EntityUtil.mustNotNull(checkedRoomRepository.findByIdFetchResident(id), ErrorCode.CHECKED_ROOM_NOT_FOUND);
-    }
-
     @Transactional
     public void update(Long checkedRoomId, UpdateCheckedRoomRequest request) { // api 호출 편의성을 위해 이 ReqDto는 값 검증하지 않았음.
-        CheckedRoom checkedRoom = getByIdFetchResident(checkedRoomId);
+        CheckedRoom checkedRoom = getById(checkedRoomId);
         // Null이 아닌 값만 업데이트
         checkedRoom.updateValuesOnlyNotNull(
                 request.getIndoor()

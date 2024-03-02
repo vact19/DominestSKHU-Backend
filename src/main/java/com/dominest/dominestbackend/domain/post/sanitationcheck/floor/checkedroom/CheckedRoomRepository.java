@@ -1,6 +1,5 @@
 package com.dominest.dominestbackend.domain.post.sanitationcheck.floor.checkedroom;
 
-import com.dominest.dominestbackend.domain.resident.Resident;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,11 +12,6 @@ public interface CheckedRoomRepository extends JpaRepository<CheckedRoom, Long> 
             "JOIN FETCH cr.room " +
             "WHERE cr.floor.id = :floorId")
     List<CheckedRoom> findAllByFloorIdFetchResidentAndRoom(@Param("floorId") Long floorId);
-
-    //모든 CheckedRoom을 조회해야 하므로 Left Join Resident로 조회한다.
-    @Query("SELECT cr FROM CheckedRoom cr" +
-            " WHERE cr.id = :id")
-    CheckedRoom findByIdFetchResident(@Param("id") Long id);
 
     // 방역점검 게시글에 연관된 모든 CheckedRoom을 가져온다. 3중 조인해야 하며, 미통과만 조회한다,
     //모든 CheckedRoom을 조회해야 하므로 Left Join Resident로 조회한다.
