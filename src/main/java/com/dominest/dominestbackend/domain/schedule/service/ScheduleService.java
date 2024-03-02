@@ -5,12 +5,14 @@ import com.dominest.dominestbackend.api.schedule.request.ScheduleSaveRequest;
 import com.dominest.dominestbackend.api.schedule.response.ScheduleInfo;
 import com.dominest.dominestbackend.api.schedule.response.TimeSlotInfo;
 import com.dominest.dominestbackend.api.schedule.response.UserScheduleResponse;
+import com.dominest.dominestbackend.domain.common.Datasource;
 import com.dominest.dominestbackend.domain.schedule.Schedule;
 import com.dominest.dominestbackend.domain.schedule.repository.ScheduleRepository;
 import com.dominest.dominestbackend.domain.user.User;
 import com.dominest.dominestbackend.domain.user.repository.UserRepository;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.exceptions.domain.DomainException;
+import com.dominest.dominestbackend.global.exception.exceptions.external.common.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -102,12 +104,14 @@ public class ScheduleService {
     public void deleteSchedule(ScheduleDeleteRequest request) {
         String username = request.getUsername();
         Schedule.DayOfWeek dayOfWeek = request.getDayOfWeek();
-        String timeSlot = request.getTimeSlot();
+        Schedule.TimeSlot timeslot = Schedule.TimeSlot.fromString(request.getTimeSlot());
 
         // 요일과 시간대로 스케줄 조회
-        Optional<Schedule> optionalSchedule = scheduleRepository.findByDayOfWeekAndTimeSlot(dayOfWeek, Schedule.TimeSlot.fromString(timeSlot));
+        Optional<Schedule> optionalSchedule = scheduleRepository.findByDayOfWeekAndTimeSlot(dayOfWeek, timeslot);
         if (optionalSchedule.isEmpty()) {  // 결과가 없다면
-            throw new DomainException(ErrorCode.SCHEDULE_NOT_FOUND);
+            throw new ResourceNotFoundException(Datasource.SCHEDULE
+                    , Datasource.DAY_OF_WEEK.label +", " + Datasource.TIME_SLOT
+                    , dayOfWeek.value + ", " + timeslot.value);
         }
 
         Schedule schedule = optionalSchedule.get();

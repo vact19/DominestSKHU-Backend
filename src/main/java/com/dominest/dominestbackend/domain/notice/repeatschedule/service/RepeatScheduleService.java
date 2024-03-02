@@ -4,12 +4,12 @@ import com.dominest.dominestbackend.api.notice.repeatnotice.response.RepeatNotic
 import com.dominest.dominestbackend.api.notice.repeatschedule.request.RepeatScheduleSaveRequest;
 import com.dominest.dominestbackend.api.notice.repeatschedule.resopnse.AllRepeatScheduleResponse;
 import com.dominest.dominestbackend.api.notice.repeatschedule.resopnse.RepeatScheduleResponse;
+import com.dominest.dominestbackend.domain.common.Datasource;
 import com.dominest.dominestbackend.domain.notice.repeatnotice.RepeatNotice;
 import com.dominest.dominestbackend.domain.notice.repeatnotice.repository.RepeatNoticeRepository;
 import com.dominest.dominestbackend.domain.notice.repeatschedule.RepeatSchedule;
 import com.dominest.dominestbackend.domain.notice.repeatschedule.repository.RepeatScheduleRepository;
-import com.dominest.dominestbackend.global.exception.ErrorCode;
-import com.dominest.dominestbackend.global.exception.exceptions.domain.DomainException;
+import com.dominest.dominestbackend.global.exception.exceptions.external.common.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,9 +40,8 @@ public class RepeatScheduleService {
 
     private List<RepeatNotice> findRepeatNotices(List<Long> repeatNoticeIds) { // RepeatNoticeIds 이용해 RepeatNotice 조회
         return repeatNoticeIds.stream()
-                .map(repeatNoticeRepository::findById)
-                .map(optionalRepeatNotice -> optionalRepeatNotice
-                        .orElseThrow(() -> new DomainException(ErrorCode.NOTICE_NOT_FOUND)))
+                .map(id -> repeatNoticeRepository.findById(id)
+                        .orElseThrow(() -> new ResourceNotFoundException(Datasource.REPEAT_NOTICE, id)))
                 .collect(Collectors.toList());
     }
 
@@ -98,7 +97,7 @@ public class RepeatScheduleService {
 
     public RepeatScheduleResponse getRepeatScheduleById(Long id) { // 해당 반복일정 글 상세조회
         RepeatSchedule repeatSchedule = repeatScheduleRepository.findById(id)
-                .orElseThrow(() -> new DomainException(ErrorCode.NOTICE_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(Datasource.REPEAT_SCHEDULE, id));
 
         List<RepeatNotice> repeatNotices = repeatNoticeRepository.findAllByRepeatSchedule(repeatSchedule);
 

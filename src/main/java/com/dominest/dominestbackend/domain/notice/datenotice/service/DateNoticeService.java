@@ -2,10 +2,10 @@ package com.dominest.dominestbackend.domain.notice.datenotice.service;
 
 import com.dominest.dominestbackend.api.notice.datenotice.request.DateNoticeSaveRequest;
 import com.dominest.dominestbackend.api.notice.datenotice.response.DateNoticeResponse;
+import com.dominest.dominestbackend.domain.common.Datasource;
 import com.dominest.dominestbackend.domain.notice.datenotice.DateNotice;
 import com.dominest.dominestbackend.domain.notice.datenotice.repository.DateNoticeRepository;
-import com.dominest.dominestbackend.global.exception.ErrorCode;
-import com.dominest.dominestbackend.global.exception.exceptions.domain.DomainException;
+import com.dominest.dominestbackend.global.exception.exceptions.external.common.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,7 +68,9 @@ public class DateNoticeService {
     @Transactional
     public boolean switchDateApply(Long id) {
         DateNotice dateNotice = dateNoticeRepository.findById(id)
-                .orElseThrow(() -> new DomainException(ErrorCode.NOTICE_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        Datasource.DATE_NOTICE, id
+                ));
         return dateNotice.switchApply();
     }
 

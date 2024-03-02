@@ -2,12 +2,12 @@ package com.dominest.dominestbackend.domain.todo.service;
 
 import com.dominest.dominestbackend.api.todo.request.TodoSaveRequest;
 import com.dominest.dominestbackend.api.todo.response.TodoUserResponse;
+import com.dominest.dominestbackend.domain.common.Datasource;
 import com.dominest.dominestbackend.domain.todo.Todo;
 import com.dominest.dominestbackend.domain.todo.repository.TodoRepository;
 import com.dominest.dominestbackend.domain.user.User;
 import com.dominest.dominestbackend.domain.user.repository.UserRepository;
-import com.dominest.dominestbackend.global.exception.ErrorCode;
-import com.dominest.dominestbackend.global.exception.exceptions.domain.DomainException;
+import com.dominest.dominestbackend.global.exception.exceptions.external.common.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +16,6 @@ import javax.persistence.EntityNotFoundException;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -67,15 +66,10 @@ public class TodoService {
     }
 
     @Transactional
-    public void deleteTodo(Long todoId) { // 투두 삭제
-        Optional<Todo> todo = todoRepository.findById(todoId);
-
-        if (todo.isEmpty()) {
-            throw new DomainException(ErrorCode.TODO_NOT_FOUND);
-        }
-
-        todoRepository.delete(todo.get());
-
+    public void deleteTodo(Long id) { // 투두 삭제
+        Todo todo = todoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(Datasource.TODO, id));
+        todoRepository.delete(todo);
     }
 
     public List<TodoUserResponse> getUserNameTodo() { // 투두 근로자 선택
