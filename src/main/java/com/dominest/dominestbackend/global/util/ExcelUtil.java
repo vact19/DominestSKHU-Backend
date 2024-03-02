@@ -5,9 +5,9 @@ import com.dominest.dominestbackend.domain.post.sanitationcheck.floor.checkedroo
 import com.dominest.dominestbackend.domain.post.sanitationcheck.floor.checkedroom.component.ResidentInfo;
 import com.dominest.dominestbackend.domain.room.Room;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
-import com.dominest.dominestbackend.global.exception.exceptions.AppServiceException;
-import com.dominest.dominestbackend.global.exception.exceptions.BusinessException;
-import com.dominest.dominestbackend.global.exception.exceptions.file.FileIOException;
+import com.dominest.dominestbackend.global.exception.exceptions.external.ExternalServiceException;
+import com.dominest.dominestbackend.global.exception.exceptions.domain.DomainException;
+import com.dominest.dominestbackend.global.exception.exceptions.external.file.FileIOException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +42,7 @@ public class ExcelUtil {
 
     public static List<List<String>> parseExcel(MultipartFile file) {
         if (! isExcelFile(file)) {
-            throw new AppServiceException(ErrorCode.INVALID_FILE_EXTENSION);
+            throw new ExternalServiceException(ErrorCode.INVALID_FILE_EXTENSION);
         }
 
         List<List<String>> data = new ArrayList<>();
@@ -92,7 +92,7 @@ public class ExcelUtil {
                 .orElse(0);
 
         if (sheetColumnCount != RESIDENT_COLUMN_COUNT){
-            throw new BusinessException("읽어들인 컬럼 개수가 " +
+            throw new DomainException("읽어들인 컬럼 개수가 " +
                     RESIDENT_COLUMN_COUNT + "개가 아닙니다.", HttpStatus.BAD_REQUEST);
         }
     }
@@ -115,10 +115,10 @@ public class ExcelUtil {
     // 통과차수별 방 정보와 소속된 사생의 정보를 반환.
     public static void createAndRespondResidentInfoWithCheckedRoom(String filename, String sheetName, HttpServletResponse response, List<CheckedRoom> checkedRooms) {
         if (! isExcelExt(filename)) {
-            throw new AppServiceException(ErrorCode.INVALID_FILE_EXTENSION);
+            throw new ExternalServiceException(ErrorCode.INVALID_FILE_EXTENSION);
         }
 
-        ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
+        ContentDisposition contentDisposition = ContentDisposition.attachment()
                 .filename(filename, StandardCharsets.UTF_8)
                 .build();
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, contentDisposition.toString());
@@ -169,7 +169,7 @@ public class ExcelUtil {
     // 점검표 화면의 내용 전체를 다운로드
     public static void createAndRespondAllDataWithCheckedRoom(String filename, String sheetName, HttpServletResponse response, List<CheckedRoom> checkedRooms) {
         if (! isExcelExt(filename)) {
-            throw new AppServiceException(ErrorCode.INVALID_FILE_EXTENSION);
+            throw new ExternalServiceException(ErrorCode.INVALID_FILE_EXTENSION);
         }
 
         ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
@@ -249,7 +249,7 @@ public class ExcelUtil {
     // 민원처리내역의 모든 데이터를 엑셀로 반환한다.
     public static void createAndRespondAllDataWitehComplaint(String filename, String sheetName, HttpServletResponse response, List<Complaint> complaints) {
         if (! isExcelExt(filename)) {
-            throw new AppServiceException(ErrorCode.INVALID_FILE_EXTENSION);
+            throw new ExternalServiceException(ErrorCode.INVALID_FILE_EXTENSION);
         }
 
         ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
