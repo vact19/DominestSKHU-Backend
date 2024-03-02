@@ -31,8 +31,8 @@ public class ManualPostService {
     private final ManualPostRepository manualPostRepository;
     private final FileService fileService;
 
-    private static final String filePathPrefix = "manual/";
-    private static final String filePathSuffix = "/";
+    private static final String FILE_PATH_PREFIX = "manual/";
+    private static final String FILE_PATH_SUFFIX = "/";
 
     @Transactional
     public Long create(Long categoryId, CreateManualPostDto.Req reqDto, String email) {
@@ -54,7 +54,7 @@ public class ManualPostService {
     private void saveFile(Set<MultipartFile>attachFiles, Set<MultipartFile> imageFiles,
                           Set<MultipartFile> videoFiles, ManualPost manualPost, Long manualPostId) {
 
-        String subPath = filePathPrefix+manualPostId+filePathSuffix;
+        String subPath = FILE_PATH_PREFIX +manualPostId+ FILE_PATH_SUFFIX;
         Set<String> savedAttachUrls = fileService.save(FileService.FilePrefix.ATTACH_TYPE, subPath, attachFiles);
         Set<String> savedImgUrls = fileService.save(FileService.FilePrefix.IMAGE_TYPE, subPath, imageFiles);
         Set<String> savedVideoUrls = fileService.save(FileService.FilePrefix.VIDEO_TYPE, subPath, videoFiles);
@@ -76,18 +76,21 @@ public class ManualPostService {
         return manualPostRepository.findAllByCategory(categoryId, pageable);
     }
 
-    public ManualPost getById(Long manualPostId) {
-        return EntityUtil.mustNotNull(manualPostRepository.findById(manualPostId), ErrorCode.POST_NOT_FOUND);
+    public ManualPost getById(Long id) {
+        return manualPostRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(Datasource.MANUAL_POST, id));
     }
 
     public ManualPost getByIdIncludeAllColumn(Long manualPostId) {
-        return EntityUtil.mustNotNull(manualPostRepository.findManualPostIncludeAllColumn(manualPostId), ErrorCode.POST_NOT_FOUND);
+        return manualPostRepository.findManualPostIncludeAllColumn(manualPostId)
+                .orElseThrow(() -> new ResourceNotFoundException(Datasource.MANUAL_POST, manualPostId));
     }
+
     @Transactional
     public long delete(Long manualPostId) {
         ManualPost post = getById(manualPostId);
         manualPostRepository.delete(post);
-        String folderPath = filePathPrefix+manualPostId+filePathSuffix;
+        String folderPath = FILE_PATH_PREFIX +manualPostId+ FILE_PATH_SUFFIX;
         fileService.deleteFolder(folderPath);
         return post.getId();
     }
@@ -103,7 +106,7 @@ public class ManualPostService {
         Optional.ofNullable(reqDto.getHtmlContent())
                 .ifPresent(manualPost::setHtmlContent);
 
-        String subPath = filePathPrefix+manualPostId+filePathSuffix;
+        String subPath = FILE_PATH_PREFIX +manualPostId+ FILE_PATH_SUFFIX;
 
         Optional.ofNullable(reqDto.getAttachFiles())
                 .ifPresent(attachFiles -> {
