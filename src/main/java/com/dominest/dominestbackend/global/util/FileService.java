@@ -107,7 +107,7 @@ public class FileService {
 
     private void saveMultipartFile(MultipartFile multipartFile, Path filePathToStore) {
         try {
-            // transferTo()는 내부적으로 알아서 is, os close를 해준다.
+            // transferTo()는 내부적으로 알아서 Input, Output Stream close 됨.
             multipartFile.transferTo(filePathToStore);
         } catch (IOException e) {
             log.error("IOEXCEPTION 발생: originalFile: {}, filePathToStore: {}", multipartFile.getOriginalFilename(), filePathToStore);
@@ -191,8 +191,10 @@ public class FileService {
     }
 
 
-    // fileUploadPath 내부에 저장될 directory 를 선택한다.
-    // fileUplaodPath + FilePrefix + fileName 으로 저장된다.
+    /**
+     * this.fileUploadPath 내부에 저장될 directory 를 선택한다.
+     * fileUploadPath + FilePrefix + fileName 으로 저장된다.
+     */
     @Getter
     public enum FilePrefix {
         RESIDENT_ADMISSION("resident/admission/"),

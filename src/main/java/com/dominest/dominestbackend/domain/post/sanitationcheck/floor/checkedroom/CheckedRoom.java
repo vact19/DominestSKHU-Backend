@@ -1,9 +1,9 @@
 package com.dominest.dominestbackend.domain.post.sanitationcheck.floor.checkedroom;
 
 import com.dominest.dominestbackend.domain.common.BaseEntity;
+import com.dominest.dominestbackend.domain.post.sanitationcheck.SanitationCheckPost;
 import com.dominest.dominestbackend.domain.post.sanitationcheck.floor.Floor;
 import com.dominest.dominestbackend.domain.post.sanitationcheck.floor.checkedroom.component.ResidentInfo;
-import com.dominest.dominestbackend.domain.resident.Resident;
 import com.dominest.dominestbackend.domain.room.Room;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.*;
@@ -11,11 +11,15 @@ import lombok.*;
 import javax.persistence.*;
 
 /**
- * 아래의 사항들을 점검한다.
+ * 방역점검 대상 방의 결과를 저장한다.
+ * 참조 관계는 {@link SanitationCheckPost} <- {@link Floor} <- this (즉, 게시글 <- 글에 속한 층 <- 층에 속한 점검대상 방)
+ * <br><br>
+ * 아래의 7가지 사항들을 점검한다.
+ * <p>
  * 1. 실내  2. 쓰레기방치  3. 화장실
  * 4. 샤워실 5. 보관금지
- * 6. 통과(ENUM)
- * 7. 비고 (String 자유입력)
+ * <br>
+ * 6. 통과(ENUM) 7. 비고 (String 자유입력)
  */
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -47,8 +51,9 @@ public class CheckedRoom extends BaseEntity {
     private Room room;
 
     @Builder
-    private CheckedRoom(PassState passState, String etc, ResidentInfo residentInfo, Room room
-            , Floor floor) {
+    private CheckedRoom(PassState passState, String etc, ResidentInfo residentInfo
+            , Room room, Floor floor) {
+        // ==기본값 설정==
         this.indoor = false;
         this.leavedTrash = false;
         this.toilet = false;
