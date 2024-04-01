@@ -1,8 +1,8 @@
 package com.dominest.dominestbackend.global.util;
 
 import com.dominest.dominestbackend.domain.post.complaint.Complaint;
-import com.dominest.dominestbackend.domain.post.sanitationcheck.floor.checkedroom.CheckedRoom;
-import com.dominest.dominestbackend.domain.post.sanitationcheck.floor.checkedroom.component.ResidentInfo;
+import com.dominest.dominestbackend.domain.post.inspection.floor.room.InspectionRoom;
+import com.dominest.dominestbackend.domain.post.inspection.floor.room.component.ResidentInfo;
 import com.dominest.dominestbackend.domain.room.Room;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.exceptions.external.ExternalServiceException;
@@ -113,7 +113,7 @@ public class ExcelUtil {
     }
 
     // 통과차수별 방 정보와 소속된 사생의 정보를 반환.
-    public static void createAndRespondResidentInfoWithCheckedRoom(String filename, String sheetName, HttpServletResponse response, List<CheckedRoom> checkedRooms) {
+    public static void createAndRespondResidentInfoWithInspectionRoom(String filename, String sheetName, HttpServletResponse response, List<InspectionRoom> inspectionRooms) {
         if (! isExcelExt(filename)) {
             throw new ExternalServiceException(ErrorCode.INVALID_FILE_EXTENSION);
         }
@@ -143,20 +143,20 @@ public class ExcelUtil {
             sheet.setColumnWidth(3, columnWidth10);
 
             // 데이터 작성
-            for (int rowNum = 1; rowNum <= checkedRooms.size(); rowNum++) {
+            for (int rowNum = 1; rowNum <= inspectionRooms.size(); rowNum++) {
                 Row row = sheet.createRow(rowNum);
 
-                CheckedRoom checkedRoom = checkedRooms.get(rowNum - 1);
-                ResidentInfo residentInfo = checkedRoom.getResidentInfo();
-                Room room = checkedRoom.getRoom();
+                InspectionRoom inspectionRoom = inspectionRooms.get(rowNum - 1);
+                ResidentInfo residentInfo = inspectionRoom.getResidentInfo();
+                Room room = inspectionRoom.getRoom();
                 String assignedRoom = room != null ? room.getAssignedRoom() : "";
 
                 row.createCell(0).setCellValue(assignedRoom);
                 row.createCell(1).setCellValue(residentInfo == null ? "" : residentInfo.getName());
                 row.createCell(2).setCellValue(residentInfo == null ? "" : residentInfo.getPhoneNo());
                 row.createCell(3).setCellValue(residentInfo == null ? "" : residentInfo.getStudentId());
-                row.createCell(4).setCellValue(checkedRoom.getPassState().getPenalty());
-                row.createCell(5).setCellValue(checkedRoom.getPassState().getValue());
+                row.createCell(4).setCellValue(inspectionRoom.getPassState().getPenalty());
+                row.createCell(5).setCellValue(inspectionRoom.getPassState().getValue());
             }
 
             // 파일 내보내기
@@ -167,7 +167,7 @@ public class ExcelUtil {
     }
 
     // 점검표 화면의 내용 전체를 다운로드
-    public static void createAndRespondAllDataWithCheckedRoom(String filename, String sheetName, HttpServletResponse response, List<CheckedRoom> checkedRooms) {
+    public static void createAndRespondAllDataWithInspectionRoom(String filename, String sheetName, HttpServletResponse response, List<InspectionRoom> inspectionRooms) {
         if (! isExcelExt(filename)) {
             throw new ExternalServiceException(ErrorCode.INVALID_FILE_EXTENSION);
         }
@@ -215,12 +215,12 @@ public class ExcelUtil {
 
             // 데이터 작성
             int dataStartRow = 2;
-            for (int rowNum = dataStartRow; rowNum <= checkedRooms.size() + dataStartRow - 1; rowNum++) {
+            for (int rowNum = dataStartRow; rowNum <= inspectionRooms.size() + dataStartRow - 1; rowNum++) {
                 Row row = sheet.createRow(rowNum);
 
-                CheckedRoom checkedRoom = checkedRooms.get(rowNum - dataStartRow);
-                ResidentInfo residentInfo = checkedRoom.getResidentInfo();
-                Room room = checkedRoom.getRoom();
+                InspectionRoom inspectionRoom = inspectionRooms.get(rowNum - dataStartRow);
+                ResidentInfo residentInfo = inspectionRoom.getResidentInfo();
+                Room room = inspectionRoom.getRoom();
                 String assignedRoom = room != null ? room.getAssignedRoom() : "";
 
                 // 실내 쓰레기방치 화장실 샤워실 보관금지
@@ -229,14 +229,14 @@ public class ExcelUtil {
                 row.createCell(1).setCellValue(residentInfo == null ? "" : residentInfo.getName());
                 row.createCell(2).setCellValue(residentInfo == null ? "" : residentInfo.getPhoneNo());
                 row.createCell(3).setCellValue(residentInfo == null ? "" : residentInfo.getStudentId());
-                row.createCell(4).setCellValue(checkedRoom.getPassState().getPenalty());
-                row.createCell(5).setCellValue(checkedRoom.getPassState().getValue());
-                row.createCell(6).setCellValue(checkedRoom.isIndoor() ? "O" : "X");
-                row.createCell(7).setCellValue(checkedRoom.isLeavedTrash() ? "O" : "X");
-                row.createCell(8).setCellValue(checkedRoom.isToilet() ? "O" : "X");
-                row.createCell(9).setCellValue(checkedRoom.isShower() ? "O" : "X");
-                row.createCell(10).setCellValue(checkedRoom.isProhibitedItem() ? "O" : "X");
-                row.createCell(11).setCellValue(checkedRoom.getEtc() == null ? "" : checkedRoom.getEtc());
+                row.createCell(4).setCellValue(inspectionRoom.getPassState().getPenalty());
+                row.createCell(5).setCellValue(inspectionRoom.getPassState().getValue());
+                row.createCell(6).setCellValue(inspectionRoom.isIndoor() ? "O" : "X");
+                row.createCell(7).setCellValue(inspectionRoom.isLeavedTrash() ? "O" : "X");
+                row.createCell(8).setCellValue(inspectionRoom.isToilet() ? "O" : "X");
+                row.createCell(9).setCellValue(inspectionRoom.isShower() ? "O" : "X");
+                row.createCell(10).setCellValue(inspectionRoom.isProhibitedItem() ? "O" : "X");
+                row.createCell(11).setCellValue(inspectionRoom.getEtc() == null ? "" : inspectionRoom.getEtc());
             }
 
             // 파일 내보내기

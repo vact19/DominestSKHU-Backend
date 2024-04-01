@@ -10,7 +10,7 @@ public enum Type {
     , UNDELIVERED_PARCEL_REGISTER("undelivered-parcel") // 장기 미수령 택배 관리대장
     , COMPLAINT("complaint") // 민원처리내역
     , CARD_KEY("card-key") // 카드키관리대장
-    , SANITATION_CHECK("sanitation-check") // 방역 호실 점검
+    , INSPECTION("inspection") // 방역 호실 점검
     , MANUAL("manual")
     ;
 

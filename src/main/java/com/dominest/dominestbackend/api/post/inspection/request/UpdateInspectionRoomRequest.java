@@ -1,12 +1,12 @@
-package com.dominest.dominestbackend.api.post.sanitationcheck.request;
+package com.dominest.dominestbackend.api.post.inspection.request;
 
-import com.dominest.dominestbackend.domain.post.sanitationcheck.floor.checkedroom.CheckedRoom;
+import com.dominest.dominestbackend.domain.post.inspection.floor.room.InspectionRoom;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Getter
-public class UpdateCheckedRoomRequest {
+public class UpdateInspectionRoomRequest {
     /**
      * 어떤 체크박스를 클릭했든지 하나의 API로 대응하기 위해
      * 아래의 값들은 NULL을 모두 허용한다.
@@ -18,6 +18,6 @@ public class UpdateCheckedRoomRequest {
     Boolean toilet;
     Boolean shower;
     Boolean prohibitedItem;
-    CheckedRoom.PassState passState; // 미통과 1차통과 2차통과...
+    InspectionRoom.PassState passState; // 미통과 1차통과 2차통과...
     String etc;
 }

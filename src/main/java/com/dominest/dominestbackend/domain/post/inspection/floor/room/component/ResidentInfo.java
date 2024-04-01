@@ -1,9 +1,7 @@
-package com.dominest.dominestbackend.domain.post.sanitationcheck.floor.checkedroom.component;
+package com.dominest.dominestbackend.domain.post.inspection.floor.room.component;
 
 import com.dominest.dominestbackend.domain.resident.Resident;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

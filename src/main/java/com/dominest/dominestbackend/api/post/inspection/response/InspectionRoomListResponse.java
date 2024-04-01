@@ -1,10 +1,10 @@
-package com.dominest.dominestbackend.api.post.sanitationcheck.response;
+package com.dominest.dominestbackend.api.post.inspection.response;
 
 import com.dominest.dominestbackend.api.common.AuditLog;
 import com.dominest.dominestbackend.api.common.CategoryResponse;
 import com.dominest.dominestbackend.domain.post.component.category.Category;
-import com.dominest.dominestbackend.domain.post.sanitationcheck.floor.checkedroom.CheckedRoom;
-import com.dominest.dominestbackend.domain.post.sanitationcheck.floor.checkedroom.component.ResidentInfo;
+import com.dominest.dominestbackend.domain.post.inspection.floor.room.InspectionRoom;
+import com.dominest.dominestbackend.domain.post.inspection.floor.room.component.ResidentInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
@@ -13,22 +13,22 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Getter
-public class CheckedRoomListResponse {
+public class InspectionRoomListResponse {
     CategoryResponse category;
-    List<CheckedRoomDto> checkedRooms;
+    List<InspectionRoomDto> inspectionRooms;
 
-    public static CheckedRoomListResponse from(List<CheckedRoom> checkedRooms, Category category){
+    public static InspectionRoomListResponse from(List<InspectionRoom> inspectionRooms, Category category){
         CategoryResponse categoryResponse = CategoryResponse.from(category);
 
-        List<CheckedRoomDto> checkedRoomDtos
-                = CheckedRoomDto.from(checkedRooms);
+        List<InspectionRoomDto> inspectionRoomDtos
+                = InspectionRoomDto.from(inspectionRooms);
 
-        return new CheckedRoomListResponse(categoryResponse, checkedRoomDtos);
+        return new InspectionRoomListResponse(categoryResponse, inspectionRoomDtos);
     }
 
     @Builder
     @Getter
-    static class CheckedRoomDto {
+    static class InspectionRoomDto {
         long id;
         boolean emptyRoom;
         String assignedRoom;
@@ -40,13 +40,13 @@ public class CheckedRoomListResponse {
         boolean shower;
         boolean prohibitedItem;
 
-        CheckedRoom.PassState passState;
+        InspectionRoom.PassState passState;
         String etc;
 
         AuditLog auditLog;
 
-        static CheckedRoomDto from(CheckedRoom checkedRoom){
-            ResidentInfo residentInfo = checkedRoom.getResidentInfo();
+        static InspectionRoomDto from(InspectionRoom inspectionRoom){
+            ResidentInfo residentInfo = inspectionRoom.getResidentInfo();
             ResidentDto residentDto = null;
             boolean emptyRoom = true;
 
@@ -55,30 +55,30 @@ public class CheckedRoomListResponse {
                         .name(residentInfo.getName())
                         .studentId(residentInfo.getStudentId())
                         .phoneNo(residentInfo.getPhoneNo())
-                        .penalty(checkedRoom.getPassState().getPenalty())
+                        .penalty(inspectionRoom.getPassState().getPenalty())
                         .build();
                  emptyRoom = false;
             }
 
-            return CheckedRoomDto.builder()
-                    .id(checkedRoom.getId())
+            return InspectionRoomDto.builder()
+                    .id(inspectionRoom.getId())
                     .emptyRoom(emptyRoom)
-                    .assignedRoom(checkedRoom.getRoom().getAssignedRoom())
+                    .assignedRoom(inspectionRoom.getRoom().getAssignedRoom())
                     .resident(residentDto)
-                    .indoor(checkedRoom.isIndoor())
-                    .leavedTrash(checkedRoom.isLeavedTrash())
-                    .toilet(checkedRoom.isToilet())
-                    .shower(checkedRoom.isShower())
-                    .prohibitedItem(checkedRoom.isProhibitedItem())
-                    .passState(checkedRoom.getPassState())
-                    .etc(checkedRoom.getEtc())
-                    .auditLog(AuditLog.from(checkedRoom))
+                    .indoor(inspectionRoom.isIndoor())
+                    .leavedTrash(inspectionRoom.isLeavedTrash())
+                    .toilet(inspectionRoom.isToilet())
+                    .shower(inspectionRoom.isShower())
+                    .prohibitedItem(inspectionRoom.isProhibitedItem())
+                    .passState(inspectionRoom.getPassState())
+                    .etc(inspectionRoom.getEtc())
+                    .auditLog(AuditLog.from(inspectionRoom))
                     .build();
         }
 
-        static List<CheckedRoomDto> from(List<CheckedRoom> rooms){
+        static List<InspectionRoomDto> from(List<InspectionRoom> rooms){
             return rooms.stream()
-                    .map(CheckedRoomDto::from)
+                    .map(InspectionRoomDto::from)
                     .collect(Collectors.toList());
         }
 

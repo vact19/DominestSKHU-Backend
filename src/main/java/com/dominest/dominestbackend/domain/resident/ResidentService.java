@@ -193,7 +193,7 @@ public class ResidentService {
 
     private void save(Resident resident) {
         try {
-            // CheckedRoom 등 Resident를 참조하는 테이블에 결과를 반영하지 않는다.
+            // InspectionRoom 등 Resident를 참조하는 테이블에 결과를 반영하지 않는다.
             residentRepository.saveAndFlush(resident);
         } catch (DataIntegrityViolationException e) {
             throw new DomainException(

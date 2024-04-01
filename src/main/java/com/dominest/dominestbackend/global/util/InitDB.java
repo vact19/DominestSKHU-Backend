@@ -145,13 +145,13 @@ public class InitDB {
                 .build();
         categoryRepository.save(cardKeyCategoryNO3);
 
-        Category sanitationCheckCategoryNO4 = Category.builder()
+        Category inspectionCategoryNO4 = Category.builder()
                 .name("방역호실점검")
-                .type(Type.SANITATION_CHECK)
+                .type(Type.INSPECTION)
                 .explanation("방역호실점검")
                 .orderKey(4)
                 .build();
-        categoryRepository.save(sanitationCheckCategoryNO4);
+        categoryRepository.save(inspectionCategoryNO4);
 
         Category imageCategoryNo5 = Category.builder()
                 .name("사진 업로드")

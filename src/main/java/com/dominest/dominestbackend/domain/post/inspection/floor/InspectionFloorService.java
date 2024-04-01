@@ -1,4 +1,4 @@
-package com.dominest.dominestbackend.domain.post.sanitationcheck.floor;
+package com.dominest.dominestbackend.domain.post.inspection.floor;
 
 import com.dominest.dominestbackend.global.exception.exceptions.domain.DomainException;
 import lombok.RequiredArgsConstructor;
@@ -12,20 +12,20 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
-public class FloorService {
-    private final FloorRepository floorRepository;
+public class InspectionFloorService {
+    private final InspectionFloorRepository inspectionFloorRepository;
 
     @Transactional
-    public List<Floor> create(List<Floor> floors) {
+    public List<InspectionFloor> create(List<InspectionFloor> inspectionFloors) {
         try {
-            return floorRepository.saveAll(floors);
+            return inspectionFloorRepository.saveAll(inspectionFloors);
         } catch (DataIntegrityViolationException e) {
             throw new DomainException("Floor 저장 실패, 중복 혹은 값의 누락을 확인해주세요"
                     , HttpStatus.BAD_REQUEST, e);
         }
     }
 
-    public List<Floor> getAllByPostId(Long postId) {
-        return floorRepository.findAllByPostId(postId);
+    public List<InspectionFloor> getAllByPostId(Long postId) {
+        return inspectionFloorRepository.findAllByPostId(postId);
     }
 }

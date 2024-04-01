@@ -1,8 +1,8 @@
-package com.dominest.dominestbackend.domain.post.sanitationcheck;
+package com.dominest.dominestbackend.domain.post.inspection;
 
 import com.dominest.dominestbackend.domain.post.common.Post;
 import com.dominest.dominestbackend.domain.post.component.category.Category;
-import com.dominest.dominestbackend.domain.post.sanitationcheck.floor.Floor;
+import com.dominest.dominestbackend.domain.post.inspection.floor.InspectionFloor;
 import com.dominest.dominestbackend.domain.resident.component.ResidenceSemester;
 import com.dominest.dominestbackend.domain.user.User;
 import lombok.AccessLevel;
@@ -17,16 +17,16 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class SanitationCheckPost extends Post {
-    @OneToMany(mappedBy = "sanitationCheckPost"
+public class InspectionPost extends Post {
+    @OneToMany(mappedBy = "inspectionPost"
             , fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<Floor> floors;
+    private List<InspectionFloor> inspectionFloors;
 
     @Enumerated(EnumType.STRING)
     private ResidenceSemester residenceSemester;
 
     @Builder
-    private SanitationCheckPost(User writer, Category category
+    private InspectionPost(User writer, Category category
             , ResidenceSemester residenceSemester
     ) {
         super(createTitle(), writer, category);

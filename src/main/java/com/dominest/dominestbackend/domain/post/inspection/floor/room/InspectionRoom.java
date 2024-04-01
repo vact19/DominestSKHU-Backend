@@ -1,9 +1,9 @@
-package com.dominest.dominestbackend.domain.post.sanitationcheck.floor.checkedroom;
+package com.dominest.dominestbackend.domain.post.inspection.floor.room;
 
 import com.dominest.dominestbackend.domain.common.BaseEntity;
-import com.dominest.dominestbackend.domain.post.sanitationcheck.SanitationCheckPost;
-import com.dominest.dominestbackend.domain.post.sanitationcheck.floor.Floor;
-import com.dominest.dominestbackend.domain.post.sanitationcheck.floor.checkedroom.component.ResidentInfo;
+import com.dominest.dominestbackend.domain.post.inspection.InspectionPost;
+import com.dominest.dominestbackend.domain.post.inspection.floor.InspectionFloor;
+import com.dominest.dominestbackend.domain.post.inspection.floor.room.component.ResidentInfo;
 import com.dominest.dominestbackend.domain.room.Room;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.*;
@@ -12,7 +12,7 @@ import javax.persistence.*;
 
 /**
  * 방역점검 대상 방의 결과를 저장한다.
- * 참조 관계는 {@link SanitationCheckPost} <- {@link Floor} <- this (즉, 게시글 <- 글에 속한 층 <- 층에 속한 점검대상 방)
+ * 참조 관계는 {@link InspectionPost} <- {@link InspectionFloor} <- this (즉, 게시글 <- 글에 속한 층 <- 층에 속한 점검대상 방)
  * <br><br>
  * 아래의 7가지 사항들을 점검한다.
  * <p>
@@ -24,7 +24,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class CheckedRoom extends BaseEntity {
+public class InspectionRoom extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -44,15 +44,15 @@ public class CheckedRoom extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "floor_id", nullable = false)
-    private Floor floor;
+    private InspectionFloor inspectionFloor;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id", nullable = false)
     private Room room;
 
     @Builder
-    private CheckedRoom(PassState passState, String etc, ResidentInfo residentInfo
-            , Room room, Floor floor) {
+    private InspectionRoom(PassState passState, String etc, ResidentInfo residentInfo
+            , Room room, InspectionFloor inspectionFloor) {
         // ==기본값 설정==
         this.indoor = false;
         this.leavedTrash = false;
@@ -65,7 +65,7 @@ public class CheckedRoom extends BaseEntity {
         this.etc = etc;
 
         this.room = room;
-        this.floor = floor;
+        this.inspectionFloor = inspectionFloor;
     }
 
     public void updateValuesOnlyNotNull(Boolean indoor, Boolean leavedTrash

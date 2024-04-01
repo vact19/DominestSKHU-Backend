@@ -1,11 +1,11 @@
-package com.dominest.dominestbackend.api.post.sanitationcheck.response;
+package com.dominest.dominestbackend.api.post.inspection.response;
 
 
 import com.dominest.dominestbackend.api.common.AuditLog;
 import com.dominest.dominestbackend.api.common.CategoryResponse;
 import com.dominest.dominestbackend.api.common.PageInfo;
 import com.dominest.dominestbackend.domain.post.component.category.Category;
-import com.dominest.dominestbackend.domain.post.sanitationcheck.SanitationCheckPost;
+import com.dominest.dominestbackend.domain.post.inspection.InspectionPost;
 import lombok.*;
 import org.springframework.data.domain.Page;
 
@@ -14,20 +14,20 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Getter
-public class CheckPostListResponse {
+public class InspectionPostListResponse {
 
     CategoryResponse category;
     PageInfo page;
 
     List<CheckPostDto> posts;
-    public static CheckPostListResponse from(Page<SanitationCheckPost> postPage, Category category){
+    public static InspectionPostListResponse from(Page<InspectionPost> postPage, Category category){
         CategoryResponse categoryResponse = CategoryResponse.from(category);
         PageInfo pageInfo = PageInfo.from(postPage);
 
         List<CheckPostDto> posts
                 = CheckPostDto.from(postPage);
 
-        return new CheckPostListResponse(categoryResponse, pageInfo, posts);
+        return new InspectionPostListResponse(categoryResponse, pageInfo, posts);
     }
 
     @Builder
@@ -37,7 +37,7 @@ public class CheckPostListResponse {
         String title;
         AuditLog auditLog;
 
-        static CheckPostDto from(SanitationCheckPost post){
+        static CheckPostDto from(InspectionPost post){
             return CheckPostDto.builder()
                     .id(post.getId())
                     .title(post.getTitle())
@@ -45,7 +45,7 @@ public class CheckPostListResponse {
                     .build();
         }
 
-        static List<CheckPostDto> from(Page<SanitationCheckPost> posts){
+        static List<CheckPostDto> from(Page<InspectionPost> posts){
             return posts.stream()
                     .map(CheckPostDto::from)
                     .collect(Collectors.toList());
