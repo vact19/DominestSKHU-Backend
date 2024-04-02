@@ -13,15 +13,27 @@
         </root>
     </springProfile>
 
+
+
     <springProfile name="prod">
         <include resource="file-info-appender.xml"/>
         <include resource="file-warn-appender.xml"/>
         <include resource="file-error-appender.xml"/>
 
-        <root level="INFO">
+        <appender name="ASYNC-INFO" class="ch.qos.logback.classic.AsyncAppender">
             <appender-ref ref="FILE-INFO"/>
+        </appender>
+        <appender name="ASYNC-WARN" class="ch.qos.logback.classic.AsyncAppender">
             <appender-ref ref="FILE-WARN"/>
+        </appender>
+        <appender name="ASYNC-ERROR" class="ch.qos.logback.classic.AsyncAppender">
             <appender-ref ref="FILE-ERROR"/>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="ASYNC-INFO"/>
+            <appender-ref ref="ASYNC-WARN"/>
+            <appender-ref ref="ASYNC-ERROR"/>
         </root>
     </springProfile>
 </configuration>
