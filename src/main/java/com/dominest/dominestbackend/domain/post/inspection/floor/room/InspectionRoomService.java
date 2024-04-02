@@ -2,8 +2,8 @@ package com.dominest.dominestbackend.domain.post.inspection.floor.room;
 
 import com.dominest.dominestbackend.api.post.inspection.request.UpdateInspectionRoomRequest;
 import com.dominest.dominestbackend.domain.common.Datasource;
-import com.dominest.dominestbackend.global.exception.exceptions.domain.DomainException;
-import com.dominest.dominestbackend.global.exception.exceptions.external.common.ResourceNotFoundException;
+import com.dominest.dominestbackend.global.exception.exceptions.business.BusinessException;
+import com.dominest.dominestbackend.global.exception.exceptions.external.db.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,7 @@ public class InspectionRoomService {
         try {
             return inspectionRoomRepository.saveAll(inspectionRooms);
         } catch (DataIntegrityViolationException e) {
-            throw new DomainException("InspectionRoom 저장 실패, 중복 혹은 값의 누락을 확인해주세요"
+            throw new BusinessException("InspectionRoom 저장 실패, 중복 혹은 값의 누락을 확인해주세요"
                     , HttpStatus.BAD_REQUEST, e);
         }
     }

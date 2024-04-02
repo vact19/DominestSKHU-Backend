@@ -1,6 +1,6 @@
 package com.dominest.dominestbackend.domain.post.inspection.floor;
 
-import com.dominest.dominestbackend.global.exception.exceptions.domain.DomainException;
+import com.dominest.dominestbackend.global.exception.exceptions.business.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,7 @@ public class InspectionFloorService {
         try {
             return inspectionFloorRepository.saveAll(inspectionFloors);
         } catch (DataIntegrityViolationException e) {
-            throw new DomainException("Floor 저장 실패, 중복 혹은 값의 누락을 확인해주세요"
+            throw new BusinessException("Floor 저장 실패, 중복 혹은 값의 누락을 확인해주세요"
                     , HttpStatus.BAD_REQUEST, e);
         }
     }

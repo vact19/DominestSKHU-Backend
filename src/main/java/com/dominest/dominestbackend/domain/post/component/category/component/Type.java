@@ -1,7 +1,7 @@
 package com.dominest.dominestbackend.domain.post.component.category.component;
 
 import com.dominest.dominestbackend.global.exception.ErrorCode;
-import com.dominest.dominestbackend.global.exception.exceptions.domain.DomainException;
+import com.dominest.dominestbackend.global.exception.exceptions.business.BusinessException;
 import lombok.Getter;
 
 @Getter
@@ -22,7 +22,7 @@ public enum Type {
 
     public void validateEqualTo(Type type){
         if (! this.equals(type)){
-            throw new DomainException(ErrorCode.CATEGORY_TYPE_MISMATCHED);
+            throw new BusinessException(ErrorCode.CATEGORY_TYPE_MISMATCHED);
         }
     }
 }

@@ -6,7 +6,7 @@ import com.dominest.dominestbackend.domain.post.inspection.floor.room.component.
 import com.dominest.dominestbackend.domain.room.Room;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.exceptions.external.ExternalServiceException;
-import com.dominest.dominestbackend.global.exception.exceptions.domain.DomainException;
+import com.dominest.dominestbackend.global.exception.exceptions.business.BusinessException;
 import com.dominest.dominestbackend.global.exception.exceptions.external.file.FileIOException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -92,7 +92,7 @@ public class ExcelUtil {
                 .orElse(0);
 
         if (sheetColumnCount != RESIDENT_COLUMN_COUNT){
-            throw new DomainException("읽어들인 컬럼 개수가 " +
+            throw new BusinessException("읽어들인 컬럼 개수가 " +
                     RESIDENT_COLUMN_COUNT + "개가 아닙니다.", HttpStatus.BAD_REQUEST);
         }
     }

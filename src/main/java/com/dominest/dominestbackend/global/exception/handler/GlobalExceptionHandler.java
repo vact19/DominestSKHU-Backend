@@ -2,8 +2,10 @@ package com.dominest.dominestbackend.global.exception.handler;
 
 import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.dto.ErrorResponseDto;
+import com.dominest.dominestbackend.global.exception.exceptions.CustomException;
+import com.dominest.dominestbackend.global.exception.exceptions.auth.CustomAuthenticationException;
 import com.dominest.dominestbackend.global.exception.exceptions.external.ExternalServiceException;
-import com.dominest.dominestbackend.global.exception.exceptions.domain.DomainException;
+import com.dominest.dominestbackend.global.exception.exceptions.business.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,20 +17,18 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     /**
-     * @ModelAttribute 으로 binding error 발생시 BindException 발생한다.
-     * @RequestBody @Valid 바인딩 오류(HttpMessageConverter binding) 시 발생하는 MethodArgumentNotValidException 도 BindException 을 확장한다.
+     * \@ModelAttribute 으로 binding error 발생시 BindException 발생한다.
+     * \@RequestBody @Valid 바인딩 오류(HttpMessageConverter binding)시 ConstraintViolationException 을 추상화한
+     *  MethodArgumentNotValidException 도 BindException 을 확장한다.
      */
     @ExceptionHandler(BindException.class)
     public ResponseEntity<ErrorResponseDto<Map<String, String>>> handleBindException(BindException e, HttpServletRequest request) {
@@ -53,35 +53,12 @@ public class GlobalExceptionHandler {
         return createErrorResponse(HttpStatus.BAD_REQUEST, errorInfoMap);
     }
 
-    /** @RequestParam 파라미터 누락*/
+    /** spring handler @RequestParam 파라미터 누락*/
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<ErrorResponseDto<String>> handleMissingServletRequestParameterException(MissingServletRequestParameterException e, HttpServletRequest request) {
         printLog(e, request);
         String message = "파라미터 '" + e.getParameterName() + "'이 누락되었습니다.";
         return createErrorResponse(HttpStatus.BAD_REQUEST, message);
-    }
-
-    /** @Valid 파라미터 누락*/
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorResponseDto<Map<String, String>>> handleConstraintViolationException(ConstraintViolationException e, HttpServletRequest request) {
-        printLog(e, request);
-        Set<ConstraintViolation<?>> constraintViolations = e.getConstraintViolations();
-
-        StringBuilder sb = new StringBuilder();
-        Map<String, String> errorInfoMap = new HashMap<>();
-        for (ConstraintViolation<?> constraintViolation : constraintViolations) {
-            String errorMsg = sb
-                    .append(constraintViolation.getMessage())
-                    .append(". 입력값: ")
-                    .append(constraintViolation.getInvalidValue())
-                    .toString();
-
-            errorInfoMap.put(constraintViolation.getConstraintDescriptor().getAnnotation().annotationType().getSimpleName(), errorMsg);
-
-            sb.setLength(0);
-        }
-
-        return createErrorResponse(HttpStatus.BAD_REQUEST, errorInfoMap);
     }
 
     @ExceptionHandler({IllegalArgumentException.class})
@@ -97,21 +74,14 @@ public class GlobalExceptionHandler {
         return createErrorResponse(ErrorCode.HTTP_MESSAGE_NOT_READABLE);
     }
 
-    // DomainException 을 상속한 다른 Custom Exception 에도 적용된다.
-    @ExceptionHandler({DomainException.class})
-    public ResponseEntity<ErrorResponseDto<String>> handleBusinessException(DomainException e, HttpServletRequest request){
+    // global.exception.exceptions 패키지의 커스텀 예외 처리를 담당한다.
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<ErrorResponseDto<String>> handleBusinessException(CustomException e, HttpServletRequest request){
         printLog(e, request);
         return createErrorResponse(e.getHttpStatus(), e.getMessage());
     }
 
-    // 비즈니스 로직이 아닌 애플리케이션 서비스 로직상 예외
-    @ExceptionHandler({ExternalServiceException.class})
-    public ResponseEntity<ErrorResponseDto<String>> handleAppServiceException(ExternalServiceException e, HttpServletRequest request){
-        printLog(e, request);
-        return createErrorResponse(e.getHttpStatus(), e.getMessage());
-    }
-
-    // 예상하지 못한 예외 발생 시, 예외 로그 전체를 서버에 남기고, 로그 자체를 모두 클라이언트에 전송한다.
+    // 예상하지 못한 예외
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto<String>> handleException(Exception e, HttpServletRequest request){
         log.error("예외처리 범위 외의 오류 발생."); // enum.name() enum.toString() 차이 기억하자. name은 단순 문자열변환, toString은 오버라이딩된 메서드 호출

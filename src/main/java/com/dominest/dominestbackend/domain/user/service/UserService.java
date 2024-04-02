@@ -10,8 +10,8 @@ import com.dominest.dominestbackend.domain.user.User;
 import com.dominest.dominestbackend.domain.user.component.Role;
 import com.dominest.dominestbackend.domain.user.repository.UserRepository;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
-import com.dominest.dominestbackend.global.exception.exceptions.domain.DomainException;
-import com.dominest.dominestbackend.global.exception.exceptions.external.common.ResourceNotFoundException;
+import com.dominest.dominestbackend.global.exception.exceptions.business.BusinessException;
+import com.dominest.dominestbackend.global.exception.exceptions.external.db.ResourceNotFoundException;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -51,7 +51,7 @@ public class UserService {
         User user = getUserByEmail(email);
 
         if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
-            throw new DomainException(ErrorCode.MISMATCHED_SIGNIN_INFO);
+            throw new BusinessException(ErrorCode.MISMATCHED_SIGNIN_INFO);
         }
         // audience 는 email + ":" + name 으로 구성
         String audience = user.getEmail() + ":" + user.getName();
@@ -72,7 +72,7 @@ public class UserService {
         User user = getUserByEmail(email);
 
         if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
-            throw new DomainException(ErrorCode.MISMATCHED_SIGNIN_INFO);
+            throw new BusinessException(ErrorCode.MISMATCHED_SIGNIN_INFO);
         }
         // audience 는 email + ":" + name 으로 구성
         String audience = user.getEmail() + ":" + user.getName();
@@ -131,7 +131,7 @@ public class UserService {
             user.changePassword(passwordEncoder.encode(newPassword));
             userRepository.save(user);
         } else {
-            throw new DomainException(ErrorCode.EMAIL_VERIFICATION_CODE_MISMATCHED);
+            throw new BusinessException(ErrorCode.EMAIL_VERIFICATION_CODE_MISMATCHED);
         }
     }
 }

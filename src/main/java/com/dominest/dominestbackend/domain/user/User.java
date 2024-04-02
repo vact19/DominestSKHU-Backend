@@ -3,7 +3,7 @@ package com.dominest.dominestbackend.domain.user;
 import com.dominest.dominestbackend.domain.common.BaseEntity;
 import com.dominest.dominestbackend.domain.user.component.Role;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
-import com.dominest.dominestbackend.global.exception.exceptions.external.auth.JwtAuthException;
+import com.dominest.dominestbackend.global.exception.exceptions.auth.jwt.JwtAuthenticationException;
 import com.dominest.dominestbackend.global.util.DateConverter;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -75,7 +75,7 @@ public class User extends BaseEntity implements UserDetails {
 
     public void validateRefreshTokenExp() {
         if(tokenExp.isBefore(LocalDateTime.now())){
-            throw new JwtAuthException(ErrorCode.REFRESH_TOKEN_EXPIRED);
+            throw new JwtAuthenticationException(ErrorCode.REFRESH_TOKEN_EXPIRED);
         }
     }
 

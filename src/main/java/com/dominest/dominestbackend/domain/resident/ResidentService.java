@@ -9,8 +9,8 @@ import com.dominest.dominestbackend.domain.room.Room;
 import com.dominest.dominestbackend.domain.room.RoomService;
 import com.dominest.dominestbackend.domain.room.roomhistory.RoomHistoryService;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
-import com.dominest.dominestbackend.global.exception.exceptions.domain.DomainException;
-import com.dominest.dominestbackend.global.exception.exceptions.external.common.ResourceNotFoundException;
+import com.dominest.dominestbackend.global.exception.exceptions.business.BusinessException;
+import com.dominest.dominestbackend.global.exception.exceptions.external.db.ResourceNotFoundException;
 import com.dominest.dominestbackend.global.util.ExcelUtil;
 import com.dominest.dominestbackend.global.util.FileService;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +38,7 @@ public class ResidentService {
     @Transactional
     public void uploadPdf(Long id, FileService.FilePrefix filePrefix, MultipartFile pdf) {
         if (fileService.isInvalidFileExtension(pdf.getOriginalFilename(), FileService.FileExt.PDF)) {
-            throw new DomainException(ErrorCode.INVALID_FILE_EXTENSION);
+            throw new BusinessException(ErrorCode.INVALID_FILE_EXTENSION);
         }
 
         Resident resident = findById(id);
@@ -92,7 +92,7 @@ public class ResidentService {
         }
         // 한 건도 업로드하지 못했으면 예외발생
         if (response.getSuccessCount() == 0)
-            throw new DomainException(ErrorCode.NO_FILE_UPLOADED);
+            throw new BusinessException(ErrorCode.NO_FILE_UPLOADED);
         return response;
     }
 
@@ -165,7 +165,7 @@ public class ResidentService {
         try {
             residentRepository.saveAndFlush(residentToUpdate);
         } catch (DataIntegrityViolationException e) {
-            throw new DomainException("입사생 정보 변경 실패, 잘못된 입력값입니다. 데이터 누락 혹은 중복을 확인해주세요." +
+            throw new BusinessException("입사생 정보 변경 실패, 잘못된 입력값입니다. 데이터 누락 혹은 중복을 확인해주세요." +
                     " 지정 학기에 같은 학번을 가졌거나, 같은 방을 사용중인 입사생이 있을 수 있습니다.", HttpStatus.BAD_REQUEST, e);
         }
         updateRoomHistory(residentToUpdate);
@@ -196,7 +196,7 @@ public class ResidentService {
             // InspectionRoom 등 Resident를 참조하는 테이블에 결과를 반영하지 않는다.
             residentRepository.saveAndFlush(resident);
         } catch (DataIntegrityViolationException e) {
-            throw new DomainException(
+            throw new BusinessException(
                     String.format("입사생 저장 실패, 잘못된 입력값입니다. 데이터 누락 혹은 중복을 확인해주세요. 이름: %s, 학번: %s, 학기: %s, 방 번호: %d, 방 코드: %s"
                             , resident.getName(), resident.getStudentId(), resident.getResidenceSemester()
                             , resident.getRoom().getId(), resident.getRoom().getAssignedRoom())

@@ -9,7 +9,7 @@ import com.dominest.dominestbackend.domain.notice.repeatnotice.RepeatNotice;
 import com.dominest.dominestbackend.domain.notice.repeatnotice.repository.RepeatNoticeRepository;
 import com.dominest.dominestbackend.domain.notice.repeatschedule.RepeatSchedule;
 import com.dominest.dominestbackend.domain.notice.repeatschedule.repository.RepeatScheduleRepository;
-import com.dominest.dominestbackend.global.exception.exceptions.external.common.ResourceNotFoundException;
+import com.dominest.dominestbackend.global.exception.exceptions.external.db.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

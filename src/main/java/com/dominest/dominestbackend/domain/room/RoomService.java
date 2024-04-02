@@ -1,7 +1,7 @@
 package com.dominest.dominestbackend.domain.room;
 
 import com.dominest.dominestbackend.domain.common.Datasource;
-import com.dominest.dominestbackend.global.exception.exceptions.external.common.ResourceNotFoundException;
+import com.dominest.dominestbackend.global.exception.exceptions.external.db.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

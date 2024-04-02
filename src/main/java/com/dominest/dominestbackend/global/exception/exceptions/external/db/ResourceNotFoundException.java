@@ -1,4 +1,4 @@
-package com.dominest.dominestbackend.global.exception.exceptions.external.common;
+package com.dominest.dominestbackend.global.exception.exceptions.external.db;
 
 import com.dominest.dominestbackend.domain.common.Datasource;
 

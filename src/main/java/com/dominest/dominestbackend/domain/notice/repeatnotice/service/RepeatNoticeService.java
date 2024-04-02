@@ -5,7 +5,7 @@ import com.dominest.dominestbackend.api.notice.repeatnotice.response.RepeatNotic
 import com.dominest.dominestbackend.domain.notice.repeatnotice.RepeatNotice;
 import com.dominest.dominestbackend.domain.notice.repeatnotice.repository.RepeatNoticeRepository;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
-import com.dominest.dominestbackend.global.exception.exceptions.domain.DomainException;
+import com.dominest.dominestbackend.global.exception.exceptions.business.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,7 +74,7 @@ public class RepeatNoticeService {
             case 7:
                 return "일요일";
             default:
-                throw new DomainException(ErrorCode.NOT_CORRECT_DAY);
+                throw new BusinessException(ErrorCode.NOT_CORRECT_DAY);
         }
     }
     public List<String> getDayNoticeContent(int requestDayOfWeek, LocalTime requestTime) {
