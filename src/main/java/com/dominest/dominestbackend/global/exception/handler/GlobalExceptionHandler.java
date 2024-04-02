@@ -84,7 +84,7 @@ public class GlobalExceptionHandler {
     // 예상하지 못한 예외
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto<String>> handleException(Exception e, HttpServletRequest request){
-        log.error("예외처리 범위 외의 오류 발생."); // enum.name() enum.toString() 차이 기억하자. name은 단순 문자열변환, toString은 오버라이딩된 메서드 호출
+        log.error("예외처리 범위 외의 오류 발생.");
         printLog(e, request);
 
         return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
