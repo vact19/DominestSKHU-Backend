@@ -9,7 +9,7 @@ import com.dominest.dominestbackend.domain.post.component.category.service.Categ
 import com.dominest.dominestbackend.domain.user.User;
 import com.dominest.dominestbackend.domain.user.service.UserService;
 import com.dominest.dominestbackend.global.exception.exceptions.external.db.ResourceNotFoundException;
-import com.dominest.dominestbackend.global.util.FileService;
+import com.dominest.dominestbackend.global.util.FileManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.dominest.dominestbackend.global.util.FileService.FilePrefix.*;
+import static com.dominest.dominestbackend.global.util.FileManager.FilePrefix.*;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -29,7 +29,7 @@ public class ManualPostService {
     private final CategoryService categoryService;
     private final UserService userService;
     private final ManualPostRepository manualPostRepository;
-    private final FileService fileService;
+    private final FileManager fileManager;
 
     private static final String FILE_PATH_PREFIX = "manual/";
     private static final String FILE_PATH_SUFFIX = "/";
@@ -55,20 +55,20 @@ public class ManualPostService {
                           Set<MultipartFile> videoFiles, ManualPost manualPost, Long manualPostId) {
 
         String subPath = FILE_PATH_PREFIX +manualPostId+ FILE_PATH_SUFFIX;
-        Set<String> savedAttachUrls = fileService.save(FileService.FilePrefix.ATTACH_TYPE, subPath, attachFiles);
-        Set<String> savedImgUrls = fileService.save(FileService.FilePrefix.IMAGE_TYPE, subPath, imageFiles);
-        Set<String> savedVideoUrls = fileService.save(FileService.FilePrefix.VIDEO_TYPE, subPath, videoFiles);
+        Set<String> savedAttachUrls = fileManager.save(FileManager.FilePrefix.ATTACH_TYPE, subPath, attachFiles);
+        Set<String> savedImgUrls = fileManager.save(FileManager.FilePrefix.IMAGE_TYPE, subPath, imageFiles);
+        Set<String> savedVideoUrls = fileManager.save(FileManager.FilePrefix.VIDEO_TYPE, subPath, videoFiles);
         manualPost.setAttachmentNames(savedAttachUrls, savedImgUrls, savedVideoUrls);
     }
 
     private void deleteFile(Set<String> toDeleteAttachFileUrls, Set<String> toDeleteImageFileUrls,
                             Set<String> toDeleteVideoFileUrls) {
         if(toDeleteImageFileUrls!= null)
-            toDeleteImageFileUrls.forEach(fileService::deleteFile);
+            toDeleteImageFileUrls.forEach(fileManager::deleteFile);
         if(toDeleteVideoFileUrls != null)
-            toDeleteVideoFileUrls.forEach(fileService::deleteFile);
+            toDeleteVideoFileUrls.forEach(fileManager::deleteFile);
         if(toDeleteAttachFileUrls != null)
-            toDeleteAttachFileUrls.forEach(fileService::deleteFile);
+            toDeleteAttachFileUrls.forEach(fileManager::deleteFile);
     }
 
     public Page<ManualPost> getPage(Long categoryId, Pageable pageable) {
@@ -91,7 +91,7 @@ public class ManualPostService {
         ManualPost post = getById(manualPostId);
         manualPostRepository.delete(post);
         String folderPath = FILE_PATH_PREFIX +manualPostId+ FILE_PATH_SUFFIX;
-        fileService.deleteFolder(folderPath);
+        fileManager.deleteFolder(folderPath);
         return post.getId();
     }
 
@@ -110,19 +110,19 @@ public class ManualPostService {
 
         Optional.ofNullable(reqDto.getAttachFiles())
                 .ifPresent(attachFiles -> {
-                    Set<String> savedAttachUrls = fileService.save(ATTACH_TYPE, subPath, attachFiles);
+                    Set<String> savedAttachUrls = fileManager.save(ATTACH_TYPE, subPath, attachFiles);
                     manualPost.addAttachmentUrls(savedAttachUrls);
                 });
 
         Optional.ofNullable(reqDto.getImageFiles())
                 .ifPresent(imageFiles -> {
-                    Set<String> savedImageUrls = fileService.save(IMAGE_TYPE, subPath, imageFiles);
+                    Set<String> savedImageUrls = fileManager.save(IMAGE_TYPE, subPath, imageFiles);
                     manualPost.addImageUrls(savedImageUrls);
                 });
 
         Optional.ofNullable(reqDto.getVideoFiles())
                 .ifPresent(videoFiles -> {
-                    Set<String> savedVideoUrls = fileService.save(VIDEO_TYPE, subPath, videoFiles);
+                    Set<String> savedVideoUrls = fileManager.save(VIDEO_TYPE, subPath, videoFiles);
                     manualPost.addVideoUrls(savedVideoUrls);
                 });
 

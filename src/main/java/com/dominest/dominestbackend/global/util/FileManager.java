@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -18,12 +18,12 @@ import java.util.*;
 import java.util.stream.Stream;
 
 @Slf4j
-@Service
-public class FileService {
+@Component
+public class FileManager {
     // yml 설정파일
     private final String fileUploadPath;
 
-    public FileService(@Value("${file.upload.path}")String fileUploadPath) {
+    public FileManager(@Value("${file.upload.path}")String fileUploadPath) {
         this.fileUploadPath = fileUploadPath;
     }
 

@@ -11,7 +11,7 @@ import com.dominest.dominestbackend.domain.post.image.ImageType;
 import com.dominest.dominestbackend.domain.post.image.ImageTypeService;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.exceptions.external.file.FileIOException;
-import com.dominest.dominestbackend.global.util.FileService;
+import com.dominest.dominestbackend.global.util.FileManager;
 import com.dominest.dominestbackend.global.util.PageableUtil;
 import com.dominest.dominestbackend.global.util.PrincipalUtil;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +33,7 @@ import java.util.List;
 public class ImageTypeController {
 
     private final ImageTypeService imageTypeService;
-    private final FileService fileService;
+    private final FileManager fileManager;
     private final CategoryService categoryService;
 
     //    1. 제목
@@ -76,7 +76,7 @@ public class ImageTypeController {
         ImageType imageType = imageTypeService.deleteById(imageTypeId);
 
         List<String> imageUrlsToDelete = imageType.getImageUrls();
-        fileService.deleteFile(FileService.FilePrefix.POST_IMAGE_TYPE, imageUrlsToDelete);
+        fileManager.deleteFile(FileManager.FilePrefix.POST_IMAGE_TYPE, imageUrlsToDelete);
 
         return new ResponseTemplate<>(HttpStatus.OK, imageType.getId() + "번 게시글 삭제");
     }
@@ -84,7 +84,7 @@ public class ImageTypeController {
     // 게시물 이미지 조회
     @GetMapping("/posts/image-types/images")
     public void getImage(HttpServletResponse response, @RequestParam(required = true) String filename) {
-        byte[] bytes = fileService.getByteArr(FileService.FilePrefix.POST_IMAGE_TYPE, filename);
+        byte[] bytes = fileManager.getByteArr(FileManager.FilePrefix.POST_IMAGE_TYPE, filename);
 
         response.setContentType("image/*");
         try {

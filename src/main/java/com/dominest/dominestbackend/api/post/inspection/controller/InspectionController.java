@@ -17,7 +17,7 @@ import com.dominest.dominestbackend.domain.post.inspection.floor.room.Inspection
 import com.dominest.dominestbackend.domain.post.inspection.floor.room.InspectionRoomService;
 import com.dominest.dominestbackend.domain.resident.component.ResidenceSemester;
 import com.dominest.dominestbackend.global.util.ExcelUtil;
-import com.dominest.dominestbackend.global.util.FileService.FileExt;
+import com.dominest.dominestbackend.global.util.FileManager.FileExt;
 import com.dominest.dominestbackend.global.util.PageableUtil;
 import com.dominest.dominestbackend.global.util.PrincipalUtil;
 import lombok.Getter;

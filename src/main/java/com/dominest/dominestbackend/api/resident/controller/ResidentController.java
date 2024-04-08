@@ -15,7 +15,7 @@ import com.dominest.dominestbackend.domain.resident.component.ResidenceSemester;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.exceptions.external.file.FileIOException;
 import com.dominest.dominestbackend.global.util.ExcelUtil;
-import com.dominest.dominestbackend.global.util.FileService;
+import com.dominest.dominestbackend.global.util.FileManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -35,7 +35,7 @@ import java.util.List;
 public class ResidentController {
 
     private final ResidentService residentService;
-    private final FileService fileService;
+    private final FileManager fileManager;
 
     // 엑셀로 업로드
     @PostMapping("/residents/upload-excel")
@@ -114,10 +114,10 @@ public class ResidentController {
 
         // PdfType에 따라 입사 혹은 퇴사신청서 filename 가져오기
         String filename = pdfType.getPdfFileName(resident);
-        FileService.FilePrefix filePrefix = pdfType.toFilePrefix();
+        FileManager.FilePrefix filePrefix = pdfType.toFilePrefix();
 
         // PDF 파일 읽기
-        byte[] bytes = fileService.getByteArr(filePrefix, filename);
+        byte[] bytes = fileManager.getByteArr(filePrefix, filename);
 
         response.setContentType(MediaType.APPLICATION_PDF_VALUE);
 
@@ -132,7 +132,7 @@ public class ResidentController {
     @PostMapping("/residents/{id}/pdf")
     public ResponseEntity<ResponseTemplate<String>> handlePdfUpload(@PathVariable Long id, @RequestParam(required = true) MultipartFile pdf,
                                                                     @RequestParam(required = true) PdfType pdfType){
-        FileService.FilePrefix filePrefix = pdfType.toFilePrefix();
+        FileManager.FilePrefix filePrefix = pdfType.toFilePrefix();
 
         residentService.uploadPdf(id, filePrefix, pdf);
         ResponseTemplate<String> responseTemplate = new ResponseTemplate<>(HttpStatus.CREATED, "pdf 업로드 완료");
@@ -148,7 +148,7 @@ public class ResidentController {
             , @RequestParam(required = true) ResidenceSemester residenceSemester
             , @RequestParam(required = true) PdfType pdfType
     ){
-        FileService.FilePrefix filePrefix = pdfType.toFilePrefix();
+        FileManager.FilePrefix filePrefix = pdfType.toFilePrefix();
         PdfBulkUploadResponse response = residentService.uploadPdfs(filePrefix, pdfs, residenceSemester);
 
         ResponseTemplate<PdfBulkUploadResponse> responseTemplate = new ResponseTemplate<>(HttpStatus.CREATED,

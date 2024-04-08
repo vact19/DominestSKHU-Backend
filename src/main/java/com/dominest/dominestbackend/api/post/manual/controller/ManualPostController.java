@@ -12,7 +12,7 @@ import com.dominest.dominestbackend.domain.post.manual.ManualPost;
 import com.dominest.dominestbackend.domain.post.manual.ManualPostService;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.exceptions.external.file.FileIOException;
-import com.dominest.dominestbackend.global.util.FileService;
+import com.dominest.dominestbackend.global.util.FileManager;
 import com.dominest.dominestbackend.global.util.PageableUtil;
 import com.dominest.dominestbackend.global.util.PrincipalUtil;
 import com.dominest.dominestbackend.global.util.VideoService;
@@ -38,7 +38,7 @@ import java.util.Optional;
 public class ManualPostController {
     private final ManualPostService manualPostService;
     private final CategoryService categoryService;
-    private final FileService fileService;
+    private final FileManager fileManager;
     private final VideoService videoService;
 
     //게시글 작성
@@ -134,7 +134,7 @@ public class ManualPostController {
     }
 
     public void getAnyFile(HttpServletResponse response, String filePath) {
-        byte[] bytes = fileService.getByteArr(filePath);
+        byte[] bytes = fileManager.getByteArr(filePath);
         try {
             response.getOutputStream().write(bytes);
         } catch (IOException e) {

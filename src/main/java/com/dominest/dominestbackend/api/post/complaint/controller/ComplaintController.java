@@ -11,7 +11,7 @@ import com.dominest.dominestbackend.domain.post.component.category.Category;
 import com.dominest.dominestbackend.domain.post.component.category.component.Type;
 import com.dominest.dominestbackend.domain.post.component.category.service.CategoryService;
 import com.dominest.dominestbackend.global.util.ExcelUtil;
-import com.dominest.dominestbackend.global.util.FileService;
+import com.dominest.dominestbackend.global.util.FileManager;
 import com.dominest.dominestbackend.global.util.PageableUtil;
 import com.dominest.dominestbackend.global.util.PrincipalUtil;
 import lombok.RequiredArgsConstructor;
@@ -113,7 +113,7 @@ public class ComplaintController {
             filename = sb.append(formattedDate)
                     .append(" 민원접수내역 전체 ")
                     .append(complaintCnt).append("건")
-                    .append(".").append(FileService.FileExt.XLSX.value)
+                    .append(".").append(FileManager.FileExt.XLSX.value)
                     .toString();
         } else {
             complaints = complaintRepository.findAllByCategoryId(
@@ -123,7 +123,7 @@ public class ComplaintController {
             filename = sb.append(formattedDate)
                     .append(" 민원접수내역 최신 ")
                     .append(downloadCnt).append("건")
-                    .append(".").append(FileService.FileExt.XLSX.value)
+                    .append(".").append(FileManager.FileExt.XLSX.value)
                     .toString();
         }
         String sheetName = "민원접수내역";

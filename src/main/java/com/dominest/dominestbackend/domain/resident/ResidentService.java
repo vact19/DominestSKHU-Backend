@@ -12,7 +12,7 @@ import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.exceptions.business.BusinessException;
 import com.dominest.dominestbackend.global.exception.exceptions.external.db.ResourceNotFoundException;
 import com.dominest.dominestbackend.global.util.ExcelUtil;
-import com.dominest.dominestbackend.global.util.FileService;
+import com.dominest.dominestbackend.global.util.FileManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -29,32 +29,32 @@ import java.util.List;
 @Service
 public class ResidentService {
     private final ResidentRepository residentRepository;
-    private final FileService fileService;
+    private final FileManager fileManager;
     private final RoomService roomService;
     private final RoomHistoryService roomHistoryService;
     private final ResidentFileManager residentFileManager;
 
     /** return 저장한 파일명 */
     @Transactional
-    public void uploadPdf(Long id, FileService.FilePrefix filePrefix, MultipartFile pdf) {
-        if (fileService.isInvalidFileExtension(pdf.getOriginalFilename(), FileService.FileExt.PDF)) {
+    public void uploadPdf(Long id, FileManager.FilePrefix filePrefix, MultipartFile pdf) {
+        if (fileManager.isInvalidFileExtension(pdf.getOriginalFilename(), FileManager.FileExt.PDF)) {
             throw new BusinessException(ErrorCode.INVALID_FILE_EXTENSION);
         }
 
         Resident resident = findById(id);
         String fileNameToUpload = resident.generatePdfFileNameToStore();
 
-        fileService.save(filePrefix, pdf, fileNameToUpload);
+        fileManager.save(filePrefix, pdf, fileNameToUpload);
 
         String prevFilename = residentFileManager.getPdfFilename(resident, filePrefix);
         residentFileManager.setPdfFilenameToResident(resident, filePrefix, fileNameToUpload);
 
         if (prevFilename != null)
-            fileService.deleteFile(filePrefix, prevFilename);
+            fileManager.deleteFile(filePrefix, prevFilename);
     }
 
     @Transactional
-    public PdfBulkUploadResponse uploadPdfs(FileService.FilePrefix filePrefix, List<MultipartFile> pdfs, ResidenceSemester residenceSemester) {
+    public PdfBulkUploadResponse uploadPdfs(FileManager.FilePrefix filePrefix, List<MultipartFile> pdfs, ResidenceSemester residenceSemester) {
         PdfBulkUploadResponse response = new PdfBulkUploadResponse();
         for (MultipartFile pdf : pdfs) {
             // 빈 객체면 continue
@@ -64,12 +64,12 @@ public class ResidentService {
 
             String filename = pdf.getOriginalFilename();
             // pdf 확장자가 아니라면 continue
-            if (fileService.isInvalidFileExtension(filename, FileService.FileExt.PDF)) {
+            if (fileManager.isInvalidFileExtension(filename, FileManager.FileExt.PDF)) {
                 continue;
             }
 
             // 1. 파일명으로 해당 차수의 학생이름을 찾는다. 파일명은 '학생이름.pdf' 여야 한다.
-            String residentName = fileService.extractFileNameNoExt(filename);
+            String residentName = fileManager.extractFileNameNoExt(filename);
             Resident resident = residentRepository.findByNameAndResidenceSemester(residentName, residenceSemester);
 
             // 파일명에 해당하는 학생이 없으면 continue
@@ -79,7 +79,7 @@ public class ResidentService {
             }
 
             String fileNameToUpload = resident.generatePdfFileNameToStore();
-            fileService.save(filePrefix, pdf, fileNameToUpload);
+            fileManager.save(filePrefix, pdf, fileNameToUpload);
 
             String prevFilename = residentFileManager.getPdfFilename(resident, filePrefix);
             residentFileManager.setPdfFilenameToResident(resident, filePrefix, fileNameToUpload);
@@ -88,7 +88,7 @@ public class ResidentService {
             response.addSuccessCount();
 
             if (prevFilename != null)
-                fileService.deleteFile(filePrefix, prevFilename);
+                fileManager.deleteFile(filePrefix, prevFilename);
         }
         // 한 건도 업로드하지 못했으면 예외발생
         if (response.getSuccessCount() == 0)

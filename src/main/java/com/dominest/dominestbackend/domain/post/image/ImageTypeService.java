@@ -10,7 +10,7 @@ import com.dominest.dominestbackend.domain.post.component.category.service.Categ
 import com.dominest.dominestbackend.domain.user.User;
 import com.dominest.dominestbackend.domain.user.service.UserService;
 import com.dominest.dominestbackend.global.exception.exceptions.external.db.ResourceNotFoundException;
-import com.dominest.dominestbackend.global.util.FileService;
+import com.dominest.dominestbackend.global.util.FileManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +26,7 @@ public class ImageTypeService {
     private final ImageTypeRepository imageTypeRepository;
     private final UserService userService;
     private final CategoryService categoryService;
-    private final FileService fileService;
+    private final FileManager fileManager;
     private final RecentPostService recentPostService;
 
     @Transactional
@@ -38,7 +38,7 @@ public class ImageTypeService {
 
         User writer = userService.getUserByEmail(uploaderEmail);
 
-        List<String> savedImgUrls = fileService.save(FileService.FilePrefix.POST_IMAGE_TYPE, request.getPostImages());
+        List<String> savedImgUrls = fileManager.save(FileManager.FilePrefix.POST_IMAGE_TYPE, request.getPostImages());
         ImageType imageType = request.toEntity(savedImgUrls, writer, category);
 
 
@@ -68,7 +68,7 @@ public class ImageTypeService {
         ImageType imageType = imageTypeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(Datasource.IMAGE_TYPE, id));
 
-        List<String> savedImgUrls = fileService.save(FileService.FilePrefix.POST_IMAGE_TYPE, request.getPostImages());
+        List<String> savedImgUrls = fileManager.save(FileManager.FilePrefix.POST_IMAGE_TYPE, request.getPostImages());
         imageType.setImageUrls(savedImgUrls);
         return imageType.getId();
     }
