@@ -36,15 +36,15 @@ public class ResidentService {
 
     /** return 저장한 파일명 */
     @Transactional
-    public void uploadPdf(Long id, FileManager.FilePrefix filePrefix, MultipartFile pdf) {
-        if (fileManager.isInvalidFileExtension(pdf.getOriginalFilename(), FileManager.FileExt.PDF)) {
+    public void uploadPdf(Long id, FileManager.FilePrefix filePrefix, MultipartFile file) {
+        if (fileManager.isInvalidFileExtension(file.getOriginalFilename(), FileManager.FileExt.PDF)) {
             throw new BusinessException(ErrorCode.INVALID_FILE_EXTENSION);
         }
 
         Resident resident = findById(id);
         String fileNameToUpload = resident.generatePdfFileNameToStore();
 
-        fileManager.save(filePrefix, pdf, fileNameToUpload);
+        fileManager.save(filePrefix, file, fileNameToUpload);
 
         String prevFilename = residentFileManager.getPdfFilename(resident, filePrefix);
         residentFileManager.setPdfFilenameToResident(resident, filePrefix, fileNameToUpload);
@@ -54,21 +54,21 @@ public class ResidentService {
     }
 
     @Transactional
-    public PdfBulkUploadResponse uploadPdfs(FileManager.FilePrefix filePrefix, List<MultipartFile> pdfs, ResidenceSemester residenceSemester) {
+    public PdfBulkUploadResponse uploadPdfs(FileManager.FilePrefix filePrefix, List<MultipartFile> files, ResidenceSemester residenceSemester) {
         PdfBulkUploadResponse response = new PdfBulkUploadResponse();
-        for (MultipartFile pdf : pdfs) {
+        for (MultipartFile file : files) {
             // 빈 객체면 continue
-            if (pdf.isEmpty()) {
+            if (file.isEmpty()) {
                 continue;
             }
 
-            String filename = pdf.getOriginalFilename();
+            String filename = file.getOriginalFilename();
             // pdf 확장자가 아니라면 continue
             if (fileManager.isInvalidFileExtension(filename, FileManager.FileExt.PDF)) {
                 continue;
             }
 
-            // 1. 파일명으로 해당 차수의 학생이름을 찾는다. 파일명은 '학생이름.pdf' 여야 한다.
+            // 1. 파일명으로 해당 차수의 학생이름을 찾는다. 파일명은 '학생이름.file' 여야 한다.
             String residentName = fileManager.extractFileNameNoExt(filename);
             Resident resident = residentRepository.findByNameAndResidenceSemester(residentName, residenceSemester);
 
@@ -79,7 +79,7 @@ public class ResidentService {
             }
 
             String fileNameToUpload = resident.generatePdfFileNameToStore();
-            fileManager.save(filePrefix, pdf, fileNameToUpload);
+            fileManager.save(filePrefix, file, fileNameToUpload);
 
             String prevFilename = residentFileManager.getPdfFilename(resident, filePrefix);
             residentFileManager.setPdfFilenameToResident(resident, filePrefix, fileNameToUpload);
