@@ -88,17 +88,15 @@ public class GlobalExceptionHandler {
     }
 
     private <T> ResponseEntity<ErrorResponseDto<T>> createErrorResponse(HttpStatus httpStatus, T errorMessage) {
-        ErrorResponseDto<T> errDto = new ErrorResponseDto<>(httpStatus.value(), httpStatus, errorMessage);
+        ErrorResponseDto<T> errDto = new ErrorResponseDto<>(httpStatus, errorMessage);
         return ResponseEntity.status(httpStatus).body(errDto);
     }
 
     private ResponseEntity<ErrorResponseDto<String>> createErrorResponse(ErrorCode errorCode) {
-        int statusCode = errorCode.getStatusCode();
-        HttpStatus httpStatus = HttpStatus.valueOf(statusCode);
+        HttpStatus httpStatus = HttpStatus.valueOf(errorCode.getStatusCode());
 
         ErrorResponseDto<String> errDto = new ErrorResponseDto<>(
-                statusCode
-                , httpStatus
+                httpStatus
                 , errorCode.getMessage());
         return ResponseEntity.status(httpStatus).body(errDto);
     }
