@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.swing.text.html.Option;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -43,8 +42,7 @@ public class FileManager {
             log.warn("save() 메서드 Empty Optional 반환, 파일이 비어있을 수 있음.");
             return Optional.empty();
         }
-        String originalFileName = multipartFile.getOriginalFilename();
-        String filenameToStore = convertFileNameToUuid(originalFileName);
+        String filenameToStore = convertFileNameToUuid(multipartFile.getOriginalFilename());
         Path filePathToStore = Paths.get(fileUploadPath + prefix.getPrefix() + filenameToStore);
 
         saveMultipartFile(multipartFile, filePathToStore);
@@ -107,24 +105,24 @@ public class FileManager {
         }
     }
 
-    private String convertFileNameToUuid(String originalFileName) {
+    private String convertFileNameToUuid(String filename) {
         String uuid = UUID.randomUUID().toString();
-        String ext = extractExt(originalFileName);
+        String ext = extractExt(filename);
 
         return uuid + "." + ext;
     }
 
-    private String extractExt(String originalFileName) {
-        int pos = originalFileName.lastIndexOf(".");
-        return originalFileName.substring(pos +1);
+    private String extractExt(String filename) {
+        int pos = filename.lastIndexOf(".");
+        return filename.substring(pos +1);
     }
 
-    public String extractFileNameNoExt(String originalFileName) {
-        int pos = originalFileName.lastIndexOf(".");
+    public String extractFileNameNoExt(String filename) {
+        int pos = filename.lastIndexOf(".");
         if (pos > 0) {
-            return originalFileName.substring(0, pos);
+            return filename.substring(0, pos);
         } else {
-            return originalFileName;
+            return filename;
         }
     }
 
