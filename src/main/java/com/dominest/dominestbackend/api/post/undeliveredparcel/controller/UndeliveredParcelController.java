@@ -12,7 +12,7 @@ import com.dominest.dominestbackend.domain.post.undeliveredparcel.UndeliveredPar
 import com.dominest.dominestbackend.domain.post.undeliveredparcel.UndeliveredParcelPostService;
 import com.dominest.dominestbackend.domain.post.undeliveredparcel.component.UndeliveredParcelService;
 import com.dominest.dominestbackend.global.util.PageBaseConverter;
-import com.dominest.dominestbackend.global.util.PrincipalUtil;
+import com.dominest.dominestbackend.global.util.PrincipalParser;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +40,7 @@ public class UndeliveredParcelController {
     public ResponseEntity<ResponseTemplate<Void>> handleCreateParcelPost(
             @PathVariable Long categoryId, Principal principal
     ) {
-        String email = PrincipalUtil.toEmail(principal);
+        String email = PrincipalParser.toEmail(principal);
         long unDeliParcelId = undelivParcelPostService.create(categoryId, email);
         ResponseTemplate<Void> responseTemplate = new ResponseTemplate<>(HttpStatus.CREATED, unDeliParcelId + "번 게시글 작성");
 

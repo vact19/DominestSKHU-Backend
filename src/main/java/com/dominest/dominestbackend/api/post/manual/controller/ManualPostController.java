@@ -14,7 +14,7 @@ import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.exceptions.external.file.FileIOException;
 import com.dominest.dominestbackend.global.util.FileManager;
 import com.dominest.dominestbackend.global.util.PageBaseConverter;
-import com.dominest.dominestbackend.global.util.PrincipalUtil;
+import com.dominest.dominestbackend.global.util.PrincipalParser;
 import com.dominest.dominestbackend.global.util.VideoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.support.ResourceRegion;
@@ -47,7 +47,7 @@ public class ManualPostController {
             @PathVariable Long categoryId, Principal principal, @Valid CreateManualPostDto.Req reqDto
 
     ) {
-        String email = PrincipalUtil.toEmail(principal);
+        String email = PrincipalParser.toEmail(principal);
 
         long manualPostId = manualPostService.create(categoryId, reqDto, email);
 

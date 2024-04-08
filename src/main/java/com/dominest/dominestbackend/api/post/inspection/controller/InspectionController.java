@@ -19,7 +19,7 @@ import com.dominest.dominestbackend.domain.resident.component.ResidenceSemester;
 import com.dominest.dominestbackend.global.util.ExcelUtil;
 import com.dominest.dominestbackend.global.util.FileManager.FileExt;
 import com.dominest.dominestbackend.global.util.PageBaseConverter;
-import com.dominest.dominestbackend.global.util.PrincipalUtil;
+import com.dominest.dominestbackend.global.util.PrincipalParser;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -55,7 +55,7 @@ public class InspectionController {
             @PathVariable Long categoryId, Principal principal
             , @RequestBody @Valid ResidenceSemesterDto residenceSemesterDto
     ) {
-        String email = PrincipalUtil.toEmail(principal);
+        String email = PrincipalParser.toEmail(principal);
 
         long inspectionPostId = inspectionPostService.create(
                 residenceSemesterDto.getResidenceSemester()

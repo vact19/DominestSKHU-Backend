@@ -12,7 +12,7 @@ import com.dominest.dominestbackend.domain.jwt.service.TokenValidator;
 import com.dominest.dominestbackend.domain.schedule.service.ScheduleService;
 import com.dominest.dominestbackend.domain.todo.service.TodoService;
 import com.dominest.dominestbackend.domain.user.service.UserService;
-import com.dominest.dominestbackend.global.util.PrincipalUtil;
+import com.dominest.dominestbackend.global.util.PrincipalParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -59,7 +59,7 @@ public class UserController {
     @PostMapping("/logout")
     public ResponseTemplate<Void> logout(Principal principal) {
         // 액세스 토큰 검증은 필터에서 거치므로 바로 로그아웃 처리
-        userService.logout(PrincipalUtil.toEmail(principal));
+        userService.logout(PrincipalParser.toEmail(principal));
 
         return new ResponseTemplate<>(HttpStatus.OK, "로그아웃 성공");
     }
@@ -83,7 +83,7 @@ public class UserController {
     @PostMapping("/myPage/password") // 비밀번호 변경
     public ResponseTemplate<Void> changePassword(@RequestBody ChangePasswordRequest request
             , Principal principal) {
-        String logInUserEmail = PrincipalUtil.toEmail(principal);
+        String logInUserEmail = PrincipalParser.toEmail(principal);
 
         userService.changePassword(logInUserEmail, request.getPassword(), request.getNewPassword());
 

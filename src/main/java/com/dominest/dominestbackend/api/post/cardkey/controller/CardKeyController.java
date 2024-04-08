@@ -10,7 +10,7 @@ import com.dominest.dominestbackend.domain.post.component.category.Category;
 import com.dominest.dominestbackend.domain.post.component.category.component.Type;
 import com.dominest.dominestbackend.domain.post.component.category.service.CategoryService;
 import com.dominest.dominestbackend.global.util.PageBaseConverter;
-import com.dominest.dominestbackend.global.util.PrincipalUtil;
+import com.dominest.dominestbackend.global.util.PrincipalParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +34,7 @@ public class CardKeyController {
             @RequestBody @Valid CreateCardKeyRequest request
             , @PathVariable Long categoryId, Principal principal
     ) {
-        String email = PrincipalUtil.toEmail(principal);
+        String email = PrincipalParser.toEmail(principal);
         long cardKeyId = cardKeyService.create(request, categoryId, email);
         ResponseTemplate<Void> responseTemplate = new ResponseTemplate<>(HttpStatus.CREATED
                 , cardKeyId + "번 카드키 기록 작성");

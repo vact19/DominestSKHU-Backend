@@ -2,7 +2,7 @@ package com.dominest.dominestbackend.api.post.undeliveredparcel.response;
 
 import com.dominest.dominestbackend.domain.post.undeliveredparcel.UndeliveredParcelPost;
 import com.dominest.dominestbackend.domain.post.undeliveredparcel.component.UndeliveredParcel;
-import com.dominest.dominestbackend.global.util.PrincipalUtil;
+import com.dominest.dominestbackend.global.util.PrincipalParser;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
@@ -39,7 +39,7 @@ public class UndelivParcelPostDetailResponse {
                     .createTime(post.getCreateTime())
                     .lastModifiedTime(post.getLastModifiedTime())
                     .title(post.getTitle())
-                    .lastModifiedBy(PrincipalUtil.strToName(post.getLastModifiedBy()))
+                    .lastModifiedBy(PrincipalParser.toName(post.getLastModifiedBy()))
                     .undelivParcels(parcelDtos)
                     .build();
         }
@@ -65,7 +65,7 @@ public class UndelivParcelPostDetailResponse {
                     .recipientPhoneNum(undelivParcel.getRecipientPhoneNum())
                     .instruction(undelivParcel.getInstruction())
                     .processState(undelivParcel.getProcessState())
-                    .lastModifiedBy(PrincipalUtil.strToName(undelivParcel.getLastModifiedBy()))
+                    .lastModifiedBy(PrincipalParser.toName(undelivParcel.getLastModifiedBy()))
                     .lastModifiedTime(undelivParcel.getLastModifiedTime())
                     .build();
         }

@@ -13,7 +13,7 @@ import com.dominest.dominestbackend.domain.post.component.category.service.Categ
 import com.dominest.dominestbackend.global.util.ExcelUtil;
 import com.dominest.dominestbackend.global.util.FileManager;
 import com.dominest.dominestbackend.global.util.PageBaseConverter;
-import com.dominest.dominestbackend.global.util.PrincipalUtil;
+import com.dominest.dominestbackend.global.util.PrincipalParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,7 +43,7 @@ public class ComplaintController {
             @RequestBody @Valid CreateComplaintRequest request
             , @PathVariable Long categoryId, Principal principal
     ) {
-        String email = PrincipalUtil.toEmail(principal);
+        String email = PrincipalParser.toEmail(principal);
         long complaintId = complaintService.create(request, categoryId, email);
         ResponseTemplate<Void> responseTemplate = new ResponseTemplate<>(HttpStatus.CREATED, complaintId + "번 민원 작성");
 
