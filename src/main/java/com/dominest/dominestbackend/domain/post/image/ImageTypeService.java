@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -38,9 +40,9 @@ public class ImageTypeService {
 
         User writer = userService.getUserByEmail(uploaderEmail);
 
-        List<String> savedImgUrls = fileManager.save(FileManager.FilePrefix.POST_IMAGE_TYPE, request.getPostImages());
-        ImageType imageType = request.toEntity(savedImgUrls, writer, category);
-
+        List<Optional<String>> savedImgUrls = fileManager.save(FileManager.FilePrefix.POST_IMAGE_TYPE, request.getPostImages());
+        List<String> validImgUrls = extractValidImgUrls(savedImgUrls);
+        ImageType imageType = request.toEntity(validImgUrls, writer, category);
 
         ImageType saved = imageTypeRepository.save(imageType);
         RecentPost recentPost = RecentPost.builder()
@@ -68,8 +70,10 @@ public class ImageTypeService {
         ImageType imageType = imageTypeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(Datasource.IMAGE_TYPE, id));
 
-        List<String> savedImgUrls = fileManager.save(FileManager.FilePrefix.POST_IMAGE_TYPE, request.getPostImages());
-        imageType.setImageUrls(savedImgUrls);
+        List<Optional<String>> savedImgUrls = fileManager.save(FileManager.FilePrefix.POST_IMAGE_TYPE, request.getPostImages());
+        List<String> validImgUrls = extractValidImgUrls(savedImgUrls);
+
+        imageType.setImageUrls(validImgUrls);
         return imageType.getId();
     }
 
@@ -79,6 +83,13 @@ public class ImageTypeService {
                         .orElseThrow(() -> new ResourceNotFoundException(Datasource.IMAGE_TYPE, imageTypeId));
         imageTypeRepository.delete(imageType);
         return imageType;
+    }
+
+    private List<String> extractValidImgUrls(List<Optional<String>> savedImgUrls) {
+        return savedImgUrls.stream()
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toUnmodifiableList());
     }
 }
 

@@ -9,12 +9,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.swing.text.html.Option;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -27,28 +29,18 @@ public class FileManager {
         this.fileUploadPath = fileUploadPath;
     }
 
-    /**@return save() 메서드 반환값의 리스트*/
-    public List<String> save(FilePrefix prefix, List<MultipartFile> multipartFiles){
-        List<String> storedFilePaths = new ArrayList<>();
-        if (multipartFiles == null) {
-            return storedFilePaths;
-        }
-
-        for (MultipartFile multipartFile : multipartFiles) {
-            Optional<String> storedFilePath = save(prefix, multipartFile);
-            storedFilePath.ifPresentOrElse(
-                    storedFilePaths::add,
-                    () -> log.warn("save() 메서드 Empty Optional 반환, 파일이 비어있을 수 있음.")
-            );
-        }
-        // 저장한 파일의 경로 리스트를 반환한다.
-        return storedFilePaths;
+    /**@return save(FilePrefix prefix, MultipartFile multipartFile) 메서드 반환값의 리스트*/
+    public List<Optional<String>> save(FilePrefix prefix, List<MultipartFile> multipartFiles){
+        return multipartFiles.stream()
+                .map(multipartFile -> save(prefix, multipartFile))
+                .collect(Collectors.toUnmodifiableList());
     }
 
     /**@return "저장된 파일명 UUID" + ".확장자". */
     public Optional<String> save(FilePrefix prefix, MultipartFile multipartFile){
         // empty Check. type=file 이며 name이 일치한다면, 본문이 비어있어도 MultiPartFile 객체가 생성된다.
         if (multipartFile.isEmpty()) {
+            log.warn("save() 메서드 Empty Optional 반환, 파일이 비어있을 수 있음.");
             return Optional.empty();
         }
         String originalFileName = multipartFile.getOriginalFilename();
