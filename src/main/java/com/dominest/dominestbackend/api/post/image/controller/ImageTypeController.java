@@ -12,7 +12,7 @@ import com.dominest.dominestbackend.domain.post.image.ImageTypeService;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.exceptions.external.file.FileIOException;
 import com.dominest.dominestbackend.global.util.FileManager;
-import com.dominest.dominestbackend.global.util.PageableUtil;
+import com.dominest.dominestbackend.global.util.PageBaseConverter;
 import com.dominest.dominestbackend.global.util.PrincipalUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -111,7 +111,7 @@ public class ImageTypeController {
     @GetMapping("/categories/{categoryId}/posts/image-types")
     public ResponseTemplate<ImageTypeListResponse> handleGetImageTypes(@PathVariable Long categoryId, @RequestParam(defaultValue = "1") int page) {
         final int IMAGE_TYPE_PAGE_SIZE = 20;
-        Pageable pageable = PageableUtil.of(page, IMAGE_TYPE_PAGE_SIZE);
+        Pageable pageable = PageBaseConverter.of(page, IMAGE_TYPE_PAGE_SIZE);
 
         Category category = categoryService.validateCategoryType(categoryId, Type.IMAGE);
         // 카테고리 내 게시글이 1건도 없는 경우도 있으므로, 게시글과 함께 카테고리를 Join해서 데이터를 찾아오지 않는다.

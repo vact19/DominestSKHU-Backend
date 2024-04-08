@@ -9,7 +9,7 @@ import com.dominest.dominestbackend.domain.post.cardkey.CardKeyService;
 import com.dominest.dominestbackend.domain.post.component.category.Category;
 import com.dominest.dominestbackend.domain.post.component.category.component.Type;
 import com.dominest.dominestbackend.domain.post.component.category.service.CategoryService;
-import com.dominest.dominestbackend.global.util.PageableUtil;
+import com.dominest.dominestbackend.global.util.PageBaseConverter;
 import com.dominest.dominestbackend.global.util.PrincipalUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -72,7 +72,7 @@ public class CardKeyController {
     ) {
         final int COMPLAINT_TYPE_PAGE_SIZE = 20;
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        Pageable pageable = PageableUtil.of(page, COMPLAINT_TYPE_PAGE_SIZE, sort);
+        Pageable pageable = PageBaseConverter.of(page, COMPLAINT_TYPE_PAGE_SIZE, sort);
 
         Category category = categoryService.validateCategoryType(categoryId, Type.CARD_KEY);
 

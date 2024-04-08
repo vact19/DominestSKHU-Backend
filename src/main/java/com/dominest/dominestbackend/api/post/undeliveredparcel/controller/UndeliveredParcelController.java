@@ -11,7 +11,7 @@ import com.dominest.dominestbackend.domain.post.component.category.service.Categ
 import com.dominest.dominestbackend.domain.post.undeliveredparcel.UndeliveredParcelPost;
 import com.dominest.dominestbackend.domain.post.undeliveredparcel.UndeliveredParcelPostService;
 import com.dominest.dominestbackend.domain.post.undeliveredparcel.component.UndeliveredParcelService;
-import com.dominest.dominestbackend.global.util.PageableUtil;
+import com.dominest.dominestbackend.global.util.PageBaseConverter;
 import com.dominest.dominestbackend.global.util.PrincipalUtil;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -56,7 +56,7 @@ public class UndeliveredParcelController {
     ) {
         final int IMAGE_TYPE_PAGE_SIZE = 20;
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        Pageable pageable = PageableUtil.of(page, IMAGE_TYPE_PAGE_SIZE, sort);
+        Pageable pageable = PageBaseConverter.of(page, IMAGE_TYPE_PAGE_SIZE, sort);
 
         Category category = categoryService.validateCategoryType(categoryId, Type.UNDELIVERED_PARCEL_REGISTER);
         Page<UndeliveredParcelPost> postsPage = undelivParcelPostService.getPage(category.getId(), pageable);

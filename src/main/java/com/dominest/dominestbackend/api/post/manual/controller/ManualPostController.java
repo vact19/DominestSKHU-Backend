@@ -13,7 +13,7 @@ import com.dominest.dominestbackend.domain.post.manual.ManualPostService;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.exceptions.external.file.FileIOException;
 import com.dominest.dominestbackend.global.util.FileManager;
-import com.dominest.dominestbackend.global.util.PageableUtil;
+import com.dominest.dominestbackend.global.util.PageBaseConverter;
 import com.dominest.dominestbackend.global.util.PrincipalUtil;
 import com.dominest.dominestbackend.global.util.VideoService;
 import lombok.RequiredArgsConstructor;
@@ -62,7 +62,7 @@ public class ManualPostController {
             @PathVariable Long categoryId, @RequestParam(defaultValue = "1") int page) {
         final int MANUAL_TYPE_PAGE_SIZE = 20;
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        Pageable pageable = PageableUtil.of(page, MANUAL_TYPE_PAGE_SIZE, sort);
+        Pageable pageable = PageBaseConverter.of(page, MANUAL_TYPE_PAGE_SIZE, sort);
 
         Category category = categoryService.validateCategoryType(categoryId, Type.MANUAL);
         Page<ManualPost> postsPage = manualPostService.getPage(category.getId(), pageable);
