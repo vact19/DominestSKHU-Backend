@@ -129,7 +129,11 @@ public class Resident extends BaseEntity {
                 .semester(data.get(3))
                 .residenceSemester(residenceSemester)
                 .currentStatus(data.get(4))
-                .dateOfBirth(DatePatternParser.parseyyMMddToLocalDate(data.get(5)))
+                .dateOfBirth(
+                        DatePatternParser.parseyyMMddToLocalDate(
+                                LocalDate.now().getYear(), data.get(5)
+                        )
+                )
                 .room(room)
                 .major(data.get(7))
                 .grade(data.get(8))
