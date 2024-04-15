@@ -101,7 +101,7 @@ public class Resident extends BaseEntity {
         this.studentId = studentId;
         this.major = major;
         this.grade = grade;
-        this.dateOfBirth = DatePatternParser.parseyyMMddToLocalDate(dateOfBirth);
+        this.dateOfBirth = dateOfBirth;
         this.semester = semester;
         this.residenceSemester = residenceSemester;
         this.currentStatus = currentStatus;
