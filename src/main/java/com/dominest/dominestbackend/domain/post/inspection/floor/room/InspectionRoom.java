@@ -100,7 +100,7 @@ public class InspectionRoom extends BaseEntity {
         ;
 
         @JsonValue
-        private final String value;
+        private final String label;
         private final int penalty;
     }
 }

@@ -214,7 +214,7 @@ public class InspectionController {
     ) {
         String postTitle = inspectionPostService.getById(postId).getTitle();
 
-        String passStateValue = passState.getValue();
+        String passStateValue = passState.getLabel();
         String filename = postTitle + " - " + passStateValue + " 명단" + "." + FileExt.XLSX.value;
         String sheetName = passStateValue + "명단";
 

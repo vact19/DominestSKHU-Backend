@@ -156,7 +156,7 @@ public class ExcelUtil {
                 row.createCell(2).setCellValue(residentInfo == null ? "" : residentInfo.getPhoneNo());
                 row.createCell(3).setCellValue(residentInfo == null ? "" : residentInfo.getStudentId());
                 row.createCell(4).setCellValue(inspectionRoom.getPassState().getPenalty());
-                row.createCell(5).setCellValue(inspectionRoom.getPassState().getValue());
+                row.createCell(5).setCellValue(inspectionRoom.getPassState().getLabel());
             }
 
             // 파일 내보내기
@@ -230,7 +230,7 @@ public class ExcelUtil {
                 row.createCell(2).setCellValue(residentInfo == null ? "" : residentInfo.getPhoneNo());
                 row.createCell(3).setCellValue(residentInfo == null ? "" : residentInfo.getStudentId());
                 row.createCell(4).setCellValue(inspectionRoom.getPassState().getPenalty());
-                row.createCell(5).setCellValue(inspectionRoom.getPassState().getValue());
+                row.createCell(5).setCellValue(inspectionRoom.getPassState().getLabel());
                 row.createCell(6).setCellValue(inspectionRoom.isIndoor() ? "O" : "X");
                 row.createCell(7).setCellValue(inspectionRoom.isLeavedTrash() ? "O" : "X");
                 row.createCell(8).setCellValue(inspectionRoom.isToilet() ? "O" : "X");

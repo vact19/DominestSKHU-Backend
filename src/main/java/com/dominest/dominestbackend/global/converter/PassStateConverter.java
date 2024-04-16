@@ -11,7 +11,7 @@ public class PassStateConverter implements Converter<String, PassState> {
     @Override
     public PassState convert(String source) {
         return Arrays.stream(PassState.values())
-                .filter(pass -> pass.getValue().equals(source))
+                .filter(passState -> passState.getLabel().equals(source))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Invalid value. No Matching Enum Constant. your input value ->  " + source));
     }
