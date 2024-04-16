@@ -12,14 +12,15 @@ public class DatePatternParser {
     /**
      * yyMMdd 형식의 문자열을 LocalDate로 변환한다.
      * 'yy'의 파싱 결과는 기본적으로 2000년대이지만, {@code baseYear}를 넘지 않도록 설정된다.
+     * <p>
      * 생년을 해석함에 있어 [90년생과 00년생]을 각각 [1990, 2000년생]으로 해석하기 위함.
-     *
-     * baseYear가 2020일 때,
-     * ex) 200101 -> 2020-01-01
-     * ex) 210101 -> 1921-01-01
+     * <br>
+     * baseYear가 2020일 때, <br>
+     * ex) 200101 -> 2020-01-01 <br>
+     * ex) 210101 -> 1921-01-01 <br>
      * ex) 990101 -> 1999-01-01
      *
-     * @param yyMMdd ex) 990401
+     * @param yyMMdd 변환할 날짜에 해당하는 문자열. ex) 990401
      * @param baseYear 기준 연도. ex) 2024
      * @return 1999-04-01 LocalDate
      * @throws IllegalArgumentException 인자가 유효한 yyMMdd 형식이 아니어서 LocalDate로 파싱할 수 없는 경우
