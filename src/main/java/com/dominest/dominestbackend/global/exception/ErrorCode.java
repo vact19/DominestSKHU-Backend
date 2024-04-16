@@ -29,6 +29,9 @@ public enum ErrorCode {
     NOT_VALID_TOKEN(401, "유효하지 않은 토큰입니다."),
     NO_ACCESS_USER(403, "권한이 없습니다."),
 
+    // 인증 - Spring Security
+    ANONYMOUS_USER(401, "인증되지 않은 사용자입니다."),
+
     // 엑셀 업로드
     COLUMN_COUNT_MISMATCHED(400, "컬럼의 개수가 일치하지 않습니다."),
     INVALID_FILE_EXTENSION(400, "파일 확장자가 유효하지 않습니다."),
