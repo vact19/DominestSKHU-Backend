@@ -8,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 import static org.assertj.core.api.Assertions.*;
 
 class PageBaseConverterTest {
-    // todo 정상적으로 변환된 경우, 1보다 작은 페이지가 들어온 경우
 
     @DisplayName("1-based page를 0-based pageable로 변환한다")
     @Test
@@ -37,5 +36,4 @@ class PageBaseConverterTest {
         assertThatThrownBy(() -> PageBaseConverter.of(oneBasedPage, size))
                 .isInstanceOf(IllegalArgumentException.class);
     }
-
 }
