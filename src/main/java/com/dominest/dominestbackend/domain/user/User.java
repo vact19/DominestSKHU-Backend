@@ -71,7 +71,8 @@ public class User extends BaseEntity implements UserDetails {
     }
 
     public void validateRefreshTokenExp() {
-        if(tokenExp.isBefore(LocalDateTime.now())){
+        boolean isTokenExpired = tokenExp.isBefore(LocalDateTime.now());
+        if(isTokenExpired){
             throw new JwtAuthenticationException(ErrorCode.REFRESH_TOKEN_EXPIRED);
         }
     }
