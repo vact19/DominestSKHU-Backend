@@ -65,13 +65,13 @@ public class User extends BaseEntity implements UserDetails {
         this.tokenExp = DateConverter.convertToLocalDateTime(refreshTokenExp);
     }
 
-    public void logout(){
+    public void logout(LocalDateTime now){
         this.refreshToken = "";
-        this.tokenExp = LocalDateTime.now();
+        this.tokenExp = now;
     }
 
-    public void validateRefreshTokenExp() {
-        boolean isTokenExpired = tokenExp.isBefore(LocalDateTime.now());
+    public void validateRefreshTokenExp(LocalDateTime now) {
+        boolean isTokenExpired = tokenExp.isBefore(now);
         if(isTokenExpired){
             throw new JwtAuthenticationException(ErrorCode.REFRESH_TOKEN_EXPIRED);
         }
