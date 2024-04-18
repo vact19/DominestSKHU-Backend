@@ -15,9 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
@@ -36,7 +33,6 @@ public class UndeliveredParcelPostService {
 
         // Undeli... 객체 생성 후 저장
         UndeliveredParcelPost unDeliParcelPost = UndeliveredParcelPost.builder()
-                .titleWithCurrentDate(createTitle())
                 .category(category)
                 .writer(user)
                 .build();
@@ -80,12 +76,5 @@ public class UndeliveredParcelPostService {
     public Page<UndeliveredParcelPost> getPage(Long categoryId, Pageable pageable) {
         // 카테고리 내 게시글이 1건도 없는 경우도 있으므로, 게시글과 함께 카테고리를 Join해서 데이터를 찾아오지 않는다.
         return undelivParcelPostRepository.findAllByCategory(categoryId, pageable);
-    }
-
-    private String createTitle() {
-        // 원하는 형식의 문자열로 변환
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String formattedDate = LocalDateTime.now().format(formatter);
-        return formattedDate + " 장기미수령 택배";
     }
 }

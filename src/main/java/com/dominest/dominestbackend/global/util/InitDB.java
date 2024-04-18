@@ -179,7 +179,6 @@ public class InitDB {
 
         
 //        UndeliveredParcelPost unDeliParcelPost = UndeliveredParcelPost.builder()
-//                .titleWithCurrentDate(createTitle())
 //                .category(undelivCategoryNo1)
 //                .writer(firstUser)
 //                .build();

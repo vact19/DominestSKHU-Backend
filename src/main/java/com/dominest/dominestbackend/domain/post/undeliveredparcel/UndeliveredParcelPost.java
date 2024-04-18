@@ -13,6 +13,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +30,14 @@ public class UndeliveredParcelPost extends Post {
     List<UndeliveredParcel> undelivParcels = new ArrayList<>();
 
     @Builder
-    private UndeliveredParcelPost(String titleWithCurrentDate, User writer, Category category) {
+    private UndeliveredParcelPost(User writer, Category category) {
         // currentDate는 "yyyy-MM-dd 장기미수령 택배" 형식의 문자열이다.
-        super(titleWithCurrentDate, writer, category);
+        super(createDefaultTitle(), writer, category);
+    }
+
+    private static String createDefaultTitle() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedDate = LocalDateTime.now().format(formatter);
+        return formattedDate + " 장기미수령 택배";
     }
 }

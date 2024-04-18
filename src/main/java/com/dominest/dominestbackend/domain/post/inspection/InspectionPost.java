@@ -29,12 +29,11 @@ public class InspectionPost extends Post {
     private InspectionPost(User writer, Category category
             , ResidenceSemester residenceSemester
     ) {
-        super(createTitle(), writer, category);
+        super(createDefaultTitle(), writer, category);
         this.residenceSemester = residenceSemester;
     }
-    // 객체의 context를 전혀 반영하지 않으므로 static
-    private static String createTitle() {
-        // 원하는 형식의 문자열로 변환
+
+    private static String createDefaultTitle() {
         LocalDateTime now = LocalDateTime.now();
         return now.getYear() +
                 "년 " +
