@@ -39,14 +39,7 @@ public class Schedule {
         MON("월요일"), TUE("화요일"), WED("수요일"), THU("목요일"), FRI("금요일");
 
         @JsonValue
-        public final String value;
-
-        public static DayOfWeek fromString(String value) {
-            return Arrays.stream(DayOfWeek.values())
-                    .filter(dayOfWeek -> dayOfWeek.value.equals(value))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid weekday value: " + value));
-        }
+        public final String label;
     }
 
     @RequiredArgsConstructor
@@ -56,14 +49,13 @@ public class Schedule {
         THREE_TO_FOUR("15:00 ~ 16:00"), FOUR_TO_FIVE("16:00 ~ 17:00");
 
         @JsonValue
-        public final String value;
+        public final String label;
 
         public static TimeSlot fromString(String value) {
             return Arrays.stream(TimeSlot.values())
-                    .filter(timeSlot -> timeSlot.value.equals(value))
+                    .filter(timeSlot -> timeSlot.label.equals(value))
                     .findFirst()
                     .orElseThrow(() -> new IllegalArgumentException("Invalid timeSlot value: " + value));
         }
     }
-
 }

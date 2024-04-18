@@ -72,7 +72,7 @@ public class ScheduleService {
         // 가져온 스케줄 정보를 요일별로 분류
         for (Schedule schedule : schedules) {
             Schedule.DayOfWeek dayOfWeek = schedule.getDayOfWeek();
-            String timeSlot = schedule.getTimeSlot().value;
+            String timeSlot = schedule.getTimeSlot().label;
             List<String> usernames = schedule.getUsernames(); // 모든 사용자 이름 가져오기
 
             TimeSlotInfo timeSlotInfo = new TimeSlotInfo(timeSlot, usernames); // 사용자 이름 리스트를 TimeSlotInfo에 전달
@@ -111,7 +111,7 @@ public class ScheduleService {
         if (optionalSchedule.isEmpty()) {  // 결과가 없다면
             throw new ResourceNotFoundException(Datasource.SCHEDULE
                     , Datasource.DAY_OF_WEEK.label +", " + Datasource.TIME_SLOT
-                    , dayOfWeek.value + ", " + timeslot.value);
+                    , dayOfWeek.label + ", " + timeslot.label);
         }
 
         Schedule schedule = optionalSchedule.get();

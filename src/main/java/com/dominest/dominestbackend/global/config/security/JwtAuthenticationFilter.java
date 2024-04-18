@@ -45,7 +45,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         //  2. authorization Bearer 체크
         String[] authorizations = authHeader.split(" ");
         // AuthScheme.BEARER.getType() 은 "Bearer"문자열 반환
-        if(authorizations.length < 2 || (!AuthScheme.BEARER.getType().equals(authorizations[0]))){
+        if(authorizations.length < 2 || (!AuthScheme.BEARER.getLabel().equals(authorizations[0]))){
             request.setAttribute(ErrorCode.class.getSimpleName(), ErrorCode.NOT_VALID_BEARER_GRANT_TYPE);
             return;
         }

@@ -59,9 +59,8 @@ public class UndeliveredParcel extends BaseEntity {
         DISCARD_SCHEDULED("폐기예정"), DISCARD_COMPLETED("폐기완료");
 
         @JsonValue // 직렬화, 역직렬화 시 사용될 값
-        private final String state;
+        private final String label;
     }
-
 }
 
 

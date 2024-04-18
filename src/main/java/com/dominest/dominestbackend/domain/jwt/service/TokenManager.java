@@ -45,7 +45,7 @@ public class TokenManager {
         String accessToken = createAccessToken(audience, accessTokenExp);
         String refreshToken = createRefreshToken(audience, refreshTokenExp);
         return TokenDto.builder()
-                .authScheme(AuthScheme.BEARER.getType())
+                .authScheme(AuthScheme.BEARER.getLabel())
                 .accessToken(accessToken)
                 .accessTokenExp(accessTokenExp)
                 .refreshToken(refreshToken)
@@ -58,7 +58,7 @@ public class TokenManager {
         String accessToken = createAccessToken(audience, tokenExp);
         String refreshToken = createRefreshToken(audience, tokenExp);
         return TokenDto.builder()
-                .authScheme(AuthScheme.BEARER.getType())
+                .authScheme(AuthScheme.BEARER.getLabel())
                 .accessToken(accessToken)
                 .accessTokenExp(tokenExp)
                 .refreshToken(refreshToken)

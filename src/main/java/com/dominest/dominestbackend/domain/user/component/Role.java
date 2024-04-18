@@ -6,18 +6,18 @@ public enum Role implements GrantedAuthority {
     ROLE_USER("User"),
     ROLE_ADMIN("Admin");
 
-    private final String description;
+    private final String label;
 
     Role(String description) {
-        this.description = description;
+        this.label = description;
     }
 
-    public String getDescription() {
-        return description;
+    public String getLabel() {
+        return label;
     }
 
     @Override
     public String getAuthority() {
-        return description;
+        return label;
     }
 }

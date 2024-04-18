@@ -165,7 +165,7 @@ public class FileManager {
 
     public boolean isInvalidFileExtension(String fileName, FileExt fileExt) {
         String ext = extractExt(fileName);
-        return !ext.equals(fileExt.value);
+        return !ext.equals(fileExt.label);
     }
 
     public void deleteFolder(String folderPath) {
@@ -208,7 +208,7 @@ public class FileManager {
         PDF("pdf"),
         XLSX("xlsx");
 
-        public final String value;
+        public final String label;
     }
 }
 

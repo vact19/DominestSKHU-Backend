@@ -61,7 +61,7 @@ public class UserService {
         user.updateRefreshTokenAndExp(tokenDto.getRefreshToken(), tokenDto.getRefreshTokenExp());
 
         tokenDto.setUsername(user.getName());
-        tokenDto.setRole(user.getRole().getDescription());
+        tokenDto.setRole(user.getRole().getLabel());
         return tokenDto;
     }
 
@@ -82,7 +82,7 @@ public class UserService {
         user.updateRefreshTokenAndExp(tokenDto.getRefreshToken(), tokenDto.getRefreshTokenExp());
 
         tokenDto.setUsername(user.getName());
-        tokenDto.setRole(user.getRole().getDescription());
+        tokenDto.setRole(user.getRole().getLabel());
         return tokenDto;
     }
 
@@ -99,7 +99,7 @@ public class UserService {
         user.updateRefreshTokenAndExp(tokenDto.getRefreshToken(), tokenDto.getRefreshTokenExp());
 
         tokenDto.setUsername(user.getName());
-        tokenDto.setRole(user.getRole().getDescription());
+        tokenDto.setRole(user.getRole().getLabel());
         return tokenDto;
     }
 

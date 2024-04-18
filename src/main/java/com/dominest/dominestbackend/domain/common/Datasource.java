@@ -43,10 +43,6 @@ public enum Datasource {
     , RESIDENT("입사자")
     , ROOM("방")
 
-
-
-
-
     ;
     public final String label;
 }

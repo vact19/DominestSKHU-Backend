@@ -193,7 +193,7 @@ public class InspectionController {
     ) {
         String postTitle = inspectionPostService.getById(postId).getTitle();
 
-        String filename = postTitle + " - 벌점 부여자 명단" + "." + FileExt.XLSX.value;
+        String filename = postTitle + " - 벌점 부여자 명단" + "." + FileExt.XLSX.label;
         String sheetName = "벌점 부여자 명단";
 
         // N차 통과를 조회하려면 InspectionRoom까지 조회해야 함. Resident를 Inner Join해서 빈 방 조회를 피하자.
@@ -215,7 +215,7 @@ public class InspectionController {
         String postTitle = inspectionPostService.getById(postId).getTitle();
 
         String passStateValue = passState.getLabel();
-        String filename = postTitle + " - " + passStateValue + " 명단" + "." + FileExt.XLSX.value;
+        String filename = postTitle + " - " + passStateValue + " 명단" + "." + FileExt.XLSX.label;
         String sheetName = passStateValue + "명단";
 
         // N차 통과를 조회하려면 InspectionRoom까지 조회해야 함. Resident를 Inner Join해서 빈 방 조회를 피하자.
@@ -233,7 +233,7 @@ public class InspectionController {
     ) {
         String postTitle = inspectionPostService.getById(postId).getTitle();
 
-        String filename = postTitle + " - 점검표 전체 데이터" + "." + FileExt.XLSX.value;
+        String filename = postTitle + " - 점검표 전체 데이터" + "." + FileExt.XLSX.label;
         String sheetName = "점검표 전체 데이터";
 
         // N차 통과를 조회하려면 InspectionRoom까지 조회해야 함. Resident를 Inner Join해서 빈 방 조회를 피하자.
