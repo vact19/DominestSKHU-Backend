@@ -3,7 +3,6 @@ package com.dominest.dominestbackend.api.user.controller;
 import com.dominest.dominestbackend.api.user.request.ChangePasswordRequest;
 import com.dominest.dominestbackend.api.user.request.JoinRequest;
 import com.dominest.dominestbackend.api.user.request.LoginRequest;
-import com.dominest.dominestbackend.api.user.response.JoinResponse;
 import com.dominest.dominestbackend.api.common.ResponseTemplate;
 import com.dominest.dominestbackend.api.schedule.response.UserScheduleResponse;
 import com.dominest.dominestbackend.api.todo.response.TodoUserResponse;
@@ -34,11 +33,10 @@ public class UserController {
     private final TodoService todoService;
 
     @PostMapping("/join") // 회원가입
-    public ResponseTemplate<JoinResponse> signUp(@RequestBody @Valid final JoinRequest request){
-        JoinResponse joinResponse = userService.create(request);
+    public ResponseTemplate<Void> signUp(@RequestBody @Valid final JoinRequest request){
+        userService.create(request);
 
-        return new ResponseTemplate<>(HttpStatus.OK, "회원가입에 성공하였습니다.", joinResponse);
-
+        return new ResponseTemplate<>(HttpStatus.OK, "회원가입에 성공하였습니다.");
     }
 
     @PostMapping("/login") // 로그인

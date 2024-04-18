@@ -2,7 +2,6 @@ package com.dominest.dominestbackend.domain.user.service;
 
 
 import com.dominest.dominestbackend.api.user.request.JoinRequest;
-import com.dominest.dominestbackend.api.user.response.JoinResponse;
 import com.dominest.dominestbackend.domain.common.Datasource;
 import com.dominest.dominestbackend.domain.jwt.dto.TokenDto;
 import com.dominest.dominestbackend.domain.jwt.service.TokenManager;
@@ -31,7 +30,7 @@ public class UserService {
     private final TokenManager tokenManager;
 
     @Transactional
-    public JoinResponse create(JoinRequest request) {
+    public void create(JoinRequest request) {
         User user = User.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
@@ -41,8 +40,6 @@ public class UserService {
                 .build();
 
         userRepository.save(user);
-
-        return JoinResponse.of(user.getEmail(), user.getName(), user.getPhoneNumber());
     }
 
     @Transactional
