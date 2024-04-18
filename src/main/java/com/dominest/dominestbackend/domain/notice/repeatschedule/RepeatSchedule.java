@@ -38,7 +38,6 @@ public class RepeatSchedule extends BaseEntity {
         repeatNotice.updateRepeatSchedule(this);
     }
 
-
     @Builder
     public RepeatSchedule(String title, String description, List<RepeatNotice> repeatNotices){
         this.title = title;

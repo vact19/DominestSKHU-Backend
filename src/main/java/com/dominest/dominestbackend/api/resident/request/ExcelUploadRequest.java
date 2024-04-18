@@ -16,6 +16,3 @@ public class ExcelUploadRequest {
     @NotNull(message = "거주학기를 입력해주세요.")
     ResidenceSemester residenceSemester;
 }
-
-
-

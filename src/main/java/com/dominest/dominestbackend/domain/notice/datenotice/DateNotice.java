@@ -39,7 +39,6 @@ public class DateNotice extends BaseEntity {
         return this.apply;
     }
 
-
     @Builder
     public DateNotice(LocalDate date, LocalTime time,
                       int alertBefore, String content, boolean apply){ // 일자, 시간별 알림
@@ -48,7 +47,5 @@ public class DateNotice extends BaseEntity {
         this.alertBefore = alertBefore;
         this.content = content;
         this.apply = apply;
-
     }
-
 }

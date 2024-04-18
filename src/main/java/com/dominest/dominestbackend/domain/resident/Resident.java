@@ -187,6 +187,4 @@ public class Resident extends BaseEntity {
     public String generatePdfFileNameToStore() {
         return this.name + "-" + UUID.randomUUID() + ".pdf";
     }
-
 }
-

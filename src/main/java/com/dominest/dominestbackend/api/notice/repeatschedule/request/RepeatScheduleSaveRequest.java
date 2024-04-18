@@ -10,9 +10,6 @@ import java.util.List;
 @Getter
 public class RepeatScheduleSaveRequest {
     private String title;
-
     private String description;
-
     private List<Long> repeatNoticeIds; // RepeatNotice의 ID 리스트
 }
-

@@ -53,5 +53,4 @@ public class DateNoticeController {
         return new ResponseTemplate<>(HttpStatus.OK
                 , id + "번의 알림 상태를 성공적으로 변경하였습니다.", changeApply);
     }
-
 }

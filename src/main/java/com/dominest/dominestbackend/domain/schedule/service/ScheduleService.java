@@ -122,6 +122,4 @@ public class ScheduleService {
             throw new BusinessException(ErrorCode.USER_NOT_FOUND_IN_SCHEDULE);
         }
     }
-
-
 }

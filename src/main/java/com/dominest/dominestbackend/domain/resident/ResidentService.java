@@ -208,22 +208,4 @@ public class ResidentService {
     private void updateRoomHistory(Resident resident) {
         roomHistoryService.saveFrom(resident);
     }
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -63,7 +63,6 @@ public enum ErrorCode {
     NOT_CORRECT_DAY(400, "요일 정보가 잘못되었습니다. 1(월요일)에서 7(일요일) 사이의 숫자를 입력해주세요.")
     ;
 
-
     private final int statusCode;
     private final String message;
 

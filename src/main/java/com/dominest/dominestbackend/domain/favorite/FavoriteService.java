@@ -45,15 +45,3 @@ public class FavoriteService {
         return favoriteRepository.findAllByUserEmailFetchCategoryOrderByUpdateTimeDesc(email, sort);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-

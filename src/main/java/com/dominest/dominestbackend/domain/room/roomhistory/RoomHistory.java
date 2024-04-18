@@ -2,7 +2,6 @@ package com.dominest.dominestbackend.domain.room.roomhistory;
 
 import com.dominest.dominestbackend.domain.common.BaseEntity;
 import com.dominest.dominestbackend.domain.room.Room;
-import com.dominest.dominestbackend.global.validation.PhoneNumber;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -51,14 +50,3 @@ public class RoomHistory extends BaseEntity {
         this.room = room;
     }
 }
-
-
-
-
-
-
-
-
-
-
-

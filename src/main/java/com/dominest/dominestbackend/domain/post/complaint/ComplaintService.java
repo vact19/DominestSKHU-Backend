@@ -88,19 +88,3 @@ public class ComplaintService {
         return complaintRepository.findPageAllByCategoryId(categoryId, pageable);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

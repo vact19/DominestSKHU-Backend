@@ -27,9 +27,7 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
     private final TokenValidator tokenValidator;
-
     private final ScheduleService scheduleService;
-
     private final TodoService todoService;
 
     @PostMapping("/join") // 회원가입
@@ -99,5 +97,4 @@ public class UserController {
         List<TodoUserResponse> nameResponse = todoService.getUserNameTodo();
         return new ResponseTemplate<>(HttpStatus.OK, "유저의 이름을 모두 불러오는데 성공했습니다.", nameResponse);
     }
-
 }

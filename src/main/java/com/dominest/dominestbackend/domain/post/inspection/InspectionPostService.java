@@ -137,20 +137,4 @@ public class InspectionPostService {
         return inspectionPostRepository.findByIdFetchCategory(id)
                 .orElseThrow(() -> new ResourceNotFoundException(Datasource.INSPECTION_POST, id));
     }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

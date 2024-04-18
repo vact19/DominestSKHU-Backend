@@ -27,6 +27,3 @@ public class ImageType extends Post {
         this.imageUrls = imageUrls;
     }
 }
-
-
-

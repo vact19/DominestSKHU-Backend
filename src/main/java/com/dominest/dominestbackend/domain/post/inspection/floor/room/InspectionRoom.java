@@ -104,17 +104,3 @@ public class InspectionRoom extends BaseEntity {
         private final int penalty;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

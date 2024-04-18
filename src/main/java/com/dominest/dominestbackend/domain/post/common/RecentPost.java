@@ -35,20 +35,3 @@ public class RecentPost extends BaseEntity {
         this.categoryType = categoryType;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

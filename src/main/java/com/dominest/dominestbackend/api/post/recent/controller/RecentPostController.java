@@ -31,19 +31,3 @@ public class RecentPostController {
         return new ResponseTemplate<>(HttpStatus.OK, "최근등록게시물 카테고리 링크 - 내림차순 조회", resDto);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -22,5 +22,4 @@ public class AllRepeatScheduleResponse {
     public static AllRepeatScheduleResponse of(Long id, String title, String createdBy, LocalDateTime createTime){
         return new AllRepeatScheduleResponse(id, title, createdBy, createTime);
     }
-
 }

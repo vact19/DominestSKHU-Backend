@@ -58,17 +58,3 @@ public class InspectionRoomService {
         inspectionRoom.passAll();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

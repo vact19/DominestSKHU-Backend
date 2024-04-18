@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 public class RepeatScheduleService {
 
     private final RepeatScheduleRepository repeatScheduleRepository;
-
     private final RepeatNoticeRepository repeatNoticeRepository;
 
     @Transactional // 반복일정 글 저장
@@ -94,7 +93,6 @@ public class RepeatScheduleService {
                 .collect(Collectors.toList());
     }
 
-
     public RepeatScheduleResponse getRepeatScheduleById(Long id) { // 해당 반복일정 글 상세조회
         RepeatSchedule repeatSchedule = repeatScheduleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(Datasource.REPEAT_SCHEDULE, id));
@@ -103,5 +101,4 @@ public class RepeatScheduleService {
 
         return createResponse(repeatSchedule, repeatNotices);
     }
-
 }

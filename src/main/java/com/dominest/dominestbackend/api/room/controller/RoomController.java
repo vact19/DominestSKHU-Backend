@@ -65,19 +65,4 @@ public class RoomController {
         roomHistoryService.initRoomHistory(residenceSemester);
         return "방 거주기록 초기화 완료";
     }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -44,23 +44,3 @@ public class FavoriteController {
                 , response);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

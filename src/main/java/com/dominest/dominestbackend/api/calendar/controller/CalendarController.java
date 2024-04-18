@@ -43,6 +43,5 @@ public class CalendarController {
     public ResponseTemplate<Void> deleteCalendar(@PathVariable("date") String dateString) {
         calendarService.deleteEventsByDate(dateString);
         return new ResponseTemplate<>(HttpStatus.OK, dateString + " 날짜의 일정을 삭제하였습니다.");
-
     }
 }

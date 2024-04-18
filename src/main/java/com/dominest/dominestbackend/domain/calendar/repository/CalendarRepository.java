@@ -12,6 +12,4 @@ public interface CalendarRepository extends JpaRepository<Calendar, Long> {
     void deleteByDate(LocalDate date);
 
     List<Calendar> findByDateBetween(LocalDate start, LocalDate end);
-
-
 }

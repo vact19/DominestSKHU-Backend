@@ -44,5 +44,4 @@ public class DateNoticeResponse {
                                             int alertBefore, String content, boolean apply){
         return new DateNoticeResponse(id, date, time, alertBefore, content, apply);
     }
-
 }

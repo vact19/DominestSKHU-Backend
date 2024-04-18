@@ -7,5 +7,4 @@ import java.util.Optional;
 
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     Optional<Schedule> findByDayOfWeekAndTimeSlot(Schedule.DayOfWeek dayOfWeek, Schedule.TimeSlot timeSlot);
-
 }

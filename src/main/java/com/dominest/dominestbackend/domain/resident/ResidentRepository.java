@@ -25,6 +25,5 @@ public interface ResidentRepository extends JpaRepository<Resident, Long> {
     boolean existsByResidenceSemesterAndStudentIdAndPhoneNumberAndName
     (ResidenceSemester residenceSemester, String studentId, String phoneNumber, String name);
 
-
     boolean existsByNameAndResidenceSemester(String name, ResidenceSemester residenceSemester);
 }

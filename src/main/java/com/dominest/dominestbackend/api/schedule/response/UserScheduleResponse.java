@@ -10,7 +10,5 @@ import lombok.NoArgsConstructor;
 @Getter
 public class UserScheduleResponse {
     private String name;
-
     private String phoneNumber;
-
 }

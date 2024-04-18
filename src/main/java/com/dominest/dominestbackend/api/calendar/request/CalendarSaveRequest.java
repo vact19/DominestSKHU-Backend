@@ -9,7 +9,5 @@ import java.time.LocalDate;
 @Getter
 public class CalendarSaveRequest {
     private LocalDate date; // 날짜
-
     private String content; // 내용 작성
-
 }

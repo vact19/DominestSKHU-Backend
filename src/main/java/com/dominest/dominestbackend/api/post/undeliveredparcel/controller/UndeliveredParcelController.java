@@ -141,20 +141,4 @@ public class UndeliveredParcelController {
 
         return new ResponseTemplate<>(HttpStatus.OK, deleteId + "번 관리물품 삭제");
     }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

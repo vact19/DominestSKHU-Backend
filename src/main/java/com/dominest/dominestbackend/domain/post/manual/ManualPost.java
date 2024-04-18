@@ -6,7 +6,6 @@ import com.dominest.dominestbackend.domain.post.component.category.Category;
 import com.dominest.dominestbackend.domain.user.User;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 
 @Getter

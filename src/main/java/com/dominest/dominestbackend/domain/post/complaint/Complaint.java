@@ -64,8 +64,6 @@ public class Complaint extends BaseEntity {
         this.date = date;
     }
 
-
-
     // 처리 결과는 (접수완료, 처리중, 처리완료 중 하나)
     @RequiredArgsConstructor
     public enum ProcessState {

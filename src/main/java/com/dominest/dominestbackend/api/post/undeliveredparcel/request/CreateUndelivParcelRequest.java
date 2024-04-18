@@ -19,4 +19,3 @@ public class CreateUndelivParcelRequest {
     @NotNull(message = "처리상태는 비어있을 수 없습니다")
     UndeliveredParcel.ProcessState processState;
 }
-

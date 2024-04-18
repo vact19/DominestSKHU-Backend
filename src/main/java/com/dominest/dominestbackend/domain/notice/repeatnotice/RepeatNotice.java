@@ -55,5 +55,4 @@ public class RepeatNotice extends BaseEntity {
         this.content = content;
         this.apply = true;
     }
-
 }

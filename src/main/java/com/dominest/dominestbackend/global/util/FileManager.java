@@ -203,6 +203,7 @@ public class FileManager {
             this.prefix = prefix;
         }
     }
+
     @RequiredArgsConstructor
     public enum FileExt {
         PDF("pdf"),
@@ -211,14 +212,3 @@ public class FileManager {
         public final String label;
     }
 }
-
-
-
-
-
-
-
-
-
-
-

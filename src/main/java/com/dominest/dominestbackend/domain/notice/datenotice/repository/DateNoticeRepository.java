@@ -9,5 +9,4 @@ public interface DateNoticeRepository extends JpaRepository<DateNotice, Long> {
     DateNotice save(DateNotice dateNotice);
 
     List<DateNotice> findByCreatedBy(String createdBy);
-
 }

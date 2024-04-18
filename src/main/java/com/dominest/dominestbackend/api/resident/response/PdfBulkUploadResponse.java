@@ -33,22 +33,3 @@ public class PdfBulkUploadResponse {
         String failReason;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

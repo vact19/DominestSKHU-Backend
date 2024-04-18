@@ -313,11 +313,4 @@ public class InitDB {
             rooms.add(roomB);
         }
     }
-
-    private String createTitle() {
-        // 원하는 형식의 문자열로 변환
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String formattedDate = LocalDateTime.now().format(formatter);
-        return formattedDate + " 장기미수령 택배";
-    }
 }

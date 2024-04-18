@@ -105,23 +105,4 @@ public class GlobalExceptionHandler {
         log.error("발생 예외: {}, 에러 메시지: {}, 요청 Method: {}, 요청 url: {}",
                 e.getClass().getSimpleName(), e.getMessage(), request.getMethod(), request.getRequestURI(), e);
     }
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

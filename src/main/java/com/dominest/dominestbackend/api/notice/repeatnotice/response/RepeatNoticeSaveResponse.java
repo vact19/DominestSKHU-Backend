@@ -53,6 +53,4 @@ public class RepeatNoticeSaveResponse {
                 repeatNotice.getContent(),
                 repeatNotice.isApply());
     }
-
-
 }

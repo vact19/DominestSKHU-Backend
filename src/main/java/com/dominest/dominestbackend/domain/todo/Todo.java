@@ -43,5 +43,4 @@ public class Todo {
     public void updateCheckYn(boolean checkYn) {
         this.checkYn = checkYn;
     }
-
 }

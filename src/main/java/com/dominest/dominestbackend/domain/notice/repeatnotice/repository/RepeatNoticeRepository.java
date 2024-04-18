@@ -8,8 +8,5 @@ import java.util.List;
 
 public interface RepeatNoticeRepository extends JpaRepository<RepeatNotice, Long> {
 
-    List<RepeatNotice> findByCreatedBy(String createdBy);
-
     List<RepeatNotice> findAllByRepeatSchedule(RepeatSchedule repeatSchedule);
-
 }

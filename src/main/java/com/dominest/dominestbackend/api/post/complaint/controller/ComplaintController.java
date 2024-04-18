@@ -130,22 +130,5 @@ public class ComplaintController {
 
         ExcelUtil.createAndRespondAllDataWitehComplaint(filename, sheetName, response, complaints);
     }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

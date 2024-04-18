@@ -38,17 +38,3 @@ public class InspectionFloor extends BaseEntity {
         this.inspectionPost = inspectionPost;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

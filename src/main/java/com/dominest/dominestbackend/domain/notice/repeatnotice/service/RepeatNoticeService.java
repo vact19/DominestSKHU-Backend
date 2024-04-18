@@ -101,9 +101,6 @@ public class RepeatNoticeService {
                 }
             }
         }
-
         return contents;
     }
-
-
 }
