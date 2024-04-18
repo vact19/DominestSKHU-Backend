@@ -33,7 +33,7 @@ public class User extends BaseEntity implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
@@ -49,10 +49,7 @@ public class User extends BaseEntity implements UserDetails {
     private List<String> roles = new ArrayList<>();
 
     private String refreshToken;
-
     private LocalDateTime tokenExp;
-
-
 
     @Builder
     private User(String email, String password, String name, String phoneNumber, Role role) {
@@ -82,8 +79,6 @@ public class User extends BaseEntity implements UserDetails {
     public void changePassword(String newPassword) {
         this.password = newPassword;
     }
-
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -117,5 +112,4 @@ public class User extends BaseEntity implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
 }
