@@ -8,6 +8,7 @@ import com.dominest.dominestbackend.domain.jwt.service.TokenManager;
 import com.dominest.dominestbackend.domain.user.User;
 import com.dominest.dominestbackend.domain.user.component.Role;
 import com.dominest.dominestbackend.domain.user.repository.UserRepository;
+import com.dominest.dominestbackend.global.config.security.SecurityConst;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.exceptions.business.BusinessException;
 import com.dominest.dominestbackend.global.exception.exceptions.external.db.ResourceNotFoundException;
@@ -51,7 +52,7 @@ public class UserService {
             throw new BusinessException(ErrorCode.MISMATCHED_SIGNIN_INFO);
         }
         // audience 는 email + ":" + name 으로 구성
-        String audience = user.getEmail() + ":" + user.getName();
+        String audience = user.getEmail() + SecurityConst.PRINCIPAL_DELIMITER + user.getName();
 
         TokenDto tokenDto = tokenManager.createTokenDto(audience);
         // refresh token은 관리를 위해 user DB에 저장.
@@ -72,7 +73,7 @@ public class UserService {
             throw new BusinessException(ErrorCode.MISMATCHED_SIGNIN_INFO);
         }
         // audience 는 email + ":" + name 으로 구성
-        String audience = user.getEmail() + ":" + user.getName();
+        String audience = user.getEmail() + SecurityConst.PRINCIPAL_DELIMITER + user.getName();
 
         TokenDto tokenDto = tokenManager.createTokenDtoTemp(audience, new Date(System.currentTimeMillis() + 4896000000L));
         // refresh token은 관리를 위해 user DB에 저장.
@@ -90,7 +91,7 @@ public class UserService {
         user.validateRefreshTokenExp();
 
         // audience 는 email + ":" + name 으로 구성
-        String audience = user.getEmail() + ":" + user.getName();
+        String audience = user.getEmail() + SecurityConst.PRINCIPAL_DELIMITER + user.getName();
 
         TokenDto tokenDto = tokenManager.createTokenDto(audience);
         user.updateRefreshTokenAndExp(tokenDto.getRefreshToken(), tokenDto.getRefreshTokenExp());

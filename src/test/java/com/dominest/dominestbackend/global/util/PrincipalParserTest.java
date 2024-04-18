@@ -1,5 +1,6 @@
 package com.dominest.dominestbackend.global.util;
 
+import com.dominest.dominestbackend.global.config.security.SecurityConst;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.exceptions.auth.security.AnonymousUserException;
 import org.junit.jupiter.api.DisplayName;
@@ -23,7 +24,7 @@ class PrincipalParserTest {
         String email = "user@email.com";
         Principal principal = new
                 UsernamePasswordAuthenticationToken(
-                        email + ":" + name, null);
+                        email + SecurityConst.PRINCIPAL_DELIMITER + name, null);
         //when
         String resultEmail = PrincipalParser.toEmail(principal);
         //then
@@ -54,7 +55,7 @@ class PrincipalParserTest {
         String email = "user@email.com";
         Principal principal = new
                 UsernamePasswordAuthenticationToken(
-                email + ":" + name, null);
+                email + SecurityConst.PRINCIPAL_DELIMITER + name, null);
         //when
         String resultName = PrincipalParser.toName(principal.getName());
         //then

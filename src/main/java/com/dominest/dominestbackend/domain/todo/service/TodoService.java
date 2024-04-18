@@ -7,6 +7,7 @@ import com.dominest.dominestbackend.domain.todo.Todo;
 import com.dominest.dominestbackend.domain.todo.repository.TodoRepository;
 import com.dominest.dominestbackend.domain.user.User;
 import com.dominest.dominestbackend.domain.user.repository.UserRepository;
+import com.dominest.dominestbackend.global.config.security.SecurityConst;
 import com.dominest.dominestbackend.global.exception.exceptions.external.db.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,9 +29,9 @@ public class TodoService {
 
     @Transactional
     public void createTodo(TodoSaveRequest request, Principal principal){ // 투두 저장
-        String[] parts = principal.getName().split(":");
-        if (parts.length > 1) {
-            String username = parts[1];
+        String[] principalParts = principal.getName().split(SecurityConst.PRINCIPAL_DELIMITER);
+        if (principalParts.length > 1) {
+            String username = principalParts[1];
 
             Todo todo = Todo.builder()
                     .date(LocalDateTime.now()) // 날짜
