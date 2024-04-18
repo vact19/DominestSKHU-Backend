@@ -32,9 +32,10 @@ public class UserService {
 
     @Transactional
     public void create(JoinRequest request) {
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
         User user = User.builder()
                 .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
+                .password(encodedPassword)
                 .name(request.getName())
                 .phoneNumber(request.getPhoneNumber())
                 .role(Role.ROLE_ADMIN) //  현재 모든 가입자는 관리자로 고정됨.
@@ -48,14 +49,14 @@ public class UserService {
         // loadUserByUsername() 을 사용하지 않는다.
         User user = getUserByEmail(email);
 
-        if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
+        boolean isPasswordNotMatched = !passwordEncoder.matches(rawPassword, user.getPassword());
+        if (isPasswordNotMatched) {
             throw new BusinessException(ErrorCode.MISMATCHED_SIGNIN_INFO);
         }
         // audience 는 email + ":" + name 으로 구성
         String audience = user.getEmail() + SecurityConst.PRINCIPAL_DELIMITER + user.getName();
 
         TokenDto tokenDto = tokenManager.createTokenDto(audience);
-        // refresh token은 관리를 위해 user DB에 저장.
         user.updateRefreshTokenAndExp(tokenDto.getRefreshToken(), tokenDto.getRefreshTokenExp());
 
         tokenDto.setUsername(user.getName());
@@ -69,7 +70,8 @@ public class UserService {
         // loadUserByUsername() 을 사용하지 않는다.
         User user = getUserByEmail(email);
 
-        if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
+        boolean isPasswordNotMatched = !passwordEncoder.matches(rawPassword, user.getPassword());
+        if (isPasswordNotMatched) {
             throw new BusinessException(ErrorCode.MISMATCHED_SIGNIN_INFO);
         }
         // audience 는 email + ":" + name 으로 구성
@@ -101,16 +103,6 @@ public class UserService {
         return tokenDto;
     }
 
-    private User findByRefreshToken(String refreshToken) {
-        return userRepository.findByRefreshToken(refreshToken)
-                .orElseThrow(() -> new ResourceNotFoundException(Datasource.USER
-                        , "refreshToken", refreshToken));
-    }
-
-    public boolean validateUserPassword(String currentPassword, String loggedInUserPassword) {
-        return passwordEncoder.matches(currentPassword, loggedInUserPassword);
-    }
-
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException(Datasource.USER, "email", email));
@@ -125,11 +117,20 @@ public class UserService {
     public void changePassword(String email, String oldPassword, String newPassword) {
         User user = getUserByEmail(email);
 
-        if (validateUserPassword(oldPassword, user.getPassword())) {
-            user.changePassword(passwordEncoder.encode(newPassword));
-            userRepository.save(user);
-        } else {
+        if (isPasswordNotMatched(oldPassword, user.getPassword())) {
             throw new BusinessException(ErrorCode.EMAIL_VERIFICATION_CODE_MISMATCHED);
         }
+        user.changePassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
+    private boolean isPasswordNotMatched(String currentPassword, String loggedInUserPassword) {
+        return passwordEncoder.matches(currentPassword, loggedInUserPassword);
+    }
+
+    private User findByRefreshToken(String refreshToken) {
+        return userRepository.findByRefreshToken(refreshToken)
+                .orElseThrow(() -> new ResourceNotFoundException(Datasource.USER
+                        , "refreshToken", refreshToken));
     }
 }
