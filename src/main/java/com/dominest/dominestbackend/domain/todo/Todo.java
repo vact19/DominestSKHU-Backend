@@ -32,7 +32,7 @@ public class Todo {
     private boolean checkYn; // 투두 달성 true, false
 
     @Builder
-    private Todo(LocalDateTime date, String task, String requester, String requestReceiver, boolean checkYn) {
+    private Todo(String task, String requester, String requestReceiver, boolean checkYn) {
         this.date = LocalDateTime.now();
         this.task = task;
         this.requester = requester;
@@ -40,7 +40,7 @@ public class Todo {
         this.checkYn = checkYn;
     }
 
-    public void updateCheckYn(boolean checkYn) {
-        this.checkYn = checkYn;
+    public void toggleCheck() {
+        this.checkYn = !checkYn;
     }
 }

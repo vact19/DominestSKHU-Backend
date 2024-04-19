@@ -33,11 +33,6 @@ public class RepeatNotice extends BaseEntity {
     @Column(nullable = false)
     private boolean apply;  // 적용 여부
 
-    public boolean switchApply() {
-        this.apply = !this.apply;
-        return this.apply;
-    }
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "repeat_schedule_id")
     private RepeatSchedule repeatSchedule;
@@ -48,7 +43,7 @@ public class RepeatNotice extends BaseEntity {
 
     @Builder
     public RepeatNotice (String day, LocalTime time,
-                      int alertBefore, String content, boolean apply){ // 요일별 알림
+                      int alertBefore, String content){ // 요일별 알림
         this.day = day;
         this.time = time;
         this.alertBefore = alertBefore;

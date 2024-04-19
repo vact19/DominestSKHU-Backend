@@ -32,7 +32,6 @@ public class RepeatNoticeService {
                     .time(time)
                     .alertBefore(request.getAlertBefore())
                     .content(request.getContent())
-                    .apply(true)
                     .build();
 
             dayNotices.add(repeatNoticeRepository.save(dayNotice));

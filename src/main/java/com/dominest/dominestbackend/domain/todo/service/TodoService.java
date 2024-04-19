@@ -34,7 +34,6 @@ public class TodoService {
             String username = principalParts[1];
 
             Todo todo = Todo.builder()
-                    .date(LocalDateTime.now()) // 날짜
                     .task(request.getTask()) // 할 일
                     .requester(username) // 할 일을 부여하는 사람
                     .requestReceiver(request.getRequestReceiver()) // 할 일을 부여받은 (요청받은) 사람
@@ -50,7 +49,7 @@ public class TodoService {
         Todo todo = todoRepository.findById(todoId)
                 .orElseThrow(() -> new EntityNotFoundException(todoId + "에 해당하는 Todo가 없습니다."));
 
-        todo.updateCheckYn(checkYn);
+        todo.toggleCheck();
     }
 
     public List<Todo> getTodos() { // 모든 투두리스트 불러오기

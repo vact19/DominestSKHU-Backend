@@ -20,15 +20,6 @@ public class DateNoticeResponse {
     private String content; // 내용
     private Boolean apply; // 적용여부
 
-    public DateNoticeResponse(DateNotice dateNotice) {
-        this.id = dateNotice.getId();
-        this.date = dateNotice.getDate();
-        this.time = dateNotice.getTime();
-        this.alertBefore = dateNotice.getAlertBefore();
-        this.content = dateNotice.getContent();
-        this.apply = dateNotice.isApply();
-    }
-
     public static DateNoticeResponse of(DateNotice dateNotice) {
         DateNoticeResponse response = new DateNoticeResponse();
         response.id = dateNotice.getId();
