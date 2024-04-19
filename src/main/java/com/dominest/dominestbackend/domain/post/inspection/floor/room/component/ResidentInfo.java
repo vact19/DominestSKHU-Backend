@@ -1,6 +1,7 @@
 package com.dominest.dominestbackend.domain.post.inspection.floor.room.component;
 
 import com.dominest.dominestbackend.domain.resident.Resident;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Embeddable;
 
 // 입사자의 이름, 학번, 전화번호를 담는 Embeddable 클래스
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
 @Embeddable
