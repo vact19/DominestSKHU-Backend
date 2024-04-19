@@ -6,7 +6,6 @@ import com.dominest.dominestbackend.domain.user.component.Role;
 import com.dominest.dominestbackend.domain.common.wrapper.Email;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.exceptions.auth.jwt.JwtAuthenticationException;
-import com.dominest.dominestbackend.global.util.DateConverter;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,7 +18,6 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,7 +49,7 @@ public class User extends BaseEntity implements UserDetails {
     private List<String> roles = new ArrayList<>();
 
     private String refreshToken;
-    private LocalDateTime tokenExp;
+    private LocalDateTime refreshTokenExp;
 
     @Builder
     private User(Email email, String password, String name, PhoneNumber phoneNumber, Role role) {
@@ -64,16 +62,16 @@ public class User extends BaseEntity implements UserDetails {
 
     public void updateRefreshTokenAndTokenExp(String refreshToken, LocalDateTime refreshTokenExp) {
         this.refreshToken = refreshToken;
-        this.tokenExp = refreshTokenExp;
+        this.refreshTokenExp = refreshTokenExp;
     }
 
     public void logout(LocalDateTime now){
         this.refreshToken = "";
-        this.tokenExp = now;
+        this.refreshTokenExp = now;
     }
 
     public void validateRefreshTokenExp(LocalDateTime now) {
-        boolean isTokenExpired = tokenExp.isBefore(now);
+        boolean isTokenExpired = refreshTokenExp.isBefore(now);
         if(isTokenExpired){
             throw new JwtAuthenticationException(ErrorCode.REFRESH_TOKEN_EXPIRED);
         }
