@@ -63,7 +63,7 @@ public class UserService {
         String audience = user.getEmail() + SecurityConst.PRINCIPAL_DELIMITER + user.getName();
 
         TokenDto tokenDto = tokenManager.createTokenDto(audience);
-        user.updateRefreshTokenAndExp(tokenDto.getRefreshToken(), tokenDto.getRefreshTokenExp());
+        user.updateRefreshTokenAndTokenExp(tokenDto.getRefreshToken(), tokenDto.getRefreshTokenExp());
 
         tokenDto.setUsername(user.getName());
         tokenDto.setRole(user.getRole().getLabel());
@@ -85,7 +85,7 @@ public class UserService {
 
         TokenDto tokenDto = tokenManager.createTokenDtoTemp(audience, new Date(System.currentTimeMillis() + 4896000000L));
         // refresh token은 관리를 위해 user DB에 저장.
-        user.updateRefreshTokenAndExp(tokenDto.getRefreshToken(), tokenDto.getRefreshTokenExp());
+        user.updateRefreshTokenAndTokenExp(tokenDto.getRefreshToken(), tokenDto.getRefreshTokenExp());
 
         tokenDto.setUsername(user.getName());
         tokenDto.setRole(user.getRole().getLabel());
@@ -102,7 +102,7 @@ public class UserService {
         String audience = user.getEmail() + SecurityConst.PRINCIPAL_DELIMITER + user.getName();
 
         TokenDto tokenDto = tokenManager.createTokenDto(audience);
-        user.updateRefreshTokenAndExp(tokenDto.getRefreshToken(), tokenDto.getRefreshTokenExp());
+        user.updateRefreshTokenAndTokenExp(tokenDto.getRefreshToken(), tokenDto.getRefreshTokenExp());
 
         tokenDto.setUsername(user.getName());
         tokenDto.setRole(user.getRole().getLabel());
