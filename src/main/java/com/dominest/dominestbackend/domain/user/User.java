@@ -1,6 +1,7 @@
 package com.dominest.dominestbackend.domain.user;
 
 import com.dominest.dominestbackend.domain.common.BaseEntity;
+import com.dominest.dominestbackend.domain.common.wrapper.PhoneNumber;
 import com.dominest.dominestbackend.domain.user.component.Role;
 import com.dominest.dominestbackend.domain.common.wrapper.Email;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
@@ -40,8 +41,8 @@ public class User extends BaseEntity implements UserDetails {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, unique = true)
-    private String phoneNumber;
+    @Embedded
+    private PhoneNumber phoneNumber;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -53,7 +54,7 @@ public class User extends BaseEntity implements UserDetails {
     private LocalDateTime tokenExp;
 
     @Builder
-    private User(Email email, String password, String name, String phoneNumber, Role role) {
+    private User(Email email, String password, String name, PhoneNumber phoneNumber, Role role) {
         this.email = email;
         this.password = password;
         this.name = name;
@@ -92,7 +93,7 @@ public class User extends BaseEntity implements UserDetails {
     // principal이 UserDetails 타입일 경우, principal.getName()의 반환값.
     @Override
     public String getUsername() {
-        return email.getValue();
+        return email.getEmail();
     }
 
     @Override

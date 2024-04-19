@@ -95,7 +95,7 @@ public class ScheduleService {
         List<User> users = userRepository.findAll();
 
         return users.stream()
-                .map(user -> new UserScheduleResponse(user.getName(), user.getPhoneNumber()))
+                .map(user -> new UserScheduleResponse(user.getName(), user.getPhoneNumber().getPhoneNumber()))
                 .collect(Collectors.toList());
     }
 

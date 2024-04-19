@@ -3,6 +3,7 @@ package com.dominest.dominestbackend.domain.user.service;
 
 import com.dominest.dominestbackend.api.user.request.JoinRequest;
 import com.dominest.dominestbackend.domain.common.Datasource;
+import com.dominest.dominestbackend.domain.common.wrapper.PhoneNumber;
 import com.dominest.dominestbackend.domain.jwt.dto.TokenDto;
 import com.dominest.dominestbackend.domain.jwt.service.TokenManager;
 import com.dominest.dominestbackend.domain.user.User;
@@ -36,11 +37,13 @@ public class UserService {
     public void create(JoinRequest request) {
         String encodedPassword = passwordEncoder.encode(request.getPassword());
         Email email = new Email(request.getEmail());
+        PhoneNumber phoneNumber = new PhoneNumber(request.getPhoneNumber());
+
         User user = User.builder()
                 .email(email)
                 .password(encodedPassword)
                 .name(request.getName())
-                .phoneNumber(request.getPhoneNumber())
+                .phoneNumber(phoneNumber)
                 .role(Role.ROLE_ADMIN) //  현재 모든 가입자는 관리자로 고정됨.
                 .build();
 
