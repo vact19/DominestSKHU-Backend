@@ -62,9 +62,9 @@ public class User extends BaseEntity implements UserDetails {
         this.role = role;
     }
 
-    public void updateRefreshTokenAndTokenExp(String refreshToken, Date refreshTokenExp) {
+    public void updateRefreshTokenAndTokenExp(String refreshToken, LocalDateTime refreshTokenExp) {
         this.refreshToken = refreshToken;
-        this.tokenExp = DateConverter.convertToLocalDateTime(refreshTokenExp);
+        this.tokenExp = refreshTokenExp;
     }
 
     public void logout(LocalDateTime now){

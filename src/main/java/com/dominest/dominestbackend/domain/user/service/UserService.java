@@ -15,6 +15,7 @@ import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.exceptions.business.BusinessException;
 import com.dominest.dominestbackend.global.exception.exceptions.external.db.ResourceNotFoundException;
 
+import com.dominest.dominestbackend.global.util.DateConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -63,7 +64,8 @@ public class UserService {
         String audience = user.getEmail() + SecurityConst.PRINCIPAL_DELIMITER + user.getName();
 
         TokenDto tokenDto = tokenManager.createTokenDto(audience);
-        user.updateRefreshTokenAndTokenExp(tokenDto.getRefreshToken(), tokenDto.getRefreshTokenExp());
+        LocalDateTime refreshTokenExp = DateConverter.convertToLocalDateTime(tokenDto.getRefreshTokenExp());
+        user.updateRefreshTokenAndTokenExp(tokenDto.getRefreshToken(), refreshTokenExp);
 
         tokenDto.setUsername(user.getName());
         tokenDto.setRole(user.getRole().getLabel());
@@ -84,8 +86,8 @@ public class UserService {
         String audience = user.getEmail() + SecurityConst.PRINCIPAL_DELIMITER + user.getName();
 
         TokenDto tokenDto = tokenManager.createTokenDtoTemp(audience, new Date(System.currentTimeMillis() + 4896000000L));
-        // refresh token은 관리를 위해 user DB에 저장.
-        user.updateRefreshTokenAndTokenExp(tokenDto.getRefreshToken(), tokenDto.getRefreshTokenExp());
+        LocalDateTime refreshTokenExp = DateConverter.convertToLocalDateTime(tokenDto.getRefreshTokenExp());
+        user.updateRefreshTokenAndTokenExp(tokenDto.getRefreshToken(), refreshTokenExp);
 
         tokenDto.setUsername(user.getName());
         tokenDto.setRole(user.getRole().getLabel());
@@ -102,7 +104,8 @@ public class UserService {
         String audience = user.getEmail() + SecurityConst.PRINCIPAL_DELIMITER + user.getName();
 
         TokenDto tokenDto = tokenManager.createTokenDto(audience);
-        user.updateRefreshTokenAndTokenExp(tokenDto.getRefreshToken(), tokenDto.getRefreshTokenExp());
+        LocalDateTime refreshTokenExp = DateConverter.convertToLocalDateTime(tokenDto.getRefreshTokenExp());
+        user.updateRefreshTokenAndTokenExp(tokenDto.getRefreshToken(), refreshTokenExp);
 
         tokenDto.setUsername(user.getName());
         tokenDto.setRole(user.getRole().getLabel());
