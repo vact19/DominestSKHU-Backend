@@ -2,6 +2,7 @@ package com.dominest.dominestbackend.domain.user;
 
 import com.dominest.dominestbackend.domain.common.BaseEntity;
 import com.dominest.dominestbackend.domain.user.component.Role;
+import com.dominest.dominestbackend.domain.user.component.email.Email;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.exceptions.auth.jwt.JwtAuthenticationException;
 import com.dominest.dominestbackend.global.util.DateConverter;
@@ -30,8 +31,8 @@ public class User extends BaseEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String email;
+    @Embedded
+    private Email email;
 
     @Column(nullable = false)
     private String password;
@@ -52,7 +53,7 @@ public class User extends BaseEntity implements UserDetails {
     private LocalDateTime tokenExp;
 
     @Builder
-    private User(String email, String password, String name, String phoneNumber, Role role) {
+    private User(Email email, String password, String name, String phoneNumber, Role role) {
         this.email = email;
         this.password = password;
         this.name = name;
@@ -91,7 +92,7 @@ public class User extends BaseEntity implements UserDetails {
     // principal이 UserDetails 타입일 경우, principal.getName()의 반환값.
     @Override
     public String getUsername() {
-        return email;
+        return email.getValue();
     }
 
     @Override

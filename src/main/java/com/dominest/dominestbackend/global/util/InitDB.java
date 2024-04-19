@@ -16,6 +16,7 @@ import com.dominest.dominestbackend.domain.schedule.Schedule;
 import com.dominest.dominestbackend.domain.schedule.repository.ScheduleRepository;
 import com.dominest.dominestbackend.domain.user.User;
 import com.dominest.dominestbackend.domain.user.component.Role;
+import com.dominest.dominestbackend.domain.user.component.email.Email;
 import com.dominest.dominestbackend.domain.user.repository.UserRepository;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,11 +28,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
 
 @Profile({"local", "dev"})
 @Component
@@ -111,7 +109,7 @@ public class InitDB {
         for (int i = 0; i < INIT_USER_CNT; i++) {
             InitUser initUser = initUsers.get(i);
             User user = User.builder()
-                    .email(initUser.getEmail())
+                    .email(new Email(initUser.getEmail()))
                     .password(passwordEncoder.encode(initUser.getPassword()))
                     .name(initUser.getName())
                     .phoneNumber(initUser.getPhoneNumber())
