@@ -12,14 +12,14 @@ import java.util.List;
 
 /**
  *  기숙사 호실 정보. 행기 기숙사 데이터.
- *
- *  엑셀 데이터는 roomNo, dormitory, assignedRoom이며
+
+ *  엑셀 데이터는 roomNo, dormitory, assignedRoom 이며
  *  나머지 속성들은 개발 편의를 위하여 추가함.
- *
+
  *  아래 2가지의 데이터는 잘 쓰지 않는다.
  *  1. 호실 roomNumber(1(미가엘), 2(행기))
  *  2. ,기숙사 dormitory (A(미) B(행)),
- *
+
  *  아래 데이터를 주로 다루게 될 듯.
  *  1. 배정방 assignedRoom
  */
