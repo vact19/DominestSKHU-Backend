@@ -14,17 +14,16 @@ public class Email {
                     "(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
 
     @Column(nullable = false, unique = true)
-    private final String value;
+    private final String email;
 
     protected Email() {
-        this.value = null;
-        throw new UnsupportedOperationException("빈 생성자 호출 불가");
+        this.email = null;
     }
 
     public Email(String email) {
         if (email == null || ! email.matches(EMAIL_PATTERN)) {
             throw new IllegalArgumentException("잘못된 이메일 형식입니다. 입력값 -> " + email);
         }
-        this.value = email;
+        this.email = email;
     }
 }

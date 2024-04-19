@@ -2,6 +2,7 @@ package com.dominest.dominestbackend.global.util;
 
 
 import com.dominest.dominestbackend.domain.common.wrapper.Email;
+import com.dominest.dominestbackend.domain.common.wrapper.PhoneNumber;
 import com.dominest.dominestbackend.domain.post.cardkey.CardKeyRepository;
 import com.dominest.dominestbackend.domain.post.complaint.ComplaintRepository;
 import com.dominest.dominestbackend.domain.post.component.category.Category;
@@ -112,7 +113,7 @@ public class InitDB {
                     .email(new Email(initUser.getEmail()))
                     .password(passwordEncoder.encode(initUser.getPassword()))
                     .name(initUser.getName())
-                    .phoneNumber(initUser.getPhoneNumber())
+                    .phoneNumber(new PhoneNumber(initUser.getPhoneNumber()))
                     .role(initUser.getRole())
                     .build();
             users.add(user);
