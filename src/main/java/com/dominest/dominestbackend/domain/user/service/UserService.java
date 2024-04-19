@@ -7,7 +7,7 @@ import com.dominest.dominestbackend.domain.jwt.dto.TokenDto;
 import com.dominest.dominestbackend.domain.jwt.service.TokenManager;
 import com.dominest.dominestbackend.domain.user.User;
 import com.dominest.dominestbackend.domain.user.component.Role;
-import com.dominest.dominestbackend.domain.user.component.email.Email;
+import com.dominest.dominestbackend.domain.common.wrapper.Email;
 import com.dominest.dominestbackend.domain.user.repository.UserRepository;
 import com.dominest.dominestbackend.global.config.security.SecurityConst;
 import com.dominest.dominestbackend.global.exception.ErrorCode;

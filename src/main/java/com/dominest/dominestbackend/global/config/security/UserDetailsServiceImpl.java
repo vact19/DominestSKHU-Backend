@@ -29,7 +29,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         // Spring Security의 UserDetails로 변환하여 반환
         return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
+                user.getEmail().getValue(),
                 user.getPassword(),
                 user.getAuthorities()
         );

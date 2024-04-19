@@ -1,6 +1,7 @@
 package com.dominest.dominestbackend.global.util;
 
 
+import com.dominest.dominestbackend.domain.common.wrapper.Email;
 import com.dominest.dominestbackend.domain.post.cardkey.CardKeyRepository;
 import com.dominest.dominestbackend.domain.post.complaint.ComplaintRepository;
 import com.dominest.dominestbackend.domain.post.component.category.Category;
@@ -16,7 +17,6 @@ import com.dominest.dominestbackend.domain.schedule.Schedule;
 import com.dominest.dominestbackend.domain.schedule.repository.ScheduleRepository;
 import com.dominest.dominestbackend.domain.user.User;
 import com.dominest.dominestbackend.domain.user.component.Role;
-import com.dominest.dominestbackend.domain.user.component.email.Email;
 import com.dominest.dominestbackend.domain.user.repository.UserRepository;
 import lombok.Builder;
 import lombok.Getter;
