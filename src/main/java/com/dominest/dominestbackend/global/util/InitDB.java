@@ -1,8 +1,8 @@
 package com.dominest.dominestbackend.global.util;
 
 
-import com.dominest.dominestbackend.domain.common.wrapper.Email;
-import com.dominest.dominestbackend.domain.common.wrapper.PhoneNumber;
+import com.dominest.dominestbackend.domain.common.vo.Email;
+import com.dominest.dominestbackend.domain.common.vo.PhoneNumber;
 import com.dominest.dominestbackend.domain.post.cardkey.CardKeyRepository;
 import com.dominest.dominestbackend.domain.post.complaint.ComplaintRepository;
 import com.dominest.dominestbackend.domain.post.component.category.Category;

@@ -1,4 +1,4 @@
-package com.dominest.dominestbackend.domain.common.wrapper;
+package com.dominest.dominestbackend.domain.common.vo;
 
 import lombok.Getter;
 

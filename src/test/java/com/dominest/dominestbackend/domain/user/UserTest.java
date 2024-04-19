@@ -1,10 +1,9 @@
 package com.dominest.dominestbackend.domain.user;
 
-import com.dominest.dominestbackend.domain.common.wrapper.PhoneNumber;
+import com.dominest.dominestbackend.domain.common.vo.PhoneNumber;
 import com.dominest.dominestbackend.domain.user.component.Role;
-import com.dominest.dominestbackend.domain.common.wrapper.Email;
+import com.dominest.dominestbackend.domain.common.vo.Email;
 import com.dominest.dominestbackend.global.exception.exceptions.auth.jwt.JwtAuthenticationException;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

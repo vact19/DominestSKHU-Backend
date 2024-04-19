@@ -1,9 +1,9 @@
 package com.dominest.dominestbackend.domain.user;
 
 import com.dominest.dominestbackend.domain.common.BaseEntity;
-import com.dominest.dominestbackend.domain.common.wrapper.PhoneNumber;
+import com.dominest.dominestbackend.domain.common.vo.PhoneNumber;
 import com.dominest.dominestbackend.domain.user.component.Role;
-import com.dominest.dominestbackend.domain.common.wrapper.Email;
+import com.dominest.dominestbackend.domain.common.vo.Email;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.exceptions.auth.jwt.JwtAuthenticationException;
 import lombok.AccessLevel;
