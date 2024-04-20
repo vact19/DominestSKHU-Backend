@@ -91,7 +91,7 @@ public class User extends BaseEntity implements UserDetails {
     // principal이 UserDetails 타입일 경우, principal.getName()의 반환값.
     @Override
     public String getUsername() {
-        return email.getEmail();
+        return email.getValue();
     }
 
     @Override

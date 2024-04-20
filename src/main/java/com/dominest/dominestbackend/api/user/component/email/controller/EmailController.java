@@ -24,27 +24,27 @@ public class EmailController {
 
     @PostMapping("/send") // 인증번호 발송 버튼 누르면 메일 가게
     public ResponseEntity<ResponseTemplate<String>> sendEmail(@RequestBody EmailRequest emailRequest) {
-        emailService.sendJoinMessage(emailRequest.getEmail()); // 이메일로 인증코드를 보낸다.
+        emailService.sendJoinMessage(emailRequest.getValue()); // 이메일로 인증코드를 보낸다.
 
         SuccessStatus successStatus = SuccessStatus.SEND_EMAIL_SUCCESS;
         ResponseTemplate<String> result = new ResponseTemplate<>(successStatus.getHttpStatus(), successStatus.getMessage()
-                , emailRequest.getEmail() + "로 검증코드를 전송했습니다.");
+                , emailRequest.getValue() + "로 검증코드를 전송했습니다.");
         return ResponseEntity.ok(result);
     }
 
     @PostMapping("/change/password") // 임시 비밀번호 이메일 전송
     public ResponseEntity<ResponseTemplate<String>> changePasswordEmail(@RequestBody EmailRequest emailRequest) {
-        emailService.sendChangeMessage(emailRequest.getEmail()); // 이메일로 인증코드를 보냄
+        emailService.sendChangeMessage(emailRequest.getValue()); // 이메일로 인증코드를 보냄
 
         SuccessStatus successStatus = SuccessStatus.SEND_EMAIL_SUCCESS;
-        ResponseTemplate<String> result = new ResponseTemplate<>(successStatus.getHttpStatus(), successStatus.getMessage(), emailRequest.getEmail() + "로 검증코드를 전송했습니다.");
+        ResponseTemplate<String> result = new ResponseTemplate<>(successStatus.getHttpStatus(), successStatus.getMessage(), emailRequest.getValue() + "로 검증코드를 전송했습니다.");
         return ResponseEntity.ok(result);
     }
 
 
     @PostMapping("/verify/code") // 이메일 인증코드 검증
     public ResponseEntity<ResponseTemplate<String>> verifyEmail(@RequestBody EmailRequest emailRequest) {
-        boolean success = emailVerificationService.verifyCode(emailRequest.getEmail(), emailRequest.getCode());
+        boolean success = emailVerificationService.verifyCode(emailRequest.getValue(), emailRequest.getCode());
         if (success) { // 인증 성공
             SuccessStatus successStatus = SuccessStatus.VERIFY_EMAIL_SUCCESS;
             ResponseTemplate<String> result = new ResponseTemplate<>(successStatus.getHttpStatus(), successStatus.getMessage());
