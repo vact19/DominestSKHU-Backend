@@ -20,7 +20,7 @@ public class RoomHistoryService {
                 .residentName(resident.getName())
                 .admissionDate(resident.getAdmissionDate())
                 .leavingDate(resident.getLeavingDate())
-                .phoneNumber(resident.getPhoneNumber())
+                .phoneNumber(resident.getPhoneNumber().getValue())
                 .studentId(resident.getStudentId())
                 .room(resident.getRoom())
                 .build();

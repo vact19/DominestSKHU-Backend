@@ -1,6 +1,7 @@
 package com.dominest.dominestbackend.domain.resident;
 
 import com.dominest.dominestbackend.domain.common.BaseEntity;
+import com.dominest.dominestbackend.domain.common.vo.PhoneNumber;
 import com.dominest.dominestbackend.domain.resident.component.ResidenceSemester;
 import com.dominest.dominestbackend.domain.room.Room;
 import com.dominest.dominestbackend.global.util.DatePatternParser;
@@ -21,7 +22,7 @@ import java.util.UUID;
         // 2. [방번호]가 중복되면 안된다. 학기중 하나의 방, 하나의 구역에 둘 이상이 있을 순 없다.
         // 3. [이름] 이 학기마다 중복되면 안된다. PDF 검색관련 로직 때문에 이름+학기가 Unique해야 함.
         @UniqueConstraint(name = "unique_for_resident_info",
-                                            columnNames = { "residenceSemester", "studentId", "phoneNumber", "name"})
+                                            columnNames = { "residenceSemester", "studentId", "phone_number", "name"})
         , @UniqueConstraint(name = "unique_for_room",
                                             columnNames = { "room_id", "residenceSemester" })
         , @UniqueConstraint(name = "unique_for_pdf",
@@ -43,8 +44,9 @@ public class Resident extends BaseEntity {
     private String major; // 전공. 매학년 바뀔 수도 있으니 enum 사용하지 않는 걸로
     @Column(nullable = false)
     private String grade; // '3학년' 과 같은 식으로 저장된다
-    @Column(length = 30)
-    private String phoneNumber; // '010-1234-5678' 형식으로 저장
+
+    @Embedded
+    private PhoneNumber phoneNumber; // '010-1234-5678' 형식으로 저장
     // 엑셀데이터는 6자리로 저장되긴 하는데, 날짜 필터링 걸려면 날짜타입 사용해야 할 듯
     @Column(nullable = false)
     private LocalDate dateOfBirth;
@@ -94,7 +96,7 @@ public class Resident extends BaseEntity {
     private Resident(String name, String gender, String studentId, String major, String grade,
                     LocalDate dateOfBirth, String semester, ResidenceSemester residenceSemester, String currentStatus, String period,
                      LocalDate admissionDate, LocalDate leavingDate,
-                    LocalDate semesterStartDate, LocalDate semesterEndDate, String phoneNumber, String socialCode,
+                    LocalDate semesterStartDate, LocalDate semesterEndDate, PhoneNumber phoneNumber, String socialCode,
                     String socialName, String zipCode, String address, Room room) {
         this.name = name;
         this.gender = gender;
@@ -143,7 +145,7 @@ public class Resident extends BaseEntity {
                         LocalDate.parse(data.get(13), DateTimeFormatter.ofPattern(yyyyMMddPattern)))
                 .semesterStartDate(LocalDate.parse(data.get(14), DateTimeFormatter.ofPattern(yyyyMMddPattern)))
                 .semesterEndDate(LocalDate.parse(data.get(15), DateTimeFormatter.ofPattern(yyyyMMddPattern)))
-                .phoneNumber(data.get(16))
+                .phoneNumber(new PhoneNumber(data.get(16)))
                 .socialCode(data.get(17))
                 .socialName(data.get(18))
                 .zipCode(data.get(19))
@@ -177,7 +179,7 @@ public class Resident extends BaseEntity {
 
     // 이름 중복될 경우 이름 뒤에 전화번호 뒷자리를 붙인다.
     public void changeNameWithPhoneNumber() {
-        String[] splitedNumber = phoneNumber.split("-");
+        String[] splitedNumber = phoneNumber.getValue().split("-");
         if (splitedNumber.length != 3)
             throw new IllegalArgumentException("전화번호 형식이 잘못되었습니다.");
         String lastFourDigits = splitedNumber[splitedNumber.length - 1]; // 마지막 4자리 숫자

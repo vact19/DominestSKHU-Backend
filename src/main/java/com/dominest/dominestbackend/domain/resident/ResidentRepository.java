@@ -22,7 +22,7 @@ public interface ResidentRepository extends JpaRepository<Resident, Long> {
     List<Resident> findAllByResidenceSemester(ResidenceSemester semester);
 
     // [학번, 전화번호, 이름] 중복제한:  똑같은 학생이 한 학기에 둘 이상 있을 순 없다.
-    boolean existsByResidenceSemesterAndStudentIdAndPhoneNumberAndName
+    boolean existsByResidenceSemesterAndStudentIdAndPhoneNumberValueAndName
     (ResidenceSemester residenceSemester, String studentId, String phoneNumber, String name);
 
     boolean existsByNameAndResidenceSemester(String name, ResidenceSemester residenceSemester);

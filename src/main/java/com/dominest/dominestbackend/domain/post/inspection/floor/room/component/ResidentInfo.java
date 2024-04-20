@@ -19,6 +19,6 @@ public class ResidentInfo {
     String phoneNo;
 
     public static ResidentInfo from(Resident resident){
-        return new ResidentInfo(resident.getName(), resident.getStudentId(), resident.getPhoneNumber());
+        return new ResidentInfo(resident.getName(), resident.getStudentId(), resident.getPhoneNumber().getValue());
     }
 }

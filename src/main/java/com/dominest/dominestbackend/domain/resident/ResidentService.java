@@ -187,8 +187,8 @@ public class ResidentService {
     }
 
     private boolean existsByUniqueKey(Resident resident) {
-        return residentRepository.existsByResidenceSemesterAndStudentIdAndPhoneNumberAndName(
-                resident.getResidenceSemester(), resident.getStudentId(), resident.getPhoneNumber(), resident.getName());
+        return residentRepository.existsByResidenceSemesterAndStudentIdAndPhoneNumberValueAndName(
+                resident.getResidenceSemester(), resident.getStudentId(), resident.getPhoneNumber().getValue(), resident.getName());
     }
 
     private void save(Resident resident) {

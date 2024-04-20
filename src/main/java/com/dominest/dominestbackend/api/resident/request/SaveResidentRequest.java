@@ -1,9 +1,9 @@
 package com.dominest.dominestbackend.api.resident.request;
 
+import com.dominest.dominestbackend.domain.common.vo.PhoneNumber;
 import com.dominest.dominestbackend.domain.resident.Resident;
 import com.dominest.dominestbackend.domain.resident.component.ResidenceSemester;
 import com.dominest.dominestbackend.domain.room.Room;
-import com.dominest.dominestbackend.global.validation.PhoneNumber;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -56,7 +56,7 @@ public class SaveResidentRequest {
     @NotNull(message = "학기 종료일을 입력해주세요.")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd")
     LocalDate semesterEndDate;
-    @PhoneNumber
+    @NotBlank(message = "전화번호를 입력해주세요.")
     String phoneNumber;
     @NotBlank(message = "사회코드를 입력해주세요.")
     String socialCode;
@@ -85,7 +85,7 @@ public class SaveResidentRequest {
                         LocalDate.parse(leavingDate, DateTimeFormatter.ofPattern("yyyyMMdd")))
                 .semesterStartDate(semesterStartDate)
                 .semesterEndDate(semesterEndDate)
-                .phoneNumber(phoneNumber)
+                .phoneNumber(new PhoneNumber(phoneNumber))
                 .socialCode(socialCode)
                 .socialName(socialName)
                 .zipCode(zipCode)

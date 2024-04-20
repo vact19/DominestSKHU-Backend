@@ -12,17 +12,17 @@ public class PhoneNumber {
     private static final String PHONE_NUMBER_PATTERN =
             "(01[016789])-(\\d{3,4})-(\\d{4})";
 
-    @Column(nullable = false, unique = true)
-    private final String phoneNumber;
+    @Column(nullable = false, unique = true, name = "phone_number")
+    private final String value;
 
     protected PhoneNumber() {
-        this.phoneNumber = null;
+        this.value = null;
     }
 
-    public PhoneNumber(String phoneNumber) {
-        if (phoneNumber == null || ! phoneNumber.matches(PHONE_NUMBER_PATTERN)) {
-            throw new IllegalArgumentException("잘못된 전화번호 형식입니다. 입력값 -> " + phoneNumber);
+    public PhoneNumber(String value) {
+        if (value == null || ! value.matches(PHONE_NUMBER_PATTERN)) {
+            throw new IllegalArgumentException("잘못된 전화번호 형식입니다. 입력값 -> " + value);
         }
-        this.phoneNumber = phoneNumber;
+        this.value = value;
     }
 }

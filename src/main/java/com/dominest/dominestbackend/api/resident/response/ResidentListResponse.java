@@ -66,7 +66,7 @@ public class ResidentListResponse {
                             resident.getLeavingDate().toString())
                     .semesterStartDate(resident.getSemesterStartDate())
                     .semesterEndDate(resident.getSemesterEndDate())
-                    .phoneNumber(resident.getPhoneNumber())
+                    .phoneNumber(resident.getPhoneNumber().getValue())
                     .socialCode(resident.getSocialCode())
                     .socialName(resident.getSocialName())
                     .zipCode(resident.getZipCode())
