@@ -4,7 +4,7 @@ import com.dominest.dominestbackend.api.common.AuditLog;
 import com.dominest.dominestbackend.api.common.CategoryResponse;
 import com.dominest.dominestbackend.domain.post.component.category.Category;
 import com.dominest.dominestbackend.domain.post.inspection.floor.room.InspectionRoom;
-import com.dominest.dominestbackend.domain.post.inspection.floor.room.component.ResidentInfo;
+import com.dominest.dominestbackend.domain.post.inspection.floor.room.component.InspectionResidentInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
@@ -46,15 +46,15 @@ public class InspectionRoomListResponse {
         AuditLog auditLog;
 
         static InspectionRoomDto from(InspectionRoom inspectionRoom){
-            ResidentInfo residentInfo = inspectionRoom.getResidentInfo();
+            InspectionResidentInfo inspectionResidentInfo = inspectionRoom.getInspectionResidentInfo();
             ResidentDto residentDto = null;
             boolean emptyRoom = true;
 
-            if (residentInfo != null) {
+            if (inspectionResidentInfo != null) {
                  residentDto = ResidentDto.builder()
-                        .name(residentInfo.getName())
-                        .studentId(residentInfo.getStudentId())
-                        .phoneNo(residentInfo.getPhoneNo())
+                        .name(inspectionResidentInfo.getName())
+                        .studentId(inspectionResidentInfo.getStudentId())
+                        .phoneNo(inspectionResidentInfo.getPhoneNo())
                         .penalty(inspectionRoom.getPassState().getPenalty())
                         .build();
                  emptyRoom = false;

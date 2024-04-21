@@ -2,7 +2,7 @@ package com.dominest.dominestbackend.global.util;
 
 import com.dominest.dominestbackend.domain.post.complaint.Complaint;
 import com.dominest.dominestbackend.domain.post.inspection.floor.room.InspectionRoom;
-import com.dominest.dominestbackend.domain.post.inspection.floor.room.component.ResidentInfo;
+import com.dominest.dominestbackend.domain.post.inspection.floor.room.component.InspectionResidentInfo;
 import com.dominest.dominestbackend.domain.room.Room;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.exceptions.external.ExternalServiceException;
@@ -147,14 +147,14 @@ public class ExcelUtil {
                 Row row = sheet.createRow(rowNum);
 
                 InspectionRoom inspectionRoom = inspectionRooms.get(rowNum - 1);
-                ResidentInfo residentInfo = inspectionRoom.getResidentInfo();
+                InspectionResidentInfo inspectionResidentInfo = inspectionRoom.getInspectionResidentInfo();
                 Room room = inspectionRoom.getRoom();
                 String assignedRoom = room != null ? room.getAssignedRoom() : "";
 
                 row.createCell(0).setCellValue(assignedRoom);
-                row.createCell(1).setCellValue(residentInfo == null ? "" : residentInfo.getName());
-                row.createCell(2).setCellValue(residentInfo == null ? "" : residentInfo.getPhoneNo());
-                row.createCell(3).setCellValue(residentInfo == null ? "" : residentInfo.getStudentId());
+                row.createCell(1).setCellValue(inspectionResidentInfo == null ? "" : inspectionResidentInfo.getName());
+                row.createCell(2).setCellValue(inspectionResidentInfo == null ? "" : inspectionResidentInfo.getPhoneNo());
+                row.createCell(3).setCellValue(inspectionResidentInfo == null ? "" : inspectionResidentInfo.getStudentId());
                 row.createCell(4).setCellValue(inspectionRoom.getPassState().getPenalty());
                 row.createCell(5).setCellValue(inspectionRoom.getPassState().getLabel());
             }
@@ -219,16 +219,16 @@ public class ExcelUtil {
                 Row row = sheet.createRow(rowNum);
 
                 InspectionRoom inspectionRoom = inspectionRooms.get(rowNum - dataStartRow);
-                ResidentInfo residentInfo = inspectionRoom.getResidentInfo();
+                InspectionResidentInfo inspectionResidentInfo = inspectionRoom.getInspectionResidentInfo();
                 Room room = inspectionRoom.getRoom();
                 String assignedRoom = room != null ? room.getAssignedRoom() : "";
 
                 // 실내 쓰레기방치 화장실 샤워실 보관금지
                 //indoor leavedTrash toilet shower prohibitedItem
                 row.createCell(0).setCellValue(assignedRoom);
-                row.createCell(1).setCellValue(residentInfo == null ? "" : residentInfo.getName());
-                row.createCell(2).setCellValue(residentInfo == null ? "" : residentInfo.getPhoneNo());
-                row.createCell(3).setCellValue(residentInfo == null ? "" : residentInfo.getStudentId());
+                row.createCell(1).setCellValue(inspectionResidentInfo == null ? "" : inspectionResidentInfo.getName());
+                row.createCell(2).setCellValue(inspectionResidentInfo == null ? "" : inspectionResidentInfo.getPhoneNo());
+                row.createCell(3).setCellValue(inspectionResidentInfo == null ? "" : inspectionResidentInfo.getStudentId());
                 row.createCell(4).setCellValue(inspectionRoom.getPassState().getPenalty());
                 row.createCell(5).setCellValue(inspectionRoom.getPassState().getLabel());
                 row.createCell(6).setCellValue(inspectionRoom.isIndoor() ? "O" : "X");

@@ -3,7 +3,7 @@ package com.dominest.dominestbackend.domain.post.inspection.floor.room;
 import com.dominest.dominestbackend.domain.common.BaseEntity;
 import com.dominest.dominestbackend.domain.post.inspection.InspectionPost;
 import com.dominest.dominestbackend.domain.post.inspection.floor.InspectionFloor;
-import com.dominest.dominestbackend.domain.post.inspection.floor.room.component.ResidentInfo;
+import com.dominest.dominestbackend.domain.post.inspection.floor.room.component.InspectionResidentInfo;
 import com.dominest.dominestbackend.domain.room.Room;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.*;
@@ -40,7 +40,7 @@ public class InspectionRoom extends BaseEntity {
     private String etc;
 
     @Embedded
-    private ResidentInfo residentInfo;
+    private InspectionResidentInfo inspectionResidentInfo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "floor_id", nullable = false)
@@ -51,7 +51,7 @@ public class InspectionRoom extends BaseEntity {
     private Room room;
 
     @Builder
-    private InspectionRoom(PassState passState, String etc, ResidentInfo residentInfo
+    private InspectionRoom(PassState passState, String etc, InspectionResidentInfo inspectionResidentInfo
             , Room room, InspectionFloor inspectionFloor) {
         // ==기본값 설정==
         this.indoor = false;
@@ -60,7 +60,7 @@ public class InspectionRoom extends BaseEntity {
         this.shower = false;
         this.prohibitedItem = false;
 
-        this.residentInfo = residentInfo;
+        this.inspectionResidentInfo = inspectionResidentInfo;
         this.passState = passState;
         this.etc = etc;
 

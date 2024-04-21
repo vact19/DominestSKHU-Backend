@@ -10,7 +10,7 @@ import com.dominest.dominestbackend.domain.post.inspection.floor.InspectionFloor
 import com.dominest.dominestbackend.domain.post.inspection.floor.InspectionFloorService;
 import com.dominest.dominestbackend.domain.post.inspection.floor.room.InspectionRoom;
 import com.dominest.dominestbackend.domain.post.inspection.floor.room.InspectionRoomService;
-import com.dominest.dominestbackend.domain.post.inspection.floor.room.component.ResidentInfo;
+import com.dominest.dominestbackend.domain.post.inspection.floor.room.component.InspectionResidentInfo;
 import com.dominest.dominestbackend.domain.resident.ResidentRepository;
 import com.dominest.dominestbackend.domain.resident.component.ResidenceSemester;
 import com.dominest.dominestbackend.domain.room.Room;
@@ -90,15 +90,15 @@ public class InspectionPostService {
             Integer floorNumber = inspectionFloor.getFloorNumber();
             List<Room> rooms = roomRepository.findByFloorNo(floorNumber);
             for (Room room : rooms) { // InspectionRoom 은 Room 만큼 생성되어야 한다.
-                ResidentInfo residentInfo = residentRepository.findByResidenceSemesterAndRoom(residenceSemester, room)
-                        .map(ResidentInfo::from)
+                InspectionResidentInfo inspectionResidentInfo = residentRepository.findByResidenceSemesterAndRoom(residenceSemester, room)
+                        .map(InspectionResidentInfo::from)
                         .orElse(null);
 
                 InspectionRoom inspectionRoom = InspectionRoom.builder()
                         .room(room)
                         .inspectionFloor(inspectionFloor)
                         .passState(InspectionRoom.PassState.NOT_PASSED)
-                        .residentInfo(residentInfo) // null이든 아니든 그냥 저장.
+                        .residentInfo(inspectionResidentInfo) // null이든 아니든 그냥 저장.
                         .build();
                 inspectionRooms.add(inspectionRoom);
             }
