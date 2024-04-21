@@ -10,7 +10,6 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -65,42 +64,41 @@ public class Resident extends BaseEntity {
         this.room = room;
     }
 
-    //todo List<String> data를 래핑하는 클래스 만들어보기.
-    public static Resident from(List<String> data, ResidenceSemester residenceSemester, Room room) {
+    public static Resident from(ResidentExcelParser.ResidentCreationDto data, ResidenceSemester residenceSemester, Room room) {
         String yyyyMMdd = "yyyyMMdd";
 
         // create the resident object using builder
         return Resident.builder()
                 .personalInfo(
                         new PersonalInfo(
-                                data.get(0)
-                                , data.get(1)
-                                , new PhoneNumber(data.get(16))
-                                , DatePatternParser.parseyyMMddToLocalDate(LocalDate.now().getYear(), data.get(5))
+                                data.getName()
+                                , data.getGender()
+                                , new PhoneNumber(data.getPhoneNumber())
+                                , DatePatternParser.parseyyMMddToLocalDate(LocalDate.now().getYear(), data.getDateOfBirth())
                         ))
                 .studentInfo(
                         new StudentInfo(
-                                data.get(2)
-                                , data.get(7)
-                                , data.get(8)
+                                data.getStudentId()
+                                , data.getMajor()
+                                , data.getGrade()
                         ))
                 .residenceDateInfo(
                         new ResidenceDateInfo(
-                                LocalDate.parse(data.get(12), DateTimeFormatter.ofPattern(yyyyMMdd))
-                                , "".equals(data.get(13)) ?  null :
-                                LocalDate.parse(data.get(13), DateTimeFormatter.ofPattern(yyyyMMdd))
-                                , LocalDate.parse(data.get(14), DateTimeFormatter.ofPattern(yyyyMMdd))
-                                , LocalDate.parse(data.get(15), DateTimeFormatter.ofPattern(yyyyMMdd))
+                                LocalDate.parse(data.getAdmissionDate(), DateTimeFormatter.ofPattern(yyyyMMdd))
+                                , "".equals(data.getLeavingDate()) ?  null :
+                                LocalDate.parse(data.getLeavingDate(), DateTimeFormatter.ofPattern(yyyyMMdd))
+                                , LocalDate.parse(data.getSemesterStartDate(), DateTimeFormatter.ofPattern(yyyyMMdd))
+                                , LocalDate.parse(data.getSemesterEndDate(), DateTimeFormatter.ofPattern(yyyyMMdd))
                         ))
                 .residenceInfo(
                         new ResidenceInfo(
-                                data.get(3)
-                                , data.get(4)
-                                , data.get(9)
-                                , data.get(17)
-                                , data.get(18)
-                                , data.get(19)
-                                , data.get(20)
+                                data.getSemester()
+                                , data.getCurrentStatus()
+                                , data.getPeriod()
+                                , data.getSocialCode()
+                                , data.getSocialName()
+                                , data.getFamilyHomeZipCode()
+                                , data.getFamilyHomeAddress()
                         ))
                 .residenceSemester(residenceSemester)
                 .room(room)

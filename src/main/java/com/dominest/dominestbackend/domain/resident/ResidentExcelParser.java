@@ -8,6 +8,8 @@ import com.dominest.dominestbackend.global.exception.exceptions.business.Busines
 import com.dominest.dominestbackend.global.exception.exceptions.external.ExternalServiceException;
 import com.dominest.dominestbackend.global.exception.exceptions.external.file.FileIOException;
 import com.dominest.dominestbackend.global.util.ExcelParser;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -25,23 +27,32 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Component
 public class ResidentExcelParser {
     private final ExcelParser excelParser;
 
+    /**
+     * 엑셀 데이터를 파싱하기 위한 상수.
+     * 6번 인덱스는 '기숙사' 컬럼으로, 원본 엑셀데이터에서 'B'로 고정되어있으므로 받지 않음.
+     * 10번 인덱스는 '호실' 컬럼으로, 원본 엑셀데이터에서 '2'로 고정되어있으므로 받지 않음.
+     */
+    public static final int NAME_COLUMN_INDEX = 0; public static final int GENDER_COLUMN_INDEX = 1; public static final int STUDENT_ID_COLUMN_INDEX = 2; public static final int SEMESTER_COLUMN_INDEX = 3; public static final int CURRENT_STATUS_COLUMN_INDEX = 4; public static final int DATE_OF_BIRTH_COLUMN_INDEX = 5;
+    public static final int MAJOR_COLUMN_INDEX = 7; public static final int GRADE_COLUMN_INDEX = 8; public static final int PERIOD_COLUMN_INDEX = 9; public static final int ASSIGNED_ROOM_COLUMN_INDEX = 11; public static final int ADMISSION_DATE_COLUMN_INDEX = 12; public static final int LEAVING_DATE_COLUMN_INDEX = 13;
+    public static final int SEMESTER_START_DATE_COLUMN_INDEX = 14; public static final int SEMESTER_END_DATE_COLUMN_INDEX = 15; public static final int PHONE_NUMBER_COLUMN_INDEX = 16; public static final int SOCIAL_CODE_COLUMN_INDEX = 17; public static final int SOCIAL_NAME_COLUMN_INDEX = 18; public static final int FAMILY_HOME_ZIP_CODE_COLUMN_INDEX = 19; public static final int FAMILY_HOME_ADDRESS_COLUMN_INDEX = 20;
+
     public static final int RESIDENT_COLUMN_COUNT = 21;
 
-    public void validateResidentColumnCount(List<List<String>> sheet) {
-        Integer sheetColumnCount = Optional.ofNullable(sheet.get(0))
-                .map(List::size)
-                .orElse(0);
+    public List<ResidentCreationDto> convertToResidentExcelDto(List<List<String>> sheet) {
+        validateResidentColumnCount(sheet);
+        // 첫 3줄 제거 후 유효 데이터만 추출
+        sheet.remove(0); sheet.remove(0);sheet.remove(0);
 
-        if (sheetColumnCount != RESIDENT_COLUMN_COUNT){
-            throw new BusinessException("읽어들인 컬럼 개수가 " +
-                    RESIDENT_COLUMN_COUNT + "개가 아닙니다.", HttpStatus.BAD_REQUEST);
-        }
+        return sheet.stream()
+                .map(ResidentCreationDto::from)
+                .collect(Collectors.toUnmodifiableList());
     }
 
     // 통과차수별 방 정보와 소속된 사생의 정보를 반환.
@@ -175,6 +186,67 @@ public class ResidentExcelParser {
             workbook.write(response.getOutputStream());
         } catch (IOException e) {
             throw new FileIOException(ErrorCode.FILE_CANNOT_BE_SENT, e);
+        }
+    }
+
+    private void validateResidentColumnCount(List<List<String>> sheet) {
+        Integer sheetColumnCount = Optional.ofNullable(sheet.get(0))
+                .map(List::size)
+                .orElse(0);
+
+        if (sheetColumnCount != RESIDENT_COLUMN_COUNT){
+            throw new BusinessException("읽어들인 컬럼 개수가 " +
+                    RESIDENT_COLUMN_COUNT + "개가 아닙니다.", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Getter
+    @Builder
+    public static class ResidentCreationDto {
+        private final String name;
+        private final String gender;
+        private final String studentId;
+        private final String semester;
+        private final String currentStatus;
+        private final String dateOfBirth;
+
+        private final String major;
+        private final String grade;
+        private final String period;
+        private final String assignedRoom;
+        private final String admissionDate;
+        private final String leavingDate;
+        private final String semesterStartDate;
+        private final String semesterEndDate;
+
+        private final String phoneNumber;
+        private final String socialCode;
+        private final String socialName;
+        private final String familyHomeZipCode;
+        private final String familyHomeAddress;
+
+        private static ResidentCreationDto from(List<String> data) {
+            return ResidentCreationDto.builder()
+                    .name(data.get(NAME_COLUMN_INDEX))
+                    .gender(data.get(GENDER_COLUMN_INDEX))
+                    .studentId(data.get(STUDENT_ID_COLUMN_INDEX))
+                    .semester(data.get(SEMESTER_COLUMN_INDEX))
+                    .currentStatus(data.get(CURRENT_STATUS_COLUMN_INDEX))
+                    .dateOfBirth(data.get(DATE_OF_BIRTH_COLUMN_INDEX))
+                    .major(data.get(MAJOR_COLUMN_INDEX))
+                    .grade(data.get(GRADE_COLUMN_INDEX))
+                    .period(data.get(PERIOD_COLUMN_INDEX))
+                    .assignedRoom(data.get(ASSIGNED_ROOM_COLUMN_INDEX))
+                    .admissionDate(data.get(ADMISSION_DATE_COLUMN_INDEX))
+                    .leavingDate(data.get(LEAVING_DATE_COLUMN_INDEX))
+                    .semesterStartDate(data.get(SEMESTER_START_DATE_COLUMN_INDEX))
+                    .semesterEndDate(data.get(SEMESTER_END_DATE_COLUMN_INDEX))
+                    .phoneNumber(data.get(PHONE_NUMBER_COLUMN_INDEX))
+                    .socialCode(data.get(SOCIAL_CODE_COLUMN_INDEX))
+                    .socialName(data.get(SOCIAL_NAME_COLUMN_INDEX))
+                    .familyHomeZipCode(data.get(FAMILY_HOME_ZIP_CODE_COLUMN_INDEX))
+                    .familyHomeAddress(data.get(FAMILY_HOME_ADDRESS_COLUMN_INDEX))
+                    .build();
         }
     }
 }

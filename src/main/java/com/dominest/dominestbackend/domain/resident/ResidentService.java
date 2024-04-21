@@ -11,7 +11,6 @@ import com.dominest.dominestbackend.domain.room.roomhistory.RoomHistoryService;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.exceptions.business.BusinessException;
 import com.dominest.dominestbackend.global.exception.exceptions.external.db.ResourceNotFoundException;
-import com.dominest.dominestbackend.global.util.ExcelParser;
 import com.dominest.dominestbackend.global.util.FileManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +18,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -99,22 +99,20 @@ public class ResidentService {
 
     @Transactional
     public ExcelUploadResponse excelUpload(List<List<String>> sheet, ResidenceSemester residenceSemester) {
-        residentExcelParser.validateResidentColumnCount(sheet);
-        // 첫 3줄 제거 후 유효 데이터만 추출
-        sheet.remove(0); sheet.remove(0);sheet.remove(0);
+        List<ResidentExcelParser.ResidentCreationDto> residentCreationDtos = residentExcelParser.convertToResidentExcelDto(sheet);
 
         int originalRow = sheet.size();
         int successRow = 0;
 
         // 데이터를 저장한다. 예외발생시 삭제나 저장 작업의 트랜잭션 롤백.
-        for (List<String> row : sheet) {
-            if ("".equals(row.get(ResidentExcelParser.RESIDENT_COLUMN_COUNT - 1))) // 빈 row 발견 시 continue
+        for (ResidentExcelParser.ResidentCreationDto residentCreationDto : residentCreationDtos) {
+            if (StringUtils.hasText(residentCreationDto.getFamilyHomeAddress())) // 빈 row 발견 시 continue
                 continue;
             // Room 객체를 찾아서 넣어줘야 함
-            String assignedRoom = row.get(11);
+            String assignedRoom = residentCreationDto.getAssignedRoom();
 
             Room room = roomService.getByAssignedRoom(assignedRoom);
-            Resident resident = Resident.from(row, residenceSemester, room);
+            Resident resident = Resident.from(residentCreationDto, residenceSemester, room);
 
             // 중복을 검사함. 같은 사람이라고 판단될 경우와 동명이인이라고 판단될 경우에 따라 분기.
             if (residentRepository.existsByPersonalInfoNameAndResidenceSemester(resident.getPersonalInfo().getName(), residenceSemester)) {
