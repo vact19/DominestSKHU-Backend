@@ -14,7 +14,7 @@ import com.dominest.dominestbackend.domain.resident.ResidentService;
 import com.dominest.dominestbackend.domain.resident.component.ResidenceSemester;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.exceptions.external.file.FileIOException;
-import com.dominest.dominestbackend.global.util.ExcelUtil;
+import com.dominest.dominestbackend.global.util.ExcelParser;
 import com.dominest.dominestbackend.global.util.FileManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -36,6 +36,7 @@ public class ResidentController {
 
     private final ResidentService residentService;
     private final FileManager fileManager;
+    private final ExcelParser excelParser;
 
     // 엑셀로 업로드
     @PostMapping("/residents/upload-excel")
@@ -43,8 +44,7 @@ public class ResidentController {
             @ModelAttribute @Valid ExcelUploadRequest request
     ){
         // 엑셀 파싱
-        List<List<String>> sheet= ExcelUtil.parseExcel(request.getFile());
-        ExcelUtil.checkResidentColumnCount(sheet);
+        List<List<String>> sheet= excelParser.parse(request.getFile());
 
         ExcelUploadResponse response = residentService.excelUpload(sheet, request.getResidenceSemester());
         String resultMsg = response.getResultMsg();
