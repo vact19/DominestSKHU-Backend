@@ -5,12 +5,12 @@ import com.dominest.dominestbackend.api.post.complaint.response.ComplaintListRes
 import com.dominest.dominestbackend.api.post.complaint.request.CreateComplaintRequest;
 import com.dominest.dominestbackend.api.post.complaint.request.UpdateComplaintRequest;
 import com.dominest.dominestbackend.domain.post.complaint.Complaint;
+import com.dominest.dominestbackend.domain.post.complaint.ComplaintExcelParser;
 import com.dominest.dominestbackend.domain.post.complaint.ComplaintRepository;
 import com.dominest.dominestbackend.domain.post.complaint.ComplaintService;
 import com.dominest.dominestbackend.domain.post.component.category.Category;
 import com.dominest.dominestbackend.domain.post.component.category.component.Type;
 import com.dominest.dominestbackend.domain.post.component.category.service.CategoryService;
-import com.dominest.dominestbackend.global.util.ExcelUtil;
 import com.dominest.dominestbackend.global.util.FileManager;
 import com.dominest.dominestbackend.global.util.PageBaseConverter;
 import com.dominest.dominestbackend.global.util.PrincipalParser;
@@ -33,6 +33,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 public class ComplaintController {
+    private final ComplaintExcelParser complaintExcelParser;
     private final ComplaintService complaintService;
     private final CategoryService categoryService;
     private final ComplaintRepository complaintRepository;
@@ -128,7 +129,7 @@ public class ComplaintController {
         }
         String sheetName = "민원접수내역";
 
-        ExcelUtil.createAndRespondAllDataWitehComplaint(filename, sheetName, response, complaints);
+        complaintExcelParser.createAndRespondAllDataWithComplaint(filename, sheetName, response, complaints);
     }
 }
 

@@ -15,8 +15,9 @@ import com.dominest.dominestbackend.domain.post.inspection.floor.InspectionFloor
 import com.dominest.dominestbackend.domain.post.inspection.floor.room.InspectionRoom;
 import com.dominest.dominestbackend.domain.post.inspection.floor.room.InspectionRoomRepository;
 import com.dominest.dominestbackend.domain.post.inspection.floor.room.InspectionRoomService;
+import com.dominest.dominestbackend.domain.resident.ResidentExcelParser;
 import com.dominest.dominestbackend.domain.resident.component.ResidenceSemester;
-import com.dominest.dominestbackend.global.util.ExcelUtil;
+import com.dominest.dominestbackend.global.util.ExcelParser;
 import com.dominest.dominestbackend.global.util.FileManager.FileExt;
 import com.dominest.dominestbackend.global.util.PageBaseConverter;
 import com.dominest.dominestbackend.global.util.PrincipalParser;
@@ -48,6 +49,7 @@ public class InspectionController {
     private final InspectionFloorService inspectionFloorService;
     private final InspectionRoomService inspectionRoomService;
     private final InspectionRoomRepository inspectionRoomRepository;
+    private final ResidentExcelParser residentExcelParser;
 
     // 게시글 생성(학기 지정)
     @PostMapping("/categories/{categoryId}/posts/inspection")
@@ -203,7 +205,7 @@ public class InspectionController {
         List<InspectionRoom> inspectionRoomsGotPenalty = inspectionRoomRepository.findAllByPostIdAndNotInPassState(postId, penalty0passStates);
 
         // 파일 이름 설정
-        ExcelUtil.createAndRespondResidentInfoWithInspectionRoom(filename, sheetName, response, inspectionRoomsGotPenalty);
+        residentExcelParser.createAndRespondResidentInfoWithInspectionRoom(filename, sheetName, response, inspectionRoomsGotPenalty);
     }
 
     // (엑셀 다운로드) 방호점 게시글의 특정 통과차수에 해당하는 입사생 목록
@@ -223,7 +225,7 @@ public class InspectionController {
         List<InspectionRoom> inspectionRooms = inspectionRoomRepository.findAllByPostIdAndPassState(postId, passState);
 
         // 파일 이름 설정
-        ExcelUtil.createAndRespondResidentInfoWithInspectionRoom(filename, sheetName, response, inspectionRooms);
+        residentExcelParser.createAndRespondResidentInfoWithInspectionRoom(filename, sheetName, response, inspectionRooms);
     }
 
     // (엑셀 다운로드) 방호점 게시글의 전체 데이터
@@ -240,24 +242,6 @@ public class InspectionController {
         List<InspectionRoom> inspectionRoomsGotPenalty = inspectionRoomRepository.findAllByPostId(postId);
 
         // 파일 이름 설정
-        ExcelUtil.createAndRespondAllDataWithInspectionRoom(filename, sheetName, response, inspectionRoomsGotPenalty);
+        residentExcelParser.createAndRespondAllDataWithInspectionRoom(filename, sheetName, response, inspectionRoomsGotPenalty);
     }
-
-
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
