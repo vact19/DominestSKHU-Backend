@@ -63,9 +63,6 @@ public class ExcelUtil {
                     Cell cell = cellIterator.next();
                     String cellValue;
                     switch (cell.getCellType()) {
-                        case STRING:
-                            cellValue = cell.getStringCellValue();
-                            break;
                         case NUMERIC:
                             cellValue = NumberToTextConverter.toText(cell.getNumericCellValue());
                             break;
