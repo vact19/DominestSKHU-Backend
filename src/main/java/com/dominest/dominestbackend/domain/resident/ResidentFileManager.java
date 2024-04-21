@@ -16,9 +16,9 @@ public class ResidentFileManager {
     // FilePrefix (파일 타입) 에 맞게 파일명을 등록한다.
     public void setPdfFilenameToResident(Resident resident, FileManager.FilePrefix filePrefix, String uploadedFilename) {
         if (filePrefix.equals(RESIDENT_ADMISSION)) {
-            resident.setAdmissionPdfFileName(uploadedFilename);
+            resident.getResidenceInfo().setAdmissionPdfFileName(uploadedFilename);
         } else if (filePrefix.equals(RESIDENT_DEPARTURE)) {
-            resident.setDeparturePdfFileName(uploadedFilename);
+            resident.getResidenceInfo().setDeparturePdfFileName(uploadedFilename);
         } else { // 입사신청서, 퇴사신청서가 아닌 다른 FilePrefix 값일 때
             throw new BusinessException("잘못된 FilePrefix 값입니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -27,9 +27,9 @@ public class ResidentFileManager {
     // FilePrefix (파일 타입) 에 맞는 파일명을 가져온다.
     public String getPdfFilename(Resident resident, FileManager.FilePrefix filePrefix) {
         if (filePrefix.equals(RESIDENT_ADMISSION)) {
-            return resident.getAdmissionPdfFileName();
+            return resident.getResidenceInfo().getAdmissionPdfFileName();
         } else if (filePrefix.equals(RESIDENT_DEPARTURE)) {
-            return resident.getDeparturePdfFileName();
+            return resident.getResidenceInfo().getDeparturePdfFileName();
         } else {
             return null;
         }

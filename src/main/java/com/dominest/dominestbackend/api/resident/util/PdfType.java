@@ -19,8 +19,8 @@ public enum PdfType {
 
     public String getPdfFileName(Resident resident){
         if (this.equals(ADMISSION)){
-            return resident.getAdmissionPdfFileName();
+            return resident.getResidenceInfo().getAdmissionPdfFileName();
         }
-        return resident.getDeparturePdfFileName();
+        return resident.getResidenceInfo().getDeparturePdfFileName();
     }
 }

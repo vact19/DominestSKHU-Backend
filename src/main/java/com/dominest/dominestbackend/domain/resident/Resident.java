@@ -32,60 +32,18 @@ public class Resident extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    /** 학생 개인정보 */
-    @Column(nullable = false, length = 30)
-    private String name;
-    @Column(nullable = false)
-    private String gender; // 현재 'M' or 'F' 인데 확장성을 위해 String 쓰기로 함
-    @Column(nullable = false, length = 50)
-    private String studentId;
-    @Column(nullable = false)
-    private String major; // 전공. 매학년 바뀔 수도 있으니 enum 사용하지 않는 걸로
-    @Column(nullable = false)
-    private String grade; // '3학년' 과 같은 식으로 저장된다
-
     @Embedded
-    private PhoneNumber phoneNumber; // '010-1234-5678' 형식으로 저장
-    // 엑셀데이터는 6자리로 저장되긴 하는데, 날짜 필터링 걸려면 날짜타입 사용해야 할 듯
-    @Column(nullable = false)
-    private LocalDate dateOfBirth;
+    private PersonalInfo personalInfo;
+    @Embedded
+    private StudentInfo studentInfo;
+    @Embedded
+    private ResidenceDateInfo residenceDateInfo;
+    @Embedded
+    private ResidenceInfo residenceInfo;
 
-    /** 기숙사정보 */
-    @Column(nullable = false)
-    private String semester; // 차수. '2023SMSK02' 형식
-    @Column(nullable = false)
-    private String currentStatus;  // 현재상태
-
-    private String period; // 기간. 'LY' 'AY' 'VY' 'YY'
-
-    // 호실(1, 2), 배정방, 기숙사(A, B) 3개가 물리적인 위치에 관여
-    /** 날짜정보 */
-    // 아래의 날짜들은 '20191106' 형식으로 저장됨
-    private LocalDate admissionDate; // 입사일.
-    @Column(nullable = true)
-    private LocalDate leavingDate; // 퇴사일
-    private LocalDate semesterStartDate; // 학기시작일
-    private LocalDate semesterEndDate; // 학기종료일
-
-    private String socialCode; // 사회코드
-    private String socialName; // 사회명
-
-    private String zipCode; // 우편번호
-    private String address; // 주소.
-
-    /** 아래는 학생정보 페이지에 표시되지 않는 정보들 */
-    //ResidenceSemester를 Room에도 둘까 했으나, 여기서 조인해서 쓰면 됨.
     @Enumerated(EnumType.STRING)
     @Column(length = 30, nullable = false)
     private ResidenceSemester residenceSemester; // 거주학기. '2020-2' 와 같음
-
-    @Column(nullable = true)
-    @Setter
-    private String admissionPdfFileName;
-    @Column(nullable = true)
-    @Setter
-    private String departurePdfFileName;
 
     // 방 정보는 하나지만 학생데이터는 학기마다 추가됨. N : 1
     @ManyToOne(fetch = FetchType.LAZY)
@@ -93,100 +51,169 @@ public class Resident extends BaseEntity {
     private Room room;
 
     @Builder
-    private Resident(String name, String gender, String studentId, String major, String grade,
-                    LocalDate dateOfBirth, String semester, ResidenceSemester residenceSemester, String currentStatus, String period,
-                     LocalDate admissionDate, LocalDate leavingDate,
-                    LocalDate semesterStartDate, LocalDate semesterEndDate, PhoneNumber phoneNumber, String socialCode,
-                    String socialName, String zipCode, String address, Room room) {
-        this.name = name;
-        this.gender = gender;
-        this.studentId = studentId;
-        this.major = major;
-        this.grade = grade;
-        this.dateOfBirth = dateOfBirth;
-        this.semester = semester;
+    private Resident(
+            PersonalInfo personalInfo, StudentInfo studentInfo
+            , ResidenceDateInfo residenceDateInfo, ResidenceInfo residenceInfo
+            , ResidenceSemester residenceSemester, Room room
+    ) {
+        this.personalInfo = personalInfo;
+        this.studentInfo = studentInfo;
+        this.residenceDateInfo = residenceDateInfo;
+        this.residenceInfo = residenceInfo;
+
         this.residenceSemester = residenceSemester;
-        this.currentStatus = currentStatus;
-        this.period = period;
         this.room = room;
-        this.admissionDate = admissionDate;
-        this.leavingDate = leavingDate;
-        this.semesterStartDate = semesterStartDate;
-        this.semesterEndDate = semesterEndDate;
-        this.phoneNumber = phoneNumber;
-        this.socialCode = socialCode;
-        this.socialName = socialName;
-        this.zipCode = zipCode;
-        this.address = address;
     }
 
+    //todo List<String> data를 래핑하는 클래스 만들어보기.
     public static Resident from(List<String> data, ResidenceSemester residenceSemester, Room room) {
-        String yyyyMMddPattern = "yyyyMMdd";
+        String yyyyMMdd = "yyyyMMdd";
 
         // create the resident object using builder
         return Resident.builder()
-                .name(data.get(0))
-                .gender(data.get(1))
-                .studentId(data.get(2))
-                .semester(data.get(3))
+                .personalInfo(
+                        new PersonalInfo(
+                                data.get(0)
+                                , data.get(1)
+                                , new PhoneNumber(data.get(16))
+                                , DatePatternParser.parseyyMMddToLocalDate(LocalDate.now().getYear(), data.get(5))
+                        ))
+                .studentInfo(
+                        new StudentInfo(
+                                data.get(2)
+                                , data.get(7)
+                                , data.get(8)
+                        ))
+                .residenceDateInfo(
+                        new ResidenceDateInfo(
+                                LocalDate.parse(data.get(12), DateTimeFormatter.ofPattern(yyyyMMdd))
+                                , "".equals(data.get(13)) ?  null :
+                                LocalDate.parse(data.get(13), DateTimeFormatter.ofPattern(yyyyMMdd))
+                                , LocalDate.parse(data.get(14), DateTimeFormatter.ofPattern(yyyyMMdd))
+                                , LocalDate.parse(data.get(15), DateTimeFormatter.ofPattern(yyyyMMdd))
+                        ))
+                .residenceInfo(
+                        new ResidenceInfo(
+                                data.get(3)
+                                , data.get(4)
+                                , data.get(9)
+                                , data.get(17)
+                                , data.get(18)
+                                , data.get(19)
+                                , data.get(20)
+                        ))
                 .residenceSemester(residenceSemester)
-                .currentStatus(data.get(4))
-                .dateOfBirth(
-                        DatePatternParser.parseyyMMddToLocalDate(
-                                LocalDate.now().getYear(), data.get(5)
-                        )
-                )
                 .room(room)
-                .major(data.get(7))
-                .grade(data.get(8))
-                .period(data.get(9))
-                .admissionDate(LocalDate.parse(data.get(12), DateTimeFormatter.ofPattern(yyyyMMddPattern)))
-                .leavingDate("".equals(data.get(13)) ?  null :
-                        LocalDate.parse(data.get(13), DateTimeFormatter.ofPattern(yyyyMMddPattern)))
-                .semesterStartDate(LocalDate.parse(data.get(14), DateTimeFormatter.ofPattern(yyyyMMddPattern)))
-                .semesterEndDate(LocalDate.parse(data.get(15), DateTimeFormatter.ofPattern(yyyyMMddPattern)))
-                .phoneNumber(new PhoneNumber(data.get(16)))
-                .socialCode(data.get(17))
-                .socialName(data.get(18))
-                .zipCode(data.get(19))
-                .address(data.get(20))
                 .build();
     }
 
     // 파라미터로 받은 entity의 값을 모두 복사해서 업데이트한다.
     public void updateValueFrom(Resident resident) {
-        this.name = resident.getName();
-        this.gender = resident.getGender();
-        this.studentId = resident.getStudentId();
-        this.major = resident.getMajor();
-        this.grade = resident.getGrade();
-        this.dateOfBirth = resident.getDateOfBirth();
-        this.semester = resident.getSemester();
+        this.personalInfo = resident.getPersonalInfo();
+        this.studentInfo = resident.getStudentInfo();
+        this.residenceDateInfo = resident.getResidenceDateInfo();
+        this.residenceInfo = resident.getResidenceInfo();
+
         this.residenceSemester = resident.getResidenceSemester();
-        this.currentStatus = resident.getCurrentStatus();
         this.room = resident.getRoom();
-        this.period = resident.getPeriod();
-        this.admissionDate = resident.getAdmissionDate();
-        this.leavingDate = resident.getLeavingDate();
-        this.semesterStartDate = resident.getSemesterStartDate();
-        this.semesterEndDate = resident.getSemesterEndDate();
-        this.phoneNumber = resident.getPhoneNumber();
-        this.socialCode = resident.getSocialCode();
-        this.socialName = resident.getSocialName();
-        this.zipCode = resident.getZipCode();
-        this.address = resident.getAddress();
     }
 
     // 이름 중복될 경우 이름 뒤에 전화번호 뒷자리를 붙인다.
     public void changeNameWithPhoneNumber() {
-        String[] splitedNumber = phoneNumber.getValue().split("-");
+        String[] splitedNumber = personalInfo.phoneNumber.getValue().split("-");
         if (splitedNumber.length != 3)
             throw new IllegalArgumentException("전화번호 형식이 잘못되었습니다.");
         String lastFourDigits = splitedNumber[splitedNumber.length - 1]; // 마지막 4자리 숫자
-        this.name = name + "(" + lastFourDigits + ")";
+        this.personalInfo.name = personalInfo.name + "(" + lastFourDigits + ")";
     }
 
     public String generatePdfFileNameToStore() {
-        return this.name + "-" + UUID.randomUUID() + ".pdf";
+        return this.personalInfo.name + "-" + UUID.randomUUID() + ".pdf";
+    }
+
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
+    @Embeddable
+    public static class PersonalInfo {
+        @Column(nullable = false, length = 30)
+        private String name;
+        @Column(nullable = false)
+        private String gender; // 현재 'M' or 'F' 인데 확장성을 위해 String 쓰기로 함
+        @Embedded
+        private PhoneNumber phoneNumber; // '010-1234-5678' 형식으로 저장
+        // 엑셀데이터는 6자리로 저장되긴 하는데, 날짜 필터링 걸려면 날짜타입 사용해야 할 듯
+        @Column(nullable = false)
+        private LocalDate dateOfBirth;
+    }
+
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
+    @Embeddable
+    public static class StudentInfo {
+        @Column(nullable = false, length = 50)
+        private String studentId;
+        @Column(nullable = false)
+        private String major; // 전공. 매학년 바뀔 수도 있으니 enum 사용하지 않는 걸로
+        @Column(nullable = false)
+        private String grade; // '3학년' 과 같은 식으로 저장된다
+    }
+
+    /**
+     * 날짜정보(입퇴사, 학기)
+     * */
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
+    @Embeddable
+    public static class ResidenceDateInfo {
+        // 아래의
+        private LocalDate admissionDate; // 입사일.
+        @Column(nullable = true)
+        private LocalDate leavingDate; // 퇴사일
+        private LocalDate semesterStartDate; // 학기시작일
+        private LocalDate semesterEndDate; // 학기종료일
+    }
+
+    // 기숙사 입주 관련 정보
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @Embeddable
+    public static class ResidenceInfo {
+        /** 기숙사정보 */
+        @Column(nullable = false)
+        private String semester; // 차수. '2023SMSK02' 형식
+        @Column(nullable = false)
+        private String currentStatus;  // 현재상태
+        private String period; // 기간. 'LY' 'AY' 'VY' 'YY'
+        private String socialCode; // 사회코드
+        private String socialName; // 사회명
+
+        private String familyHomeZipCode;
+        private String familyHomeAddress;
+
+        @Column(nullable = true)
+        @Setter
+        private String admissionPdfFileName;
+        @Column(nullable = true)
+        @Setter
+        private String departurePdfFileName;
+
+        public ResidenceInfo(
+                String semester, String currentStatus, String period, String socialCode, String socialName
+                , String familyHomeZipCode, String familyHomeAddress
+        ) {
+            this.semester = semester;
+            this.currentStatus = currentStatus;
+            this.period = period;
+            this.socialCode = socialCode;
+            this.socialName = socialName;
+            this.familyHomeZipCode = familyHomeZipCode;
+            this.familyHomeAddress = familyHomeAddress;
+
+            admissionPdfFileName = null;
+            departurePdfFileName = null;
+        }
     }
 }

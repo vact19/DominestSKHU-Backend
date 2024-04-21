@@ -42,35 +42,39 @@ public class ResidentListResponse {
         private String phoneNumber;
         private String socialCode;
         private String socialName;
-        private String zipCode;
-        private String address;
+        private String familyHomeZipCode;
+        private String familyHomeAddress;
 
         //from
         public static ResidentDto from(Resident resident){
+            Resident.PersonalInfo personalInfo = resident.getPersonalInfo();
+            Resident.StudentInfo studentInfo = resident.getStudentInfo();
+            Resident.ResidenceDateInfo residenceDateInfo = resident.getResidenceDateInfo();
+            Resident.ResidenceInfo residenceInfo = resident.getResidenceInfo();
             return ResidentDto.builder()
                     .id(resident.getId())
-                    .name(resident.getName())
-                    .gender(resident.getGender())
-                    .studentId(resident.getStudentId())
-                    .semester(resident.getSemester())
-                    .currentStatus(resident.getCurrentStatus())
-                    .dateOfBirth(resident.getDateOfBirth())
+                    .name(personalInfo.getName())
+                    .gender(personalInfo.getGender())
+                    .studentId(studentInfo.getStudentId())
+                    .semester(residenceInfo.getSemester())
+                    .currentStatus(residenceInfo.getCurrentStatus())
+                    .dateOfBirth(personalInfo.getDateOfBirth())
                     .dormitory(resident.getRoom().getDormitory())
-                    .major(resident.getMajor())
-                    .grade(resident.getGrade())
-                    .period(resident.getPeriod())
+                    .major(studentInfo.getMajor())
+                    .grade(studentInfo.getGrade())
+                    .period(residenceInfo.getPeriod())
                     .roomNumber(resident.getRoom().getRoomNo())
                     .assignedRoom(resident.getRoom().getAssignedRoom())
-                    .admissionDate(resident.getAdmissionDate())
-                    .leavingDate(resident.getLeavingDate() == null ? "" :
-                            resident.getLeavingDate().toString())
-                    .semesterStartDate(resident.getSemesterStartDate())
-                    .semesterEndDate(resident.getSemesterEndDate())
-                    .phoneNumber(resident.getPhoneNumber().getValue())
-                    .socialCode(resident.getSocialCode())
-                    .socialName(resident.getSocialName())
-                    .zipCode(resident.getZipCode())
-                    .address(resident.getAddress())
+                    .admissionDate(residenceDateInfo.getAdmissionDate())
+                    .leavingDate(residenceDateInfo.getLeavingDate() == null ? "" :
+                            residenceDateInfo.getLeavingDate().toString())
+                    .semesterStartDate(residenceDateInfo.getSemesterStartDate())
+                    .semesterEndDate(residenceDateInfo.getSemesterEndDate())
+                    .phoneNumber(personalInfo.getPhoneNumber().getValue())
+                    .socialCode(residenceInfo.getSocialCode())
+                    .socialName(residenceInfo.getSocialName())
+                    .familyHomeZipCode(residenceInfo.getFamilyHomeZipCode())
+                    .familyHomeAddress(residenceInfo.getFamilyHomeAddress())
                     .build();
         }
     }

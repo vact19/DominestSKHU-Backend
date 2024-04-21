@@ -17,11 +17,11 @@ public class RoomHistoryService {
     @Transactional
     public void saveFrom(Resident resident) {
         RoomHistory roomHistory = RoomHistory.builder()
-                .residentName(resident.getName())
-                .admissionDate(resident.getAdmissionDate())
-                .leavingDate(resident.getLeavingDate())
-                .phoneNumber(resident.getPhoneNumber().getValue())
-                .studentId(resident.getStudentId())
+                .residentName(resident.getPersonalInfo().getName())
+                .admissionDate(resident.getResidenceDateInfo().getAdmissionDate())
+                .leavingDate(resident.getResidenceDateInfo().getLeavingDate())
+                .phoneNumber(resident.getPersonalInfo().getPhoneNumber().getValue())
+                .studentId(resident.getStudentInfo().getStudentId())
                 .room(resident.getRoom())
                 .build();
 

@@ -15,15 +15,15 @@ public interface ResidentRepository extends JpaRepository<Resident, Long> {
             " where r.residenceSemester = :residenceSemester")
     List<Resident> findAllByResidenceSemesterFetchRoom(@Param("residenceSemester") ResidenceSemester residenceSemester);
 
-    Resident findByNameAndResidenceSemester(String name, ResidenceSemester residenceSemester);
+    Resident findByPersonalInfoNameAndResidenceSemester(String name, ResidenceSemester residenceSemester);
 
     Optional<Resident> findByResidenceSemesterAndRoom(ResidenceSemester residenceSemester, Room room);
 
     List<Resident> findAllByResidenceSemester(ResidenceSemester semester);
 
     // [학번, 전화번호, 이름] 중복제한:  똑같은 학생이 한 학기에 둘 이상 있을 순 없다.
-    boolean existsByResidenceSemesterAndStudentIdAndPhoneNumberValueAndName
+    boolean existsByResidenceSemesterAndStudentInfoStudentIdAndPersonalInfoPhoneNumberValueAndPersonalInfoName
     (ResidenceSemester residenceSemester, String studentId, String phoneNumber, String name);
 
-    boolean existsByNameAndResidenceSemester(String name, ResidenceSemester residenceSemester);
+    boolean existsByPersonalInfoNameAndResidenceSemester(String name, ResidenceSemester residenceSemester);
 }

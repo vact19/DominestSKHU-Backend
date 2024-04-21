@@ -70,7 +70,7 @@ public class ResidentService {
 
             // 1. 파일명으로 해당 차수의 학생이름을 찾는다. 파일명은 '학생이름.file' 여야 한다.
             String residentName = fileManager.extractFileNameNoExt(filename);
-            Resident resident = residentRepository.findByNameAndResidenceSemester(residentName, residenceSemester);
+            Resident resident = residentRepository.findByPersonalInfoNameAndResidenceSemester(residentName, residenceSemester);
 
             // 파일명에 해당하는 학생이 없으면 continue
             if (resident == null) {
@@ -115,12 +115,12 @@ public class ResidentService {
             Resident resident = Resident.from(row, residenceSemester, room);
 
             // 중복을 검사함. 같은 사람이라고 판단될 경우와 동명이인이라고 판단될 경우에 따라 분기.
-            if (residentRepository.existsByNameAndResidenceSemester(resident.getName(), residenceSemester)) {
+            if (residentRepository.existsByPersonalInfoNameAndResidenceSemester(resident.getPersonalInfo().getName(), residenceSemester)) {
                 if (existsByUniqueKey(resident)) {
                     // 엑셀 데이터상 중복이 있을 시 로그만 남기고 다음 행으로 넘어간다.
                     log.warn("엑셀 데이터 저장 실패. 중복 데이터가 있어 다음으로 넘어감. 이름: {}, 학번: {}, 학기: {}" +
-                                    ", 방 번호: {}, 방 코드: {}", resident.getName()
-                            , resident.getStudentId(), resident.getResidenceSemester()
+                                    ", 방 번호: {}, 방 코드: {}", resident.getPersonalInfo().getName()
+                            , resident.getStudentInfo().getStudentId(), resident.getResidenceSemester()
                             , resident.getRoom().getId(), resident.getRoom().getAssignedRoom());
                     continue;
                 } else {
@@ -187,8 +187,11 @@ public class ResidentService {
     }
 
     private boolean existsByUniqueKey(Resident resident) {
-        return residentRepository.existsByResidenceSemesterAndStudentIdAndPhoneNumberValueAndName(
-                resident.getResidenceSemester(), resident.getStudentId(), resident.getPhoneNumber().getValue(), resident.getName());
+        return residentRepository.existsByResidenceSemesterAndStudentInfoStudentIdAndPersonalInfoPhoneNumberValueAndPersonalInfoName(
+                resident.getResidenceSemester()
+                , resident.getStudentInfo().getStudentId()
+                , resident.getPersonalInfo().getPhoneNumber().getValue()
+                , resident.getPersonalInfo().getName());
     }
 
     private void save(Resident resident) {
@@ -198,7 +201,7 @@ public class ResidentService {
         } catch (DataIntegrityViolationException e) {
             throw new BusinessException(
                     String.format("입사생 저장 실패, 잘못된 입력값입니다. 데이터 누락 혹은 중복을 확인해주세요. 이름: %s, 학번: %s, 학기: %s, 방 번호: %d, 방 코드: %s"
-                            , resident.getName(), resident.getStudentId(), resident.getResidenceSemester()
+                            , resident.getPersonalInfo().getName(), resident.getStudentInfo().getStudentId(), resident.getResidenceSemester()
                             , resident.getRoom().getId(), resident.getRoom().getAssignedRoom())
                     , HttpStatus.BAD_REQUEST, e);
         }

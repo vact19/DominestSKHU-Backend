@@ -63,33 +63,42 @@ public class SaveResidentRequest {
     @NotBlank(message = "사회명을 입력해주세요.")
     String socialName;
     @NotBlank(message = "우편번호를 입력해주세요.")
-    String zipCode;
+    String familyHomeZipCode;
     @NotBlank(message = "주소를 입력해주세요.")
-    String address;
+    String familyHomeAddress;
 
     public Resident toEntity(Room room){
         return Resident.builder()
-                .name(name)
-                .gender(gender)
-                .studentId(studentId)
-                .semester(semester)
-                .currentStatus(currentStatus)
-                .dateOfBirth(dateOfBirth)
+                .personalInfo(
+                        new Resident.PersonalInfo(
+                                name, gender, new PhoneNumber(phoneNumber), dateOfBirth
+                ))
+                .studentInfo(
+                        new Resident.StudentInfo(
+                                studentId
+                                , major
+                                , grade
+                ))
+                .residenceDateInfo(
+                        new Resident.ResidenceDateInfo(
+                                admissionDate
+                                , "".equals(leavingDate) ?  null :
+                                LocalDate.parse(leavingDate, DateTimeFormatter.ofPattern("yyyyMMdd"))
+                                , semesterStartDate
+                                , semesterEndDate
+                        ))
+                .residenceInfo(
+                        new Resident.ResidenceInfo(
+                                semester
+                                , currentStatus
+                                , period
+                                , socialCode
+                                , socialName
+                                , familyHomeZipCode
+                                , familyHomeAddress
+                ))
                 .residenceSemester(residenceSemester)
-                .major(major)
-                .grade(grade)
-                .period(period)
                 .room(room)
-                .admissionDate(admissionDate)
-                .leavingDate("".equals(leavingDate) ?  null :
-                        LocalDate.parse(leavingDate, DateTimeFormatter.ofPattern("yyyyMMdd")))
-                .semesterStartDate(semesterStartDate)
-                .semesterEndDate(semesterEndDate)
-                .phoneNumber(new PhoneNumber(phoneNumber))
-                .socialCode(socialCode)
-                .socialName(socialName)
-                .zipCode(zipCode)
-                .address(address)
                 .build();
     }
 }

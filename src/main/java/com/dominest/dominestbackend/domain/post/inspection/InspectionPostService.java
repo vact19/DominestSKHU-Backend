@@ -98,7 +98,7 @@ public class InspectionPostService {
                         .room(room)
                         .inspectionFloor(inspectionFloor)
                         .passState(InspectionRoom.PassState.NOT_PASSED)
-                        .residentInfo(inspectionResidentInfo) // null이든 아니든 그냥 저장.
+                        .inspectionResidentInfo(inspectionResidentInfo) // null이든 아니든 그냥 저장.
                         .build();
                 inspectionRooms.add(inspectionRoom);
             }

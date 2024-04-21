@@ -22,6 +22,9 @@ public class InspectionResidentInfo {
     String phoneNo;
 
     public static InspectionResidentInfo from(Resident resident){
-        return new InspectionResidentInfo(resident.getName(), resident.getStudentId(), resident.getPhoneNumber().getValue());
+        return new InspectionResidentInfo(
+                resident.getPersonalInfo().getName()
+                , resident.getStudentInfo().getStudentId()
+                , resident.getPersonalInfo().getPhoneNumber().getValue());
     }
 }

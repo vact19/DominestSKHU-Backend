@@ -30,9 +30,9 @@ public class ResidentPdfListResponse {
 
         public PdfDto(Resident resident) {
             this.id = resident.getId();
-            this.residentName = resident.getName();
-            this.existsAdmissionFile = resident.getAdmissionPdfFileName() != null ? "성공" : "오류(파일없음)";
-            this.existsDepartureFile = resident.getDeparturePdfFileName() != null ? "성공" : "오류(파일없음)";
+            this.residentName = resident.getPersonalInfo().getName();
+            this.existsAdmissionFile = resident.getResidenceInfo().getAdmissionPdfFileName() != null ? "성공" : "오류(파일없음)";
+            this.existsDepartureFile = resident.getResidenceInfo().getDeparturePdfFileName() != null ? "성공" : "오류(파일없음)";
         }
     }
 }
