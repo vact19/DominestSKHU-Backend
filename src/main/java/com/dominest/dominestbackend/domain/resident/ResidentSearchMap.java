@@ -17,12 +17,12 @@ public class ResidentSearchMap {
     private ResidentSearchMap(List<Resident> residents) {
         this.sameNameSearchMap = residents
                 .stream()
-                .collect(Collectors.toUnmodifiableMap(
+                .collect(Collectors.toMap(
                         resident -> resident.getResidenceSemester() + resident.getPersonalInfo().getName()
                         , resident -> resident)
                 );
         this.samePersonSearchMap = residents.stream()
-                .collect(Collectors.toUnmodifiableMap(
+                .collect(Collectors.toMap(
                         resident -> resident.getResidenceSemester()
                                 + resident.getStudentInfo().getStudentId()
                                 + resident.getPersonalInfo().getPhoneNumber().getValue()
@@ -43,5 +43,15 @@ public class ResidentSearchMap {
                         + resident.getPersonalInfo().getPhoneNumber().getValue()
                         + resident.getPersonalInfo().getName()
         );
+    }
+
+    public void add(Resident resident) {
+        sameNameSearchMap.put(resident.getResidenceSemester() + resident.getPersonalInfo().getName(), resident);
+        samePersonSearchMap.put(
+                resident.getResidenceSemester()
+                        + resident.getStudentInfo().getStudentId()
+                        + resident.getPersonalInfo().getPhoneNumber().getValue()
+                        + resident.getPersonalInfo().getName()
+                , resident);
     }
 }

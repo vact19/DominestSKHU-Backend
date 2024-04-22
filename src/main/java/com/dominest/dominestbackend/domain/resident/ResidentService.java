@@ -137,6 +137,7 @@ public class ResidentService {
                 resident.changeNameWithPhoneNumber();
             }
             save(resident);
+            residentSearchMap.add(resident);
             successRow++;
         }
         return ExcelUploadResponse.of(residentCreationDtos.size(), successRow);
