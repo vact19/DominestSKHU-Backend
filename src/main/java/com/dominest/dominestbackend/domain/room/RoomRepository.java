@@ -20,5 +20,5 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 
     @Query("SELECT r FROM Room r" +
             " WHERE r.assignedRoom IN :assignedRooms")
-    List<Room> findByAssignedRoomIn(List<String> assignedRooms);
+    List<Room> findByAssignedRoomIn(@Param("assignedRooms") List<String> assignedRooms);
 }
