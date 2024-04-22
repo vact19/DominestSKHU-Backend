@@ -74,7 +74,7 @@ public class ExcelParser {
 
     public boolean isNotExcelExt(String fileName) {
         String ext = extractExt(fileName);
-        return "xlsx".equals(ext) || "xls".equals(ext);
+        return !("xlsx".equals(ext) || "xls".equals(ext));
     }
 
     private String extractExt(String originalFileName) {
