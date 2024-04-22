@@ -78,7 +78,7 @@ public class EmailService {
     private MimeMessage createChangeMessage(String email)  { // 임시 비밀번호 발송 메일 만들기
         String authNum = emailVerificationService.generateCode(email);
 
-        Optional<User> user = userRepository.findByEmail(email);
+        Optional<User> user = userRepository.findByEmailValue(email);
 
         if(user.isPresent()){
             User foundUser = user.get();
