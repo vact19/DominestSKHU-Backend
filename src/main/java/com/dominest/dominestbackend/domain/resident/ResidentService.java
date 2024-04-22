@@ -122,7 +122,7 @@ public class ResidentService {
         );
 
         for (ResidentExcelParser.ResidentCreationDto residentCreationDto : residentCreationDtos) {
-            boolean isEmptyRow = StringUtils.hasText(residentCreationDto.getFamilyHomeAddress());
+            boolean isEmptyRow = !StringUtils.hasText(residentCreationDto.getFamilyHomeAddress());
             if (isEmptyRow) {
                 continue;
             }
