@@ -48,6 +48,7 @@ public class User extends BaseEntity implements UserDetails {
     @ElementCollection(fetch = FetchType.LAZY)
     private List<String> roles = new ArrayList<>();
 
+    @Column(length = 400)
     private String refreshToken;
     private LocalDateTime refreshTokenExp;
 
