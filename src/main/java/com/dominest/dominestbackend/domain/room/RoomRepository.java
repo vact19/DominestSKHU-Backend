@@ -17,4 +17,8 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
             " WHERE rh.room.id = :roomId" +
             " ORDER BY rh.id DESC")
     List<RoomHistory> findByRoomId(@Param("roomId") long roomId);
+
+    @Query("SELECT r FROM Room r" +
+            " WHERE r.assignedRoom IN :assignedRooms")
+    List<Room> findByAssignedRoomIn(List<String> assignedRooms);
 }

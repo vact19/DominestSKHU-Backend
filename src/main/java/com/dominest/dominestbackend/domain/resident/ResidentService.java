@@ -6,6 +6,8 @@ import com.dominest.dominestbackend.api.resident.request.SaveResidentRequest;
 import com.dominest.dominestbackend.domain.common.Datasource;
 import com.dominest.dominestbackend.domain.resident.component.ResidenceSemester;
 import com.dominest.dominestbackend.domain.room.Room;
+import com.dominest.dominestbackend.domain.room.RoomRepository;
+import com.dominest.dominestbackend.domain.room.RoomSearchMap;
 import com.dominest.dominestbackend.domain.room.RoomService;
 import com.dominest.dominestbackend.domain.room.roomhistory.RoomHistoryService;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
@@ -22,12 +24,14 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
 public class ResidentService {
+    private final RoomRepository roomRepository;
     private final ResidentExcelParser residentExcelParser;
     private final ResidentRepository residentRepository;
     private final FileManager fileManager;
@@ -100,39 +104,54 @@ public class ResidentService {
     @Transactional
     public ExcelUploadResponse excelUpload(List<List<String>> sheet, ResidenceSemester residenceSemester) {
         List<ResidentExcelParser.ResidentCreationDto> residentCreationDtos = residentExcelParser.convertToResidentExcelDto(sheet);
+        return saveFromResidentCreationDtos(residentCreationDtos, residenceSemester);
+    }
 
-        int originalRow = sheet.size();
+    private ExcelUploadResponse saveFromResidentCreationDtos(
+            List<ResidentExcelParser.ResidentCreationDto> residentCreationDtos
+            , ResidenceSemester residenceSemester
+    ) {
         int successRow = 0;
 
-        // 데이터를 저장한다. 예외발생시 삭제나 저장 작업의 트랜잭션 롤백.
-        for (ResidentExcelParser.ResidentCreationDto residentCreationDto : residentCreationDtos) {
-            if (StringUtils.hasText(residentCreationDto.getFamilyHomeAddress())) // 빈 row 발견 시 continue
-                continue;
-            // Room 객체를 찾아서 넣어줘야 함
-            String assignedRoom = residentCreationDto.getAssignedRoom();
+        List<String> assignedRooms = residentCreationDtos.stream()
+                .map(ResidentExcelParser.ResidentCreationDto::getAssignedRoom)
+                .collect(Collectors.toUnmodifiableList());
+        RoomSearchMap roomSearchMap = RoomSearchMap.from(roomRepository.findByAssignedRoomIn(assignedRooms));
+        ResidentSearchMap residentSearchMap = ResidentSearchMap.from(
+                residentRepository.findAllByResidenceSemester(residenceSemester)
+        );
 
-            Room room = roomService.getByAssignedRoom(assignedRoom);
+        for (ResidentExcelParser.ResidentCreationDto residentCreationDto : residentCreationDtos) {
+            boolean isEmptyRow = StringUtils.hasText(residentCreationDto.getFamilyHomeAddress());
+            if (isEmptyRow) {
+                continue;
+            }
+            Room room = roomSearchMap.getByAssignedRoom(residentCreationDto.getAssignedRoom());
             Resident resident = Resident.from(residentCreationDto, residenceSemester, room);
 
-            // 중복을 검사함. 같은 사람이라고 판단될 경우와 동명이인이라고 판단될 경우에 따라 분기.
-            if (residentRepository.existsByPersonalInfoNameAndResidenceSemester(resident.getPersonalInfo().getName(), residenceSemester)) {
-                if (existsByUniqueKey(resident)) {
-                    // 엑셀 데이터상 중복이 있을 시 로그만 남기고 다음 행으로 넘어간다.
-                    log.warn("엑셀 데이터 저장 실패. 중복 데이터가 있어 다음으로 넘어감. 이름: {}, 학번: {}, 학기: {}" +
-                                    ", 방 번호: {}, 방 코드: {}", resident.getPersonalInfo().getName()
-                            , resident.getStudentInfo().getStudentId(), resident.getResidenceSemester()
-                            , resident.getRoom().getId(), resident.getRoom().getAssignedRoom());
-                    continue;
-                } else {
-                    // 동명이인일 경우 이름 바꿔서 저장
-                    resident.changeNameWithPhoneNumber();
-                }
+            // 중복검사-같은 사람이면 건너뛰기, 동명이인이면 이름 변경
+            if (existsSameResidentInSemester(residentSearchMap, resident)) {
+                continue;
             }
-            // save()에서 {방-학기}, {이름-학기} 등이 중복될 경우는 예외 던지고 롤백한다..
+            if (residentSearchMap.existsSameNameInSemester(residenceSemester, resident.getPersonalInfo().getName())) {
+                resident.changeNameWithPhoneNumber();
+            }
             save(resident);
             successRow++;
         }
-        return ExcelUploadResponse.of(originalRow, successRow);
+        return ExcelUploadResponse.of(residentCreationDtos.size(), successRow);
+    }
+
+    private static boolean existsSameResidentInSemester(ResidentSearchMap residentSearchMap, Resident resident) {
+        if (residentSearchMap.existsSameResidentInSemester(resident)) {
+            // 엑셀 데이터상 중복이 있을 시 로그만 남기고 다음 행으로 넘어간다.
+            log.warn("엑셀 데이터 저장 실패. 중복 데이터가 있어 다음으로 넘어감. 이름: {}, 학번: {}, 학기: {}" +
+                            ", 방 번호: {}, 방 코드: {}", resident.getPersonalInfo().getName()
+                    , resident.getStudentInfo().getStudentId(), resident.getResidenceSemester()
+                    , resident.getRoom().getId(), resident.getRoom().getAssignedRoom());
+            return true;
+        }
+        return false;
     }
 
     public List<Resident> getAllResidentByResidenceSemesterFetchRoom(ResidenceSemester residenceSemester) {
@@ -152,6 +171,19 @@ public class ResidentService {
         Resident resident = request.toEntity(room);
 
         save(resident);
+    }
+
+    private void save(Resident resident) {
+        try {
+            residentRepository.saveAndFlush(resident);
+        } catch (DataIntegrityViolationException e) {
+            throw new BusinessException(
+                    String.format("입사생 저장 실패, 잘못된 입력값입니다. 데이터 누락 혹은 중복을 확인해주세요. 이름: %s, 학번: %s, 학기: %s, 방 번호: %d, 방 코드: %s"
+                            , resident.getPersonalInfo().getName(), resident.getStudentInfo().getStudentId(), resident.getResidenceSemester()
+                            , resident.getRoom().getId(), resident.getRoom().getAssignedRoom())
+                    , HttpStatus.BAD_REQUEST, e);
+        }
+        updateRoomHistory(resident);
     }
 
     @Transactional
@@ -184,28 +216,6 @@ public class ResidentService {
 
     public List<Resident> findAllByResidenceSemester(ResidenceSemester semester) {
         return residentRepository.findAllByResidenceSemester(semester);
-    }
-
-    private boolean existsByUniqueKey(Resident resident) {
-        return residentRepository.existsByResidenceSemesterAndStudentInfoStudentIdAndPersonalInfoPhoneNumberValueAndPersonalInfoName(
-                resident.getResidenceSemester()
-                , resident.getStudentInfo().getStudentId()
-                , resident.getPersonalInfo().getPhoneNumber().getValue()
-                , resident.getPersonalInfo().getName());
-    }
-
-    private void save(Resident resident) {
-        try {
-            // InspectionRoom 등 Resident를 참조하는 테이블에 결과를 반영하지 않는다.
-            residentRepository.saveAndFlush(resident);
-        } catch (DataIntegrityViolationException e) {
-            throw new BusinessException(
-                    String.format("입사생 저장 실패, 잘못된 입력값입니다. 데이터 누락 혹은 중복을 확인해주세요. 이름: %s, 학번: %s, 학기: %s, 방 번호: %d, 방 코드: %s"
-                            , resident.getPersonalInfo().getName(), resident.getStudentInfo().getStudentId(), resident.getResidenceSemester()
-                            , resident.getRoom().getId(), resident.getRoom().getAssignedRoom())
-                    , HttpStatus.BAD_REQUEST, e);
-        }
-        updateRoomHistory(resident);
     }
 
     private void updateRoomHistory(Resident resident) {
