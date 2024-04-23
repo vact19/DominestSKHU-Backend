@@ -26,7 +26,6 @@ public class ResidentSearchMap {
                         resident -> resident.getResidenceSemester()
                                 + resident.getStudentInfo().getStudentId()
                                 + resident.getPersonalInfo().getPhoneNumber().getValue()
-                                + resident.getPersonalInfo().getName()
                         , resident -> resident)
                 );
     }
@@ -41,7 +40,6 @@ public class ResidentSearchMap {
                 resident.getResidenceSemester()
                         + resident.getStudentInfo().getStudentId()
                         + resident.getPersonalInfo().getPhoneNumber().getValue()
-                        + resident.getPersonalInfo().getName()
         );
     }
 
