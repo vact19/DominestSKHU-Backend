@@ -5,7 +5,7 @@ import com.dominest.dominestbackend.api.resident.response.PdfBulkUploadResponse;
 import com.dominest.dominestbackend.api.resident.request.SaveResidentRequest;
 import com.dominest.dominestbackend.domain.common.Datasource;
 import com.dominest.dominestbackend.domain.resident.ResidentExcelParser;
-import com.dominest.dominestbackend.domain.resident.ResidentFileManager;
+import com.dominest.dominestbackend.domain.resident.ResidentFilePathManager;
 import com.dominest.dominestbackend.domain.resident.ResidentSearchMap;
 import com.dominest.dominestbackend.domain.resident.entity.component.ResidenceSemester;
 import com.dominest.dominestbackend.domain.resident.entity.Resident;
@@ -42,7 +42,7 @@ public class ResidentService {
     private final FileManager fileManager;
     private final RoomService roomService;
     private final RoomHistoryService roomHistoryService;
-    private final ResidentFileManager residentFileManager;
+    private final ResidentFilePathManager residentFilePathManager;
 
     /** return 저장한 파일명 */
     @Transactional
@@ -56,8 +56,8 @@ public class ResidentService {
 
         fileManager.save(filePrefix, file, fileNameToUpload);
 
-        String prevFilename = residentFileManager.getPdfFilename(resident, filePrefix);
-        residentFileManager.setPdfFilenameToResident(resident, filePrefix, fileNameToUpload);
+        String prevFilename = residentFilePathManager.getPdfFilename(resident, filePrefix);
+        residentFilePathManager.setPdfFilenameToResident(resident, filePrefix, fileNameToUpload);
 
         if (prevFilename != null)
             fileManager.deleteFile(filePrefix, prevFilename);
@@ -91,8 +91,8 @@ public class ResidentService {
             String fileNameToUpload = resident.generatePdfFileNameToStore();
             fileManager.save(filePrefix, file, fileNameToUpload);
 
-            String prevFilename = residentFileManager.getPdfFilename(resident, filePrefix);
-            residentFileManager.setPdfFilenameToResident(resident, filePrefix, fileNameToUpload);
+            String prevFilename = residentFilePathManager.getPdfFilename(resident, filePrefix);
+            residentFilePathManager.setPdfFilenameToResident(resident, filePrefix, fileNameToUpload);
 
             response.addToDtoList(filename, "OK", null);
             response.addSuccessCount();

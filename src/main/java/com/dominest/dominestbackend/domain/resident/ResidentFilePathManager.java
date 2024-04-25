@@ -13,7 +13,7 @@ import static com.dominest.dominestbackend.global.util.FileManager.FilePrefix.RE
  * Resident와 File 관련 로직을 중개하는 클래스
  */
 @Service
-public class ResidentFileManager {
+public class ResidentFilePathManager {
     // FilePrefix (파일 타입) 에 맞게 파일명을 등록한다.
     public void setPdfFilenameToResident(Resident resident, FileManager.FilePrefix filePrefix, String uploadedFilename) {
         if (filePrefix.equals(RESIDENT_ADMISSION)) {
