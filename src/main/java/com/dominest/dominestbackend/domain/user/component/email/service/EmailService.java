@@ -1,6 +1,6 @@
 package com.dominest.dominestbackend.domain.user.component.email.service;
 
-import com.dominest.dominestbackend.domain.user.User;
+import com.dominest.dominestbackend.domain.user.entity.User;
 import com.dominest.dominestbackend.domain.user.repository.UserRepository;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.exceptions.external.ExternalServiceException;

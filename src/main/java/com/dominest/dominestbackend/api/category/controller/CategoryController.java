@@ -5,7 +5,7 @@ import com.dominest.dominestbackend.api.category.request.CreateCategoryRequest;
 import com.dominest.dominestbackend.api.category.response.CategoryListResponse;
 import com.dominest.dominestbackend.api.category.response.CategoryListWithFavoriteResponse;
 import com.dominest.dominestbackend.api.common.ResponseTemplate;
-import com.dominest.dominestbackend.domain.post.component.category.Category;
+import com.dominest.dominestbackend.domain.post.component.category.entity.Category;
 import com.dominest.dominestbackend.domain.post.component.category.repository.CategoryRepository;
 import com.dominest.dominestbackend.domain.post.component.category.service.CategoryService;
 import com.dominest.dominestbackend.global.exception.exceptions.business.BusinessException;

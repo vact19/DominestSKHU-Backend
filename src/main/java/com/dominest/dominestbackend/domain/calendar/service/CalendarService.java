@@ -2,7 +2,7 @@ package com.dominest.dominestbackend.domain.calendar.service;
 
 import com.dominest.dominestbackend.api.calendar.request.CalendarSaveRequest;
 import com.dominest.dominestbackend.api.calendar.response.CalendarMonthResponse;
-import com.dominest.dominestbackend.domain.calendar.Calendar;
+import com.dominest.dominestbackend.domain.calendar.entity.Calendar;
 import com.dominest.dominestbackend.domain.calendar.repository.CalendarRepository;
 import com.dominest.dominestbackend.domain.common.Datasource;
 import com.dominest.dominestbackend.global.exception.exceptions.external.db.ResourceNotFoundException;

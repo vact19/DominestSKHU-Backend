@@ -1,6 +1,6 @@
 package com.dominest.dominestbackend.domain.post.inspection.floor.room.component;
 
-import com.dominest.dominestbackend.domain.resident.Resident;
+import com.dominest.dominestbackend.domain.resident.entity.Resident;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

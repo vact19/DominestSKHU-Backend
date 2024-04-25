@@ -1,5 +1,6 @@
 package com.dominest.dominestbackend.domain.post.complaint;
 
+import com.dominest.dominestbackend.domain.post.complaint.entity.Complaint;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.exceptions.external.ExternalServiceException;
 import com.dominest.dominestbackend.global.exception.exceptions.external.file.FileIOException;

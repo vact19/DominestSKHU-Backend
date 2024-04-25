@@ -5,12 +5,12 @@ import com.dominest.dominestbackend.api.post.undeliveredparcel.request.CreateUnd
 import com.dominest.dominestbackend.api.post.undeliveredparcel.response.UndelivParcelPostDetailResponse;
 import com.dominest.dominestbackend.api.post.undeliveredparcel.response.UndelivParcelPostListResponse;
 import com.dominest.dominestbackend.api.post.undeliveredparcel.request.UpdateUndelivParcelDtoRequest;
-import com.dominest.dominestbackend.domain.post.component.category.Category;
+import com.dominest.dominestbackend.domain.post.component.category.entity.Category;
 import com.dominest.dominestbackend.domain.post.component.category.component.Type;
 import com.dominest.dominestbackend.domain.post.component.category.service.CategoryService;
-import com.dominest.dominestbackend.domain.post.undeliveredparcel.UndeliveredParcelPost;
-import com.dominest.dominestbackend.domain.post.undeliveredparcel.UndeliveredParcelPostService;
-import com.dominest.dominestbackend.domain.post.undeliveredparcel.component.UndeliveredParcelService;
+import com.dominest.dominestbackend.domain.post.undeliveredparcelpost.entity.UndeliveredParcelPost;
+import com.dominest.dominestbackend.domain.post.undeliveredparcelpost.service.UndeliveredParcelPostService;
+import com.dominest.dominestbackend.domain.post.undeliveredparcelpost.component.service.UndeliveredParcelService;
 import com.dominest.dominestbackend.global.util.PageBaseConverter;
 import com.dominest.dominestbackend.global.util.PrincipalParser;
 import lombok.Getter;

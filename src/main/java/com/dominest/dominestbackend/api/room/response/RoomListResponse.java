@@ -1,6 +1,6 @@
 package com.dominest.dominestbackend.api.room.response;
 
-import com.dominest.dominestbackend.domain.room.Room;
+import com.dominest.dominestbackend.domain.room.entity.Room;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

@@ -1,6 +1,6 @@
 package com.dominest.dominestbackend.domain.calendar.repository;
 
-import com.dominest.dominestbackend.domain.calendar.Calendar;
+import com.dominest.dominestbackend.domain.calendar.entity.Calendar;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;

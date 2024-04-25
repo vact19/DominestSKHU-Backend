@@ -2,8 +2,8 @@ package com.dominest.dominestbackend.api.post.inspection.response;
 
 import com.dominest.dominestbackend.api.common.AuditLog;
 import com.dominest.dominestbackend.api.common.CategoryResponse;
-import com.dominest.dominestbackend.domain.post.component.category.Category;
-import com.dominest.dominestbackend.domain.post.inspection.floor.room.InspectionRoom;
+import com.dominest.dominestbackend.domain.post.component.category.entity.Category;
+import com.dominest.dominestbackend.domain.post.inspection.floor.room.entity.InspectionRoom;
 import com.dominest.dominestbackend.domain.post.inspection.floor.room.component.InspectionResidentInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;

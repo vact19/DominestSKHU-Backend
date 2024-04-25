@@ -1,6 +1,6 @@
 package com.dominest.dominestbackend.api.category.response;
 
-import com.dominest.dominestbackend.domain.post.component.category.Category;
+import com.dominest.dominestbackend.domain.post.component.category.entity.Category;
 
 import com.dominest.dominestbackend.domain.post.component.category.component.Type;
 import lombok.AllArgsConstructor;

@@ -1,7 +1,7 @@
 package com.dominest.dominestbackend.api.post.undeliveredparcel.response;
 
-import com.dominest.dominestbackend.domain.post.undeliveredparcel.UndeliveredParcelPost;
-import com.dominest.dominestbackend.domain.post.undeliveredparcel.component.UndeliveredParcel;
+import com.dominest.dominestbackend.domain.post.undeliveredparcelpost.entity.UndeliveredParcelPost;
+import com.dominest.dominestbackend.domain.post.undeliveredparcelpost.component.entity.UndeliveredParcel;
 import com.dominest.dominestbackend.global.util.PrincipalParser;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;

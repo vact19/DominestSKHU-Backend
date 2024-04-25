@@ -1,8 +1,8 @@
 package com.dominest.dominestbackend.domain.resident;
 
-import com.dominest.dominestbackend.domain.post.inspection.floor.room.InspectionRoom;
+import com.dominest.dominestbackend.domain.post.inspection.floor.room.entity.InspectionRoom;
 import com.dominest.dominestbackend.domain.post.inspection.floor.room.component.InspectionResidentInfo;
-import com.dominest.dominestbackend.domain.room.Room;
+import com.dominest.dominestbackend.domain.room.entity.Room;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.exceptions.business.BusinessException;
 import com.dominest.dominestbackend.global.exception.exceptions.external.ExternalServiceException;

@@ -1,7 +1,7 @@
 package com.dominest.dominestbackend.api.room.response;
 
-import com.dominest.dominestbackend.domain.room.Room;
-import com.dominest.dominestbackend.domain.room.roomhistory.RoomHistory;
+import com.dominest.dominestbackend.domain.room.entity.Room;
+import com.dominest.dominestbackend.domain.room.roomhistory.entity.RoomHistory;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

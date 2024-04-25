@@ -1,6 +1,6 @@
 package com.dominest.dominestbackend.domain.notice.datenotice;
 
-import com.dominest.dominestbackend.domain.common.BaseEntity;
+import com.dominest.dominestbackend.domain.common.jpa.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

@@ -1,6 +1,6 @@
 package com.dominest.dominestbackend.api.post.undeliveredparcel.request;
 
-import com.dominest.dominestbackend.domain.post.undeliveredparcel.component.UndeliveredParcel;
+import com.dominest.dominestbackend.domain.post.undeliveredparcelpost.component.entity.UndeliveredParcel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;

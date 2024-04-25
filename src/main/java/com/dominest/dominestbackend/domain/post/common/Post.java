@@ -1,8 +1,8 @@
 package com.dominest.dominestbackend.domain.post.common;
 
-import com.dominest.dominestbackend.domain.common.BaseEntity;
-import com.dominest.dominestbackend.domain.post.component.category.Category;
-import com.dominest.dominestbackend.domain.user.User;
+import com.dominest.dominestbackend.domain.common.jpa.BaseEntity;
+import com.dominest.dominestbackend.domain.post.component.category.entity.Category;
+import com.dominest.dominestbackend.domain.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

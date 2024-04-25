@@ -1,6 +1,6 @@
 package com.dominest.dominestbackend.api.common;
 
-import com.dominest.dominestbackend.domain.common.BaseEntity;
+import com.dominest.dominestbackend.domain.common.jpa.BaseEntity;
 import com.dominest.dominestbackend.global.util.PrincipalParser;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AccessLevel;

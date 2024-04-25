@@ -1,6 +1,6 @@
 package com.dominest.dominestbackend.api.post.image.response;
 
-import com.dominest.dominestbackend.domain.post.image.ImageType;
+import com.dominest.dominestbackend.domain.post.image.entity.ImageType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 

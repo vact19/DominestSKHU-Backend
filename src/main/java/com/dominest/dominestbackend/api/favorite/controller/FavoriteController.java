@@ -2,8 +2,8 @@ package com.dominest.dominestbackend.api.favorite.controller;
 
 import com.dominest.dominestbackend.api.common.ResponseTemplate;
 import com.dominest.dominestbackend.api.favorite.response.FavoriteListResponse;
-import com.dominest.dominestbackend.domain.favorite.Favorite;
-import com.dominest.dominestbackend.domain.favorite.FavoriteService;
+import com.dominest.dominestbackend.domain.favorite.entity.Favorite;
+import com.dominest.dominestbackend.domain.favorite.service.FavoriteService;
 import com.dominest.dominestbackend.global.util.PrincipalParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;

@@ -1,6 +1,6 @@
 package com.dominest.dominestbackend.global.converter;
 
-import com.dominest.dominestbackend.domain.post.inspection.floor.room.InspectionRoom;
+import com.dominest.dominestbackend.domain.post.inspection.floor.room.entity.InspectionRoom;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

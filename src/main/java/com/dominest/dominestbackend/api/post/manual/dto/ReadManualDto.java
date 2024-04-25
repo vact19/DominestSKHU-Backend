@@ -1,7 +1,7 @@
 package com.dominest.dominestbackend.api.post.manual.dto;
 
 import com.dominest.dominestbackend.api.common.AuditLog;
-import com.dominest.dominestbackend.domain.post.manual.ManualPost;
+import com.dominest.dominestbackend.domain.post.manual.entity.ManualPost;
 import lombok.*;
 
 import java.time.LocalDateTime;

@@ -1,6 +1,7 @@
 package com.dominest.dominestbackend.domain.room;
 
 import com.dominest.dominestbackend.domain.common.Datasource;
+import com.dominest.dominestbackend.domain.room.entity.Room;
 import com.dominest.dominestbackend.global.exception.exceptions.external.db.ResourceNotFoundException;
 
 import java.util.List;

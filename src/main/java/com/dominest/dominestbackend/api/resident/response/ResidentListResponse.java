@@ -1,6 +1,6 @@
 package com.dominest.dominestbackend.api.resident.response;
 
-import com.dominest.dominestbackend.domain.resident.Resident;
+import com.dominest.dominestbackend.domain.resident.entity.Resident;
 import lombok.*;
 
 import java.time.LocalDate;

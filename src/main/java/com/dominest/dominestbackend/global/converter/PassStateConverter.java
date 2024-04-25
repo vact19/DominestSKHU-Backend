@@ -1,6 +1,6 @@
 package com.dominest.dominestbackend.global.converter;
 
-import com.dominest.dominestbackend.domain.post.inspection.floor.room.InspectionRoom.PassState;
+import com.dominest.dominestbackend.domain.post.inspection.floor.room.entity.InspectionRoom.PassState;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 

@@ -1,9 +1,9 @@
 package com.dominest.dominestbackend.api.resident.request;
 
 import com.dominest.dominestbackend.domain.common.vo.PhoneNumber;
-import com.dominest.dominestbackend.domain.resident.Resident;
-import com.dominest.dominestbackend.domain.resident.component.ResidenceSemester;
-import com.dominest.dominestbackend.domain.room.Room;
+import com.dominest.dominestbackend.domain.resident.entity.Resident;
+import com.dominest.dominestbackend.domain.resident.entity.component.ResidenceSemester;
+import com.dominest.dominestbackend.domain.room.entity.Room;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

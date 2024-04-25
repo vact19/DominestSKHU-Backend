@@ -1,5 +1,6 @@
 package com.dominest.dominestbackend.domain.resident;
 
+import com.dominest.dominestbackend.domain.resident.entity.Resident;
 import com.dominest.dominestbackend.global.exception.exceptions.business.BusinessException;
 import com.dominest.dominestbackend.global.util.FileManager;
 import org.springframework.http.HttpStatus;

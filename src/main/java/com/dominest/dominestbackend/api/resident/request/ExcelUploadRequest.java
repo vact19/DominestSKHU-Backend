@@ -1,6 +1,6 @@
 package com.dominest.dominestbackend.api.resident.request;
 
-import com.dominest.dominestbackend.domain.resident.component.ResidenceSemester;
+import com.dominest.dominestbackend.domain.resident.entity.component.ResidenceSemester;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;

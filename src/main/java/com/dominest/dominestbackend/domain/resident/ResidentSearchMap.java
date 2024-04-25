@@ -1,6 +1,7 @@
 package com.dominest.dominestbackend.domain.resident;
 
-import com.dominest.dominestbackend.domain.resident.component.ResidenceSemester;
+import com.dominest.dominestbackend.domain.resident.entity.component.ResidenceSemester;
+import com.dominest.dominestbackend.domain.resident.entity.Resident;
 
 import java.util.List;
 import java.util.Map;

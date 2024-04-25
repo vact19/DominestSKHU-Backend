@@ -1,6 +1,6 @@
 package com.dominest.dominestbackend.api.resident.util;
 
-import com.dominest.dominestbackend.domain.resident.Resident;
+import com.dominest.dominestbackend.domain.resident.entity.Resident;
 import com.dominest.dominestbackend.global.util.FileManager;
 
 public enum PdfType {

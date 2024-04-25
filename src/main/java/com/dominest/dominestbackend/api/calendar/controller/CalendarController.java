@@ -3,7 +3,7 @@ package com.dominest.dominestbackend.api.calendar.controller;
 import com.dominest.dominestbackend.api.calendar.request.CalendarSaveRequest;
 import com.dominest.dominestbackend.api.common.ResponseTemplate;
 import com.dominest.dominestbackend.api.calendar.response.CalendarMonthResponse;
-import com.dominest.dominestbackend.domain.calendar.Calendar;
+import com.dominest.dominestbackend.domain.calendar.entity.Calendar;
 import com.dominest.dominestbackend.domain.calendar.service.CalendarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

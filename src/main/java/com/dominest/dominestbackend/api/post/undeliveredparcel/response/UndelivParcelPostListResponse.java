@@ -3,8 +3,8 @@ package com.dominest.dominestbackend.api.post.undeliveredparcel.response;
 import com.dominest.dominestbackend.api.common.AuditLog;
 import com.dominest.dominestbackend.api.common.CategoryResponse;
 import com.dominest.dominestbackend.api.common.PageInfo;
-import com.dominest.dominestbackend.domain.post.component.category.Category;
-import com.dominest.dominestbackend.domain.post.undeliveredparcel.UndeliveredParcelPost;
+import com.dominest.dominestbackend.domain.post.component.category.entity.Category;
+import com.dominest.dominestbackend.domain.post.undeliveredparcelpost.entity.UndeliveredParcelPost;
 import lombok.*;
 import org.springframework.data.domain.Page;
 

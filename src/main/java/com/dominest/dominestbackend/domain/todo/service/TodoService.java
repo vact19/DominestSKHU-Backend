@@ -3,9 +3,9 @@ package com.dominest.dominestbackend.domain.todo.service;
 import com.dominest.dominestbackend.api.todo.request.TodoSaveRequest;
 import com.dominest.dominestbackend.api.todo.response.TodoUserResponse;
 import com.dominest.dominestbackend.domain.common.Datasource;
-import com.dominest.dominestbackend.domain.todo.Todo;
+import com.dominest.dominestbackend.domain.todo.entity.Todo;
 import com.dominest.dominestbackend.domain.todo.repository.TodoRepository;
-import com.dominest.dominestbackend.domain.user.User;
+import com.dominest.dominestbackend.domain.user.entity.User;
 import com.dominest.dominestbackend.domain.user.repository.UserRepository;
 import com.dominest.dominestbackend.global.config.security.SecurityConst;
 import com.dominest.dominestbackend.global.exception.exceptions.external.db.ResourceNotFoundException;
@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.security.Principal;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 

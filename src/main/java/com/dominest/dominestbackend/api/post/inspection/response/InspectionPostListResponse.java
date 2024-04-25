@@ -4,8 +4,8 @@ package com.dominest.dominestbackend.api.post.inspection.response;
 import com.dominest.dominestbackend.api.common.AuditLog;
 import com.dominest.dominestbackend.api.common.CategoryResponse;
 import com.dominest.dominestbackend.api.common.PageInfo;
-import com.dominest.dominestbackend.domain.post.component.category.Category;
-import com.dominest.dominestbackend.domain.post.inspection.InspectionPost;
+import com.dominest.dominestbackend.domain.post.component.category.entity.Category;
+import com.dominest.dominestbackend.domain.post.inspection.entity.InspectionPost;
 import lombok.*;
 import org.springframework.data.domain.Page;
 

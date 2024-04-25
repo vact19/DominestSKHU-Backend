@@ -1,6 +1,6 @@
 package com.dominest.dominestbackend.domain.schedule.repository;
 
-import com.dominest.dominestbackend.domain.schedule.Schedule;
+import com.dominest.dominestbackend.domain.schedule.entity.Schedule;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

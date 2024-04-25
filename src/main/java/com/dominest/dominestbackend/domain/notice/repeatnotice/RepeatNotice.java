@@ -1,6 +1,6 @@
 package com.dominest.dominestbackend.domain.notice.repeatnotice;
 
-import com.dominest.dominestbackend.domain.common.BaseEntity;
+import com.dominest.dominestbackend.domain.common.jpa.BaseEntity;
 import com.dominest.dominestbackend.domain.notice.repeatschedule.RepeatSchedule;
 import lombok.AccessLevel;
 import lombok.Builder;

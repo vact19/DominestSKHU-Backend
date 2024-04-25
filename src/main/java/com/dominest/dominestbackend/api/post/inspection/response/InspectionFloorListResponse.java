@@ -3,8 +3,8 @@ package com.dominest.dominestbackend.api.post.inspection.response;
 
 import com.dominest.dominestbackend.api.common.AuditLog;
 import com.dominest.dominestbackend.api.common.CategoryResponse;
-import com.dominest.dominestbackend.domain.post.component.category.Category;
-import com.dominest.dominestbackend.domain.post.inspection.floor.InspectionFloor;
+import com.dominest.dominestbackend.domain.post.component.category.entity.Category;
+import com.dominest.dominestbackend.domain.post.inspection.floor.entity.InspectionFloor;
 import lombok.*;
 
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package com.dominest.dominestbackend.api.post.inspection.request;
 
-import com.dominest.dominestbackend.domain.post.inspection.floor.room.InspectionRoom;
+import com.dominest.dominestbackend.domain.post.inspection.floor.room.entity.InspectionRoom;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

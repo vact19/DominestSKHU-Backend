@@ -5,19 +5,18 @@ import com.dominest.dominestbackend.api.post.inspection.response.InspectionFloor
 import com.dominest.dominestbackend.api.post.inspection.response.InspectionPostListResponse;
 import com.dominest.dominestbackend.api.post.inspection.response.InspectionRoomListResponse;
 import com.dominest.dominestbackend.api.post.inspection.request.UpdateInspectionRoomRequest;
-import com.dominest.dominestbackend.domain.post.component.category.Category;
+import com.dominest.dominestbackend.domain.post.component.category.entity.Category;
 import com.dominest.dominestbackend.domain.post.component.category.component.Type;
 import com.dominest.dominestbackend.domain.post.component.category.service.CategoryService;
-import com.dominest.dominestbackend.domain.post.inspection.InspectionPost;
-import com.dominest.dominestbackend.domain.post.inspection.InspectionPostService;
-import com.dominest.dominestbackend.domain.post.inspection.floor.InspectionFloor;
-import com.dominest.dominestbackend.domain.post.inspection.floor.InspectionFloorService;
-import com.dominest.dominestbackend.domain.post.inspection.floor.room.InspectionRoom;
-import com.dominest.dominestbackend.domain.post.inspection.floor.room.InspectionRoomRepository;
-import com.dominest.dominestbackend.domain.post.inspection.floor.room.InspectionRoomService;
+import com.dominest.dominestbackend.domain.post.inspection.entity.InspectionPost;
+import com.dominest.dominestbackend.domain.post.inspection.service.InspectionPostService;
+import com.dominest.dominestbackend.domain.post.inspection.floor.entity.InspectionFloor;
+import com.dominest.dominestbackend.domain.post.inspection.floor.service.InspectionFloorService;
+import com.dominest.dominestbackend.domain.post.inspection.floor.room.entity.InspectionRoom;
+import com.dominest.dominestbackend.domain.post.inspection.floor.room.repository.InspectionRoomRepository;
+import com.dominest.dominestbackend.domain.post.inspection.floor.room.service.InspectionRoomService;
 import com.dominest.dominestbackend.domain.resident.ResidentExcelParser;
-import com.dominest.dominestbackend.domain.resident.component.ResidenceSemester;
-import com.dominest.dominestbackend.global.util.ExcelParser;
+import com.dominest.dominestbackend.domain.resident.entity.component.ResidenceSemester;
 import com.dominest.dominestbackend.global.util.FileManager.FileExt;
 import com.dominest.dominestbackend.global.util.PageBaseConverter;
 import com.dominest.dominestbackend.global.util.PrincipalParser;
@@ -39,7 +38,7 @@ import java.net.URI;
 import java.security.Principal;
 import java.util.List;
 
-import static com.dominest.dominestbackend.domain.post.inspection.floor.room.InspectionRoom.PassState.NOT_PASSED;
+import static com.dominest.dominestbackend.domain.post.inspection.floor.room.entity.InspectionRoom.PassState.NOT_PASSED;
 
 @RequiredArgsConstructor
 @RestController
