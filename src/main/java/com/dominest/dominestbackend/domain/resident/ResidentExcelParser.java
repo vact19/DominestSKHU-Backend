@@ -55,6 +55,17 @@ public class ResidentExcelParser {
                 .collect(Collectors.toUnmodifiableList());
     }
 
+    private void validateResidentColumnCount(List<List<String>> sheet) {
+        Integer sheetColumnCount = Optional.ofNullable(sheet.get(0))
+                .map(List::size)
+                .orElse(0);
+
+        if (sheetColumnCount != RESIDENT_COLUMN_COUNT){
+            throw new BusinessException("읽어들인 컬럼 개수가 " +
+                    RESIDENT_COLUMN_COUNT + "개가 아닙니다.", HttpStatus.BAD_REQUEST);
+        }
+    }
+
     // 통과차수별 방 정보와 소속된 사생의 정보를 반환.
     public void createAndRespondResidentInfoWithInspectionRoom(String filename, String sheetName, HttpServletResponse response, List<InspectionRoom> inspectionRooms) {
         if (excelParser.isNotExcelExt(filename)) {
@@ -186,17 +197,6 @@ public class ResidentExcelParser {
             workbook.write(response.getOutputStream());
         } catch (IOException e) {
             throw new FileIOException(ErrorCode.FILE_CANNOT_BE_SENT, e);
-        }
-    }
-
-    private void validateResidentColumnCount(List<List<String>> sheet) {
-        Integer sheetColumnCount = Optional.ofNullable(sheet.get(0))
-                .map(List::size)
-                .orElse(0);
-
-        if (sheetColumnCount != RESIDENT_COLUMN_COUNT){
-            throw new BusinessException("읽어들인 컬럼 개수가 " +
-                    RESIDENT_COLUMN_COUNT + "개가 아닙니다.", HttpStatus.BAD_REQUEST);
         }
     }
 
