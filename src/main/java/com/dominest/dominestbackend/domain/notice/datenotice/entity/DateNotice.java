@@ -1,4 +1,4 @@
-package com.dominest.dominestbackend.domain.notice.datenotice;
+package com.dominest.dominestbackend.domain.notice.datenotice.entity;
 
 import com.dominest.dominestbackend.domain.common.jpa.BaseEntity;
 import lombok.AccessLevel;

@@ -1,6 +1,6 @@
 package com.dominest.dominestbackend.domain.notice.datenotice.repository;
 
-import com.dominest.dominestbackend.domain.notice.datenotice.DateNotice;
+import com.dominest.dominestbackend.domain.notice.datenotice.entity.DateNotice;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

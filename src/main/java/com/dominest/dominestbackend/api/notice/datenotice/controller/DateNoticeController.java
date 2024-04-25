@@ -3,7 +3,7 @@ package com.dominest.dominestbackend.api.notice.datenotice.controller;
 import com.dominest.dominestbackend.api.common.ResponseTemplate;
 import com.dominest.dominestbackend.api.notice.datenotice.request.DateNoticeSaveRequest;
 import com.dominest.dominestbackend.api.notice.datenotice.response.DateNoticeResponse;
-import com.dominest.dominestbackend.domain.notice.datenotice.DateNotice;
+import com.dominest.dominestbackend.domain.notice.datenotice.entity.DateNotice;
 import com.dominest.dominestbackend.domain.notice.datenotice.service.DateNoticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;

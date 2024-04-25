@@ -1,6 +1,6 @@
 package com.dominest.dominestbackend.api.notice.datenotice.response;
 
-import com.dominest.dominestbackend.domain.notice.datenotice.DateNotice;
+import com.dominest.dominestbackend.domain.notice.datenotice.entity.DateNotice;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

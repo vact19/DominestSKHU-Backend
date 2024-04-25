@@ -1,6 +1,6 @@
 package com.dominest.dominestbackend.api.notice.repeatnotice.response;
 
-import com.dominest.dominestbackend.domain.notice.repeatnotice.RepeatNotice;
+import com.dominest.dominestbackend.domain.notice.repeatnotice.entity.RepeatNotice;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

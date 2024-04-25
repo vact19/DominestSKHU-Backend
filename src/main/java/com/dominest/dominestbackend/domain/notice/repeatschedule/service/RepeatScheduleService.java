@@ -5,9 +5,9 @@ import com.dominest.dominestbackend.api.notice.repeatschedule.request.RepeatSche
 import com.dominest.dominestbackend.api.notice.repeatschedule.resopnse.AllRepeatScheduleResponse;
 import com.dominest.dominestbackend.api.notice.repeatschedule.resopnse.RepeatScheduleResponse;
 import com.dominest.dominestbackend.domain.common.Datasource;
-import com.dominest.dominestbackend.domain.notice.repeatnotice.RepeatNotice;
+import com.dominest.dominestbackend.domain.notice.repeatnotice.entity.RepeatNotice;
 import com.dominest.dominestbackend.domain.notice.repeatnotice.repository.RepeatNoticeRepository;
-import com.dominest.dominestbackend.domain.notice.repeatschedule.RepeatSchedule;
+import com.dominest.dominestbackend.domain.notice.repeatschedule.entity.RepeatSchedule;
 import com.dominest.dominestbackend.domain.notice.repeatschedule.repository.RepeatScheduleRepository;
 import com.dominest.dominestbackend.global.exception.exceptions.external.db.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;

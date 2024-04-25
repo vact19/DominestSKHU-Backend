@@ -2,7 +2,7 @@ package com.dominest.dominestbackend.domain.notice.repeatnotice.service;
 
 import com.dominest.dominestbackend.api.notice.repeatnotice.request.RepeatNoticeSaveRequest;
 import com.dominest.dominestbackend.api.notice.repeatnotice.response.RepeatNoticeSaveResponse;
-import com.dominest.dominestbackend.domain.notice.repeatnotice.RepeatNotice;
+import com.dominest.dominestbackend.domain.notice.repeatnotice.entity.RepeatNotice;
 import com.dominest.dominestbackend.domain.notice.repeatnotice.repository.RepeatNoticeRepository;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.exceptions.business.BusinessException;
