@@ -1,4 +1,4 @@
-package com.dominest.dominestbackend.domain.post.complaint;
+package com.dominest.dominestbackend.domain.post.complaint.support;
 
 import com.dominest.dominestbackend.domain.post.complaint.entity.Complaint;
 import com.dominest.dominestbackend.global.exception.ErrorCode;

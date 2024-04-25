@@ -1,4 +1,4 @@
-package com.dominest.dominestbackend.domain.resident;
+package com.dominest.dominestbackend.domain.resident.support;
 
 import com.dominest.dominestbackend.domain.resident.entity.component.ResidenceSemester;
 import com.dominest.dominestbackend.domain.resident.entity.Resident;

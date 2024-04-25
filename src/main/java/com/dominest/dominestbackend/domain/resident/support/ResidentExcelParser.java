@@ -1,4 +1,4 @@
-package com.dominest.dominestbackend.domain.resident;
+package com.dominest.dominestbackend.domain.resident.support;
 
 import com.dominest.dominestbackend.domain.post.inspection.floor.room.entity.InspectionRoom;
 import com.dominest.dominestbackend.domain.post.inspection.floor.room.component.InspectionResidentInfo;

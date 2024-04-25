@@ -5,7 +5,7 @@ import com.dominest.dominestbackend.api.post.complaint.response.ComplaintListRes
 import com.dominest.dominestbackend.api.post.complaint.request.CreateComplaintRequest;
 import com.dominest.dominestbackend.api.post.complaint.request.UpdateComplaintRequest;
 import com.dominest.dominestbackend.domain.post.complaint.entity.Complaint;
-import com.dominest.dominestbackend.domain.post.complaint.ComplaintExcelParser;
+import com.dominest.dominestbackend.domain.post.complaint.support.ComplaintExcelParser;
 import com.dominest.dominestbackend.domain.post.complaint.repository.ComplaintRepository;
 import com.dominest.dominestbackend.domain.post.complaint.service.ComplaintService;
 import com.dominest.dominestbackend.domain.post.component.category.entity.Category;

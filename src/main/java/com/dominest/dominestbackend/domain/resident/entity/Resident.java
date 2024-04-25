@@ -2,7 +2,7 @@ package com.dominest.dominestbackend.domain.resident.entity;
 
 import com.dominest.dominestbackend.domain.common.jpa.BaseEntity;
 import com.dominest.dominestbackend.domain.common.vo.PhoneNumber;
-import com.dominest.dominestbackend.domain.resident.ResidentExcelParser;
+import com.dominest.dominestbackend.domain.resident.support.ResidentExcelParser;
 import com.dominest.dominestbackend.domain.resident.entity.component.ResidenceSemester;
 import com.dominest.dominestbackend.domain.room.entity.Room;
 import com.dominest.dominestbackend.global.util.DatePatternParser;

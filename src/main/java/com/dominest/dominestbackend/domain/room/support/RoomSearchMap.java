@@ -1,4 +1,4 @@
-package com.dominest.dominestbackend.domain.room;
+package com.dominest.dominestbackend.domain.room.support;
 
 import com.dominest.dominestbackend.domain.common.Datasource;
 import com.dominest.dominestbackend.domain.room.entity.Room;

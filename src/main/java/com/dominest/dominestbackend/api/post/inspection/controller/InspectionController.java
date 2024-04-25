@@ -15,7 +15,7 @@ import com.dominest.dominestbackend.domain.post.inspection.floor.service.Inspect
 import com.dominest.dominestbackend.domain.post.inspection.floor.room.entity.InspectionRoom;
 import com.dominest.dominestbackend.domain.post.inspection.floor.room.repository.InspectionRoomRepository;
 import com.dominest.dominestbackend.domain.post.inspection.floor.room.service.InspectionRoomService;
-import com.dominest.dominestbackend.domain.resident.ResidentExcelParser;
+import com.dominest.dominestbackend.domain.resident.support.ResidentExcelParser;
 import com.dominest.dominestbackend.domain.resident.entity.component.ResidenceSemester;
 import com.dominest.dominestbackend.global.util.FileManager.FileExt;
 import com.dominest.dominestbackend.global.util.PageBaseConverter;

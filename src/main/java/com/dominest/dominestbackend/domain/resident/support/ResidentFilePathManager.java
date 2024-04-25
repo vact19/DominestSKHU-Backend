@@ -1,4 +1,4 @@
-package com.dominest.dominestbackend.domain.resident;
+package com.dominest.dominestbackend.domain.resident.support;
 
 import com.dominest.dominestbackend.domain.resident.entity.Resident;
 import com.dominest.dominestbackend.global.exception.exceptions.business.BusinessException;
