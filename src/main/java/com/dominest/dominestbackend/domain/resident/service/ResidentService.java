@@ -67,13 +67,10 @@ public class ResidentService {
     public PdfBulkUploadResponse uploadPdfs(FileManager.FilePrefix filePrefix, List<MultipartFile> files, ResidenceSemester residenceSemester) {
         PdfBulkUploadResponse response = new PdfBulkUploadResponse();
         for (MultipartFile file : files) {
-            // 빈 객체면 continue
-            if (file.isEmpty()) {
+            String filename = file.getOriginalFilename();
+            if (file.isEmpty() || !StringUtils.hasText(filename)) {
                 continue;
             }
-
-            String filename = file.getOriginalFilename();
-            // pdf 확장자가 아니라면 continue
             if (fileManager.isInvalidFileExtension(filename, FileManager.FileExt.PDF)) {
                 continue;
             }
