@@ -118,10 +118,7 @@ public class ResidentService {
     ) {
         int successRow = 0;
 
-        List<String> assignedRooms = residentCreationDtos.stream()
-                .map(ResidentExcelParser.ResidentCreationDto::getAssignedRoom)
-                .collect(Collectors.toUnmodifiableList());
-        RoomSearchMap roomSearchMap = RoomSearchMap.from(roomRepository.findByAssignedRoomIn(assignedRooms));
+        RoomSearchMap roomSearchMap = RoomSearchMap.from(roomRepository.findAll());
         ResidentSearchMap residentSearchMap = ResidentSearchMap.from(
                 residentRepository.findAllByResidenceSemester(residenceSemester)
         );
