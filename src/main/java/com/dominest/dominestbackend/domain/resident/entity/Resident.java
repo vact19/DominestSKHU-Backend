@@ -22,7 +22,7 @@ import java.util.UUID;
         // 2. [방번호]가 중복되면 안된다. 학기중 하나의 방, 하나의 구역에 둘 이상이 있을 순 없다.
         // 3. [이름] 이 학기마다 중복되면 안된다. PDF 검색관련 로직 때문에 이름+학기가 Unique해야 함.
         @UniqueConstraint(name = "unique_for_resident_info",
-                                            columnNames = { "residenceSemester", "studentId", "phone_number", "name"})
+                                            columnNames = { "residenceSemester", "studentId", "phone_number"})
         , @UniqueConstraint(name = "unique_for_room",
                                             columnNames = { "room_id", "residenceSemester" })
         , @UniqueConstraint(name = "unique_for_pdf",
