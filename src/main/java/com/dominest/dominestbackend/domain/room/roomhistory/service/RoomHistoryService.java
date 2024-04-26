@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
@@ -28,6 +31,22 @@ public class RoomHistoryService {
                 .build();
 
         roomHistoryRepository.save(roomHistory);
+    }
+
+    @Transactional
+    public void saveFrom(List<Resident> residents) {
+        List<RoomHistory> roomHistories = residents.stream()
+                .map(resident -> RoomHistory.builder()
+                        .residentName(resident.getPersonalInfo().getName())
+                        .admissionDate(resident.getResidenceDateInfo().getAdmissionDate())
+                        .leavingDate(resident.getResidenceDateInfo().getLeavingDate())
+                        .phoneNumber(resident.getPersonalInfo().getPhoneNumber().getValue())
+                        .studentId(resident.getStudentInfo().getStudentId())
+                        .room(resident.getRoom())
+                        .build())
+                .collect(Collectors.toList());
+
+        roomHistoryRepository.saveAll(roomHistories);
     }
 
     @Transactional

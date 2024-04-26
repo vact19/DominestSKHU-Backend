@@ -35,6 +35,7 @@ public enum ErrorCode {
     // 엑셀 업로드
     COLUMN_COUNT_MISMATCHED(400, "컬럼의 개수가 일치하지 않습니다."),
     INVALID_FILE_EXTENSION(400, "파일 확장자가 유효하지 않습니다."),
+    DUPLICATED_RESIDENT_ON_UPLOAD(400, "엑셀 데이터 중 중복된 사생 데이터가 존재합니다."),
 
     // 파일
     FILE_CANNOT_BE_STORED(500, "파일을 저장할 수 없습니다."),
