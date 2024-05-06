@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class PdfBulkUploadResponse {
+public class FileBulkUploadResponse {
     List<UploadDto> files = new ArrayList<>();
     int successCount = 0;
 

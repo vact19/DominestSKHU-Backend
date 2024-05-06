@@ -1,7 +1,7 @@
 package com.dominest.dominestbackend.domain.resident.service;
 
 import com.dominest.dominestbackend.api.resident.response.ExcelUploadResponse;
-import com.dominest.dominestbackend.api.resident.response.PdfBulkUploadResponse;
+import com.dominest.dominestbackend.api.resident.response.FileBulkUploadResponse;
 import com.dominest.dominestbackend.api.resident.request.SaveResidentRequest;
 import com.dominest.dominestbackend.domain.common.Datasource;
 import com.dominest.dominestbackend.domain.resident.support.ResidentExcelParser;
@@ -19,6 +19,7 @@ import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.exceptions.business.BusinessException;
 import com.dominest.dominestbackend.global.exception.exceptions.external.db.ResourceNotFoundException;
 import com.dominest.dominestbackend.global.util.FileManager;
+import com.dominest.dominestbackend.global.util.FileManager.FileExt;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -46,32 +47,32 @@ public class ResidentService {
 
     /** return 저장한 파일명 */
     @Transactional
-    public void uploadPdf(Long id, FileManager.FilePrefix filePrefix, MultipartFile file) {
-        if (fileManager.isInvalidFileExtension(file.getOriginalFilename(), FileManager.FileExt.PDF)) {
+    public void uploadDocument(Long id, FileManager.FilePrefix filePrefix, MultipartFile file) {
+        if (fileManager.isInvalidFileExtension(file.getOriginalFilename(), FileExt.PDF)) {
             throw new BusinessException(ErrorCode.INVALID_FILE_EXTENSION);
         }
 
         Resident resident = findById(id);
-        String fileNameToUpload = resident.generatePdfFileNameToStore();
+        String fileNameToUpload = resident.generateFileNameToStore(FileExt.PDF.label);
 
         fileManager.save(filePrefix, file, fileNameToUpload);
 
-        String prevFilename = residentFilePathManager.getPdfFilename(resident, filePrefix);
-        residentFilePathManager.setPdfFilenameToResident(resident, filePrefix, fileNameToUpload);
+        String prevFilename = residentFilePathManager.getFilename(resident, filePrefix);
+        residentFilePathManager.setFilenameToResident(resident, filePrefix, fileNameToUpload);
 
         if (prevFilename != null)
             fileManager.deleteFile(filePrefix, prevFilename);
     }
 
     @Transactional
-    public PdfBulkUploadResponse uploadPdfs(FileManager.FilePrefix filePrefix, List<MultipartFile> files, ResidenceSemester residenceSemester) {
-        PdfBulkUploadResponse response = new PdfBulkUploadResponse();
+    public FileBulkUploadResponse uploadDocuments(FileManager.FilePrefix filePrefix, List<MultipartFile> files, ResidenceSemester residenceSemester) {
+        FileBulkUploadResponse response = new FileBulkUploadResponse();
         for (MultipartFile file : files) {
             String filename = file.getOriginalFilename();
             if (file.isEmpty() || !StringUtils.hasText(filename)) {
                 continue;
             }
-            if (fileManager.isInvalidFileExtension(filename, FileManager.FileExt.PDF)) {
+            if (fileManager.isInvalidFileExtension(filename, FileExt.PDF)) {
                 continue;
             }
 
@@ -85,11 +86,11 @@ public class ResidentService {
                 continue;
             }
 
-            String fileNameToUpload = resident.generatePdfFileNameToStore();
+            String fileNameToUpload = resident.generateFileNameToStore(FileExt.PDF.label);
             fileManager.save(filePrefix, file, fileNameToUpload);
 
-            String prevFilename = residentFilePathManager.getPdfFilename(resident, filePrefix);
-            residentFilePathManager.setPdfFilenameToResident(resident, filePrefix, fileNameToUpload);
+            String prevFilename = residentFilePathManager.getFilename(resident, filePrefix);
+            residentFilePathManager.setFilenameToResident(resident, filePrefix, fileNameToUpload);
 
             response.addToDtoList(filename, "OK", null);
             response.addSuccessCount();

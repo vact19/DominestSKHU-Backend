@@ -15,22 +15,22 @@ import static com.dominest.dominestbackend.global.util.FileManager.FilePrefix.RE
 @Service
 public class ResidentFilePathManager {
     // FilePrefix (파일 타입) 에 맞게 파일명을 등록한다.
-    public void setPdfFilenameToResident(Resident resident, FileManager.FilePrefix filePrefix, String uploadedFilename) {
+    public void setFilenameToResident(Resident resident, FileManager.FilePrefix filePrefix, String uploadedFilename) {
         if (filePrefix.equals(RESIDENT_ADMISSION)) {
-            resident.getResidenceInfo().setAdmissionPdfFileName(uploadedFilename);
+            resident.getResidenceInfo().setAdmissionFileName(uploadedFilename);
         } else if (filePrefix.equals(RESIDENT_DEPARTURE)) {
-            resident.getResidenceInfo().setDeparturePdfFileName(uploadedFilename);
+            resident.getResidenceInfo().setDepartureFileName(uploadedFilename);
         } else { // 입사신청서, 퇴사신청서가 아닌 다른 FilePrefix 값일 때
             throw new BusinessException("잘못된 FilePrefix 값입니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     // FilePrefix (파일 타입) 에 맞는 파일명을 가져온다.
-    public String getPdfFilename(Resident resident, FileManager.FilePrefix filePrefix) {
+    public String getFilename(Resident resident, FileManager.FilePrefix filePrefix) {
         if (filePrefix.equals(RESIDENT_ADMISSION)) {
-            return resident.getResidenceInfo().getAdmissionPdfFileName();
+            return resident.getResidenceInfo().getAdmissionFileName();
         } else if (filePrefix.equals(RESIDENT_DEPARTURE)) {
-            return resident.getResidenceInfo().getDeparturePdfFileName();
+            return resident.getResidenceInfo().getDepartureFileName();
         } else {
             return null;
         }

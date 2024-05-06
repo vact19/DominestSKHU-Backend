@@ -20,12 +20,12 @@ import java.util.UUID;
         // unique 제약에서 '학기' 는 기본적으로 깔고 간다.
         // 1. [학번, 전화번호, 이름] 중복제한:  똑같은 학생이 한 학기에 둘 이상 있을 순 없다.
         // 2. [방번호]가 중복되면 안된다. 학기중 하나의 방, 하나의 구역에 둘 이상이 있을 순 없다.
-        // 3. [이름] 이 학기마다 중복되면 안된다. PDF 검색관련 로직 때문에 이름+학기가 Unique해야 함.
+        // 3. [이름] 이 학기마다 중복되면 안된다. 사생 서류 검색관련 로직 때문에 이름+학기가 Unique해야 함.
         @UniqueConstraint(name = "unique_for_resident_info",
                                             columnNames = { "residenceSemester", "studentId", "phone_number"})
         , @UniqueConstraint(name = "unique_for_room",
                                             columnNames = { "room_id", "residenceSemester" })
-        , @UniqueConstraint(name = "unique_for_pdf",
+        , @UniqueConstraint(name = "unique_for_document",
                                             columnNames = { "name", "residenceSemester" })
 })
 public class Resident extends BaseEntity {
@@ -126,8 +126,8 @@ public class Resident extends BaseEntity {
         this.personalInfo.name = personalInfo.name + "(" + lastFourDigits + ")";
     }
 
-    public String generatePdfFileNameToStore() {
-        return this.personalInfo.name + "-" + UUID.randomUUID() + ".pdf";
+    public String generateFileNameToStore(String fileExt) {
+        return this.personalInfo.name + "-" + UUID.randomUUID() + "." + fileExt;
     }
 
     @Getter
@@ -194,10 +194,10 @@ public class Resident extends BaseEntity {
 
         @Column(nullable = true)
         @Setter
-        private String admissionPdfFileName;
+        private String admissionFileName;
         @Column(nullable = true)
         @Setter
-        private String departurePdfFileName;
+        private String departureFileName;
 
         public ResidenceInfo(
                 String semester, String currentStatus, String period, String socialCode, String socialName
@@ -211,8 +211,8 @@ public class Resident extends BaseEntity {
             this.familyHomeZipCode = familyHomeZipCode;
             this.familyHomeAddress = familyHomeAddress;
 
-            admissionPdfFileName = null;
-            departurePdfFileName = null;
+            admissionFileName = null;
+            departureFileName = null;
         }
     }
 }
