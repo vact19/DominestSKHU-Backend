@@ -160,7 +160,7 @@ public class ResidentService {
         return false;
     }
 
-    public List<Resident> getAllResidentByResidenceSemesterFetchRoom(ResidenceSemester residenceSemester) {
+    public List<Resident> getAllResidentByResidenceSemester(ResidenceSemester residenceSemester) {
         return residentRepository.findAllByResidenceSemesterFetchRoom(residenceSemester);
     }
 

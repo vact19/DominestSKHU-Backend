@@ -68,7 +68,7 @@ public class ResidentController {
     public ResponseTemplate<ResidentListResponse> handleGetAllResident(
             @RequestParam(required = true) ResidenceSemester residenceSemester
     ){
-        List<Resident> residents = residentService.getAllResidentByResidenceSemesterFetchRoom(residenceSemester);
+        List<Resident> residents = residentService.getAllResidentByResidenceSemester(residenceSemester);
 
         ResidentListResponse response = ResidentListResponse.from(residents);
         return new ResponseTemplate<>(HttpStatus.OK, "입사생 목록 조회 성공", response);
