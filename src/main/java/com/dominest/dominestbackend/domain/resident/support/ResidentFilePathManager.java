@@ -14,25 +14,32 @@ import static com.dominest.dominestbackend.global.util.FileManager.FilePrefix.RE
  */
 @Service
 public class ResidentFilePathManager {
+
     // FilePrefix (파일 타입) 에 맞게 파일명을 등록한다.
     public void setFilenameToResident(Resident resident, FileManager.FilePrefix filePrefix, String uploadedFilename) {
-        if (filePrefix.equals(RESIDENT_ADMISSION)) {
-            resident.getResidenceInfo().setAdmissionFileName(uploadedFilename);
-        } else if (filePrefix.equals(RESIDENT_DEPARTURE)) {
-            resident.getResidenceInfo().setDepartureFileName(uploadedFilename);
-        } else { // 입사신청서, 퇴사신청서가 아닌 다른 FilePrefix 값일 때
-            throw new BusinessException("잘못된 FilePrefix 값입니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+        switch (filePrefix) {
+            case RESIDENT_ADMISSION:
+                resident.getResidenceInfo().setAdmissionFileName(uploadedFilename);
+                break;
+            case RESIDENT_DEPARTURE:
+                resident.getResidenceInfo().setDepartureFileName(uploadedFilename);
+                break;
+            default:
+                throw new IllegalArgumentException("파일 경로 정보가 없어 저장 실패." +
+                        " filePrefix value -> " + filePrefix.name());
         }
     }
 
     // FilePrefix (파일 타입) 에 맞는 파일명을 가져온다.
     public String getFilename(Resident resident, FileManager.FilePrefix filePrefix) {
-        if (filePrefix.equals(RESIDENT_ADMISSION)) {
-            return resident.getResidenceInfo().getAdmissionFileName();
-        } else if (filePrefix.equals(RESIDENT_DEPARTURE)) {
-            return resident.getResidenceInfo().getDepartureFileName();
-        } else {
-            return null;
+        switch (filePrefix) {
+            case RESIDENT_ADMISSION:
+                return resident.getResidenceInfo().getAdmissionFileName();
+            case RESIDENT_DEPARTURE:
+                return resident.getResidenceInfo().getDepartureFileName();
+            default:
+                throw new IllegalArgumentException("파일 경로 정보가 없어 파일명 반환 실패." +
+                        " filePrefix value -> "+ filePrefix.name());
         }
     }
 }
