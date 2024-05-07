@@ -34,7 +34,7 @@ public class Room extends BaseEntity {
     @Column(nullable = false, unique = true) // Unique 할 수밖에 없음.
     private String assignedRoom; // 배정방. 'B1049A' 와 같음
     @Column(nullable = false)
-    private Integer floorNo; // 층수
+    private int floorNo; // 층수
 
     // 한 방에 한 입사생만 입주할 수 있지만, 입사생은 여러 차수로 나뉘어져 있으므로 OneToMany
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
@@ -42,12 +42,12 @@ public class Room extends BaseEntity {
 
     /** 아래의 roomNo, dormitory 는 미가엘, 행기를 구분하기 위해 사용된다. 비즈니스 로직상에서는 아직 쓸 일이 없음*/
     @Column(nullable = false)
-    private Integer roomNo; // 호실. (1(미가엘), 2(행기))
+    private int roomNo; // 호실. (1(미가엘), 2(행기))
     @Column(nullable = false)
     private String dormitory; // (A(미가엘) B(행기))
 
     @Builder
-    private Room(String assignedRoom, Integer floorNo, Integer roomNo, String dormitory) {
+    private Room(String assignedRoom, int floorNo, int roomNo, String dormitory) {
         this.assignedRoom = assignedRoom;
         this.floorNo = floorNo;
         this.roomNo = roomNo;

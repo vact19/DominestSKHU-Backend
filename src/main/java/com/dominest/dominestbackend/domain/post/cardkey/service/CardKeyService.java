@@ -33,10 +33,8 @@ public class CardKeyService {
     public long create(CreateCardKeyRequest request, Long categoryId, String email) {
         // CardKey 연관 객체인 category, user 찾기
         User user = userService.getUserByEmail(email);
-        // CardKey 연관 객체인 category 찾기
         Category category = categoryService.validateCategoryType(categoryId, Type.CARD_KEY);
 
-        // CardKey 객체 생성 후 저장
         CardKey cardKey = request.toEntity(user, category);
 
         CardKey key = cardKeyRepository.save(cardKey);

@@ -15,7 +15,6 @@ public class RoomListResponse {
     List<RoomDto> rooms;
 
     public RoomListResponse(int floorNo, int roomCnt, List<Room> rooms) {
-
         this.floorNo = floorNo;
         this.roomCnt = roomCnt;
         this.rooms = RoomDto.from(rooms);

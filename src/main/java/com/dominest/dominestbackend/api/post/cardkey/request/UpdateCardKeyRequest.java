@@ -23,7 +23,7 @@ public class UpdateCardKeyRequest {
     LocalDate dateOfBirth; // 생년월일
     @NotNull(message = "재발급 횟수를 입력해주세요.")
     @PositiveOrZero(message = "재발급 횟수는 0 이상이어야 합니다.")
-    Integer reIssueCnt; // 재발급 횟수
+    int reIssueCnt; // 재발급 횟수
 
     String etc = ""; // 비고. 검증하지 않고 값이 없으면 EMPTY STRING 처리함.
 }
