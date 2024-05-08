@@ -23,7 +23,7 @@ public class RoomListResponse {
     @Getter
     @AllArgsConstructor
     static class RoomDto {
-        String roomCode;
+        String roomCode; // 'B1010A' 에서 기숙사정보와 호실정보를 제외한 숫자 부분 '1010'
         long sectionAId;
         long sectionBId;
 
@@ -47,12 +47,7 @@ public class RoomListResponse {
         }
 
         static RoomDto from(Room roomA, Room roomB) {
-            String assignedRoom = roomA.getAssignedRoom();
-            String roomCode = "";
-            if (assignedRoom != null && assignedRoom.length() >= 6) {
-                roomCode = roomA.getAssignedRoom().substring(1, 5);
-            }
-
+            String roomCode = roomA.getAssignedRoom().substring(1, 5);
             return new RoomDto(roomCode, roomA.getId(), roomB.getId());
         }
     }

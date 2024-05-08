@@ -255,60 +255,52 @@ public class InitDB {
     }
 
     private static List<Room> createRooms() {
-        int roomCount2To3 = 26;
-        int roomCount4To10 = 17;
+        int roomAmount2To3 = 26; // 2~3층에는 26개의 방이 있음
+        int roomAmount4To10 = 17; // 4~10층에는 17개의 방이 있음
         List<Room> rooms = new ArrayList<>();
 
-        // 2층
-        createRoomsFor(roomCount2To3, "02",rooms);
-        createRoomsFor(roomCount2To3, "03",rooms);
-
-        // 4~10층
-        createRoomsFor(roomCount4To10, "04",rooms);
-        createRoomsFor(roomCount4To10, "05",rooms);
-        createRoomsFor(roomCount4To10, "06",rooms);
-        createRoomsFor(roomCount4To10, "07",rooms);
-        createRoomsFor(roomCount4To10, "08",rooms);
-        createRoomsFor(roomCount4To10, "09",rooms);
-        createRoomsFor(roomCount4To10, "10",rooms);
-
+        // 2층과 3층에 대한 방 추가
+        for (int floor = 2; floor <= 3; floor += 1) {
+            rooms.addAll(
+                    createRoomsFor(roomAmount2To3, String.format("%02d", floor))
+            );
+        }
+        // 4층부터 10층까지 방 추가
+        for (int floor = 4; floor <= 10; floor++) {
+            rooms.addAll(
+                    createRoomsFor(roomAmount4To10, String.format("%02d", floor))
+            );
+        }
         return rooms;
     }
 
-    private static void createRoomsFor(int roomCount, String floor, List<Room> rooms) {
-        for (int i = 1; i <= roomCount; i++) {
+    // 애초에 빈 Room List를 넘겨서, 함수 내부에서 Room List를 변경하도록 하면 안됨. 빌려준걸 바꿔버리면 안돼
+    private static List<Room> createRoomsFor(int roomAmount, String floor) {
+        List<Room> roomsForFloor = new ArrayList<>();
+        for (int i = 1; i <= roomAmount; i++) {
             String roomNo = String.format("%02d", i);
-            Integer floorNo = Integer.valueOf(floor);
+            int floorNo = Integer.parseInt(floor);
             StringBuilder sb = new StringBuilder();
 
-            Room roomA = Room.builder()
-                    .assignedRoom(
-                            sb.append("B")
-                                    .append(floor)
-                                    .append(roomNo)
-                                    .append("A")
-                                    .toString())
-                    .floorNo(floorNo)
+            Room roomA = new Room(sb.append("B")
+                    .append(floor)
+                    .append(roomNo)
+                    .append("A")
+                    .toString()
+                    , floorNo, 2, "B");
 
-                    .dormitory("B")
-                    .roomNo(2)
-                    .build();
-            rooms.add(roomA);
+            roomsForFloor.add(roomA);
             sb.setLength(0);
 
-            Room roomB = Room.builder()
-                    .assignedRoom(sb
+            Room roomB = new Room(sb
                             .append("B")
                             .append(floor)
                             .append(roomNo)
                             .append("B")
-                            .toString())
-                    .floorNo(floorNo)
-                    .dormitory("B")
-                    .roomNo(2)
-                    .build();
-
-            rooms.add(roomB);
+                            .toString()
+                    , floorNo, 2, "B");
+            roomsForFloor.add(roomB);
         }
+        return roomsForFloor;
     }
 }
