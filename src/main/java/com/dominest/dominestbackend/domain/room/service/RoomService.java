@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
@@ -22,5 +24,9 @@ public class RoomService {
     public Room getById(long id) {
         return roomRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(Datasource.ROOM, id));
+    }
+
+    public List<Room> findByFloorNo(int floorNo) {
+        return roomRepository.findByFloorNo(floorNo);
     }
 }

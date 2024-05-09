@@ -1,4 +1,4 @@
-package com.dominest.dominestbackend.api.room.response;
+package com.dominest.dominestbackend.api.room.roomhistory.response;
 
 import com.dominest.dominestbackend.domain.room.entity.Room;
 import com.dominest.dominestbackend.domain.room.roomhistory.entity.RoomHistory;

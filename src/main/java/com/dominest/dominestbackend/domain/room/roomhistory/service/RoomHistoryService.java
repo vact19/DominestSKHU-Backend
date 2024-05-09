@@ -54,4 +54,8 @@ public class RoomHistoryService {
         residentRepository.findAllByResidenceSemesterFetchRoom(residenceSemester)
                 .forEach(this::saveFrom);
     }
+
+    public List<RoomHistory> findByRoomId(long roomId) {
+        return roomHistoryRepository.findByRoomId(roomId);
+    }
 }
