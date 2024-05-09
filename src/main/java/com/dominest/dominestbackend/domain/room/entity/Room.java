@@ -2,6 +2,7 @@ package com.dominest.dominestbackend.domain.room.entity;
 
 import com.dominest.dominestbackend.domain.common.jpa.BaseEntity;
 import com.dominest.dominestbackend.domain.resident.entity.Resident;
+import com.dominest.dominestbackend.global.exception.exceptions.business.BusinessException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,12 +13,12 @@ import java.util.List;
 /**
  *  기숙사 호실 정보. 행기 기숙사 데이터.
 
- *  엑셀 데이터는 roomNo, dormitory, assignedRoom 이며
+ *  엑셀 데이터는 roomNo, dormitoryCode, assignedRoom 이며
  *  나머지 속성들은 개발 편의를 위하여 추가함.
 
  *  아래 2가지의 데이터는 잘 쓰지 않는다.
  *  1. 호실 roomNumber(1(미가엘), 2(행기))
- *  2. ,기숙사 dormitory (A(미) B(행)),
+ *  2. ,기숙사 dormitoryCode (A(미) B(행)),
 
  *  아래 데이터를 주로 다루게 될 듯.
  *  1. 배정방 assignedRoom
@@ -39,22 +40,39 @@ public class Room extends BaseEntity {
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
     private List<Resident> residents;
 
-    /** 아래의 roomNo, dormitory 는 미가엘, 행기를 구분하기 위해 사용된다.*/
     @Column(nullable = false)
-    private final int roomNo; // 호실. (1(미가엘), 2(행기))
-    @Column(nullable = false)
-    private final String dormitory; // (A(미가엘) B(행기))
+    @Enumerated(EnumType.STRING)
+    Dormitory dormitory;
 
-    public Room(String assignedRoom, int floorNo, int roomNo, String dormitory) {
-        if (assignedRoom == null || dormitory == null) {
-            throw new IllegalArgumentException("배정방(assignedRoom), 기숙사(dormitory)는 필수 값입니다.");
-        }
-        if (assignedRoom.length() != 6) {
-            throw new IllegalArgumentException("배정방은 6자리여야 합니다.");
+    public Room(String assignedRoom, int floorNo, Dormitory dormitory) {
+        if (assignedRoom == null || assignedRoom.length() != 6 ) {
+            throw new BusinessException("배정방(assignedRoom)은 6자리여야 합니다.");
         }
         this.assignedRoom = assignedRoom;
-        this.floorNo = floorNo;
-        this.roomNo = roomNo;
+        if (dormitory == null) {
+            throw new BusinessException("기숙사(dormitory)는 필수 값입니다.");
+        }
         this.dormitory = dormitory;
+
+        if (floorNo < 2 || floorNo > 10) {
+            throw new BusinessException("층수는 2층부터 10층까지만 존재합니다.");
+        }
+        this.floorNo = floorNo;
+    }
+
+    /**
+     * 숫자(roomNo) 혹은 문자(dormitoryCode)를 사용해서 기숙사를 구분한다.
+     */
+    public enum Dormitory {
+        // 미가엘, 행복기숙사
+        MICHAEL(1, "A"), HAENGBOK(2, "B")
+        ;
+        final int roomNo;
+        final String dormitoryCode;
+
+        Dormitory(int roomNo, String dormitoryCode) {
+            this.roomNo = roomNo;
+            this.dormitoryCode = dormitoryCode;
+        }
     }
 }

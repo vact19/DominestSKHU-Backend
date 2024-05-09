@@ -287,7 +287,7 @@ public class InitDB {
                     .append(roomNo)
                     .append("A")
                     .toString()
-                    , floorNo, 2, "B");
+                    , floorNo, Room.Dormitory.HAENGBOK);
 
             roomsForFloor.add(roomA);
             sb.setLength(0);
@@ -298,7 +298,7 @@ public class InitDB {
                             .append(roomNo)
                             .append("B")
                             .toString()
-                    , floorNo, 2, "B");
+                    , floorNo, Room.Dormitory.HAENGBOK);
             roomsForFloor.add(roomB);
         }
         return roomsForFloor;
