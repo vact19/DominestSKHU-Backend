@@ -16,6 +16,10 @@ public class BusinessException extends CustomException {
         super(errorCode, cause);
     }
 
+    public BusinessException(String message) {
+        super(message, HttpStatus.BAD_REQUEST);
+    }
+
     public BusinessException(String message, HttpStatus httpStatus) {
         super(message, httpStatus);
     }
