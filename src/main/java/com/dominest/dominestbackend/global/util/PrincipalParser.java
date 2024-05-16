@@ -19,11 +19,11 @@ public class PrincipalParser {
 
     // 데이터베이스에 이미 저장된 Principal String을 파싱할 때 사용된다.
     public static String toName(String principalStr) {
-        String[] splitedPrincipal = principalStr.split(SecurityConst.PRINCIPAL_DELIMITER);
-        boolean isAnonymous = splitedPrincipal.length < 2;
+        String[] splitPrincipal = principalStr.split(SecurityConst.PRINCIPAL_DELIMITER);
+        boolean isAnonymous = splitPrincipal.length < 2;
         if (isAnonymous) {
             return "anonymous";
         }
-        return splitedPrincipal[1];
+        return splitPrincipal[1];
     }
 }

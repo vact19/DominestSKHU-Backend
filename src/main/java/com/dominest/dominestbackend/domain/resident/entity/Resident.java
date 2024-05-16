@@ -119,10 +119,10 @@ public class Resident extends BaseEntity {
 
     // 이름 중복될 경우 이름 뒤에 전화번호 뒷자리를 붙인다.
     public void changeNameWithPhoneNumber() {
-        String[] splitedNumber = personalInfo.phoneNumber.getValue().split("-");
-        if (splitedNumber.length != 3)
+        String[] splitNumber = personalInfo.phoneNumber.getValue().split("-");
+        if (splitNumber.length != 3)
             throw new IllegalArgumentException("전화번호 형식이 잘못되었습니다.");
-        String lastFourDigits = splitedNumber[splitedNumber.length - 1]; // 마지막 4자리 숫자
+        String lastFourDigits = splitNumber[splitNumber.length - 1]; // 마지막 4자리 숫자
         this.personalInfo.name = personalInfo.name + "(" + lastFourDigits + ")";
     }
 
