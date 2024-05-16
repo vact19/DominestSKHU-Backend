@@ -134,6 +134,7 @@ public class Resident extends BaseEntity {
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor
+    @EqualsAndHashCode
     @Embeddable
     public static class PersonalInfo {
         @Column(nullable = false, length = 30)
@@ -150,6 +151,7 @@ public class Resident extends BaseEntity {
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor
+    @EqualsAndHashCode
     @Embeddable
     public static class StudentInfo {
         @Column(nullable = false, length = 50)
@@ -166,6 +168,7 @@ public class Resident extends BaseEntity {
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor
+    @EqualsAndHashCode
     @Embeddable
     public static class ResidenceDateInfo {
         // 아래의
@@ -179,6 +182,7 @@ public class Resident extends BaseEntity {
     // 기숙사 입주 관련 정보
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @EqualsAndHashCode
     @Embeddable
     public static class ResidenceInfo {
         /** 기숙사정보 */
