@@ -68,37 +68,30 @@ public class SaveResidentRequest {
     String familyHomeAddress;
 
     public Resident toEntity(Room room){
-        return Resident.builder()
-                .personalInfo(
-                        new Resident.PersonalInfo(
-                                name, gender, new PhoneNumber(phoneNumber), dateOfBirth
-                ))
-                .studentInfo(
-                        new Resident.StudentInfo(
-                                studentId
-                                , major
-                                , grade
-                ))
-                .residenceDateInfo(
-                        new Resident.ResidenceDateInfo(
-                                admissionDate
-                                , "".equals(leavingDate) ?  null :
-                                LocalDate.parse(leavingDate, DateTimeFormatter.ofPattern("yyyyMMdd"))
-                                , semesterStartDate
-                                , semesterEndDate
-                        ))
-                .residenceInfo(
-                        new Resident.ResidenceInfo(
-                                semester
-                                , currentStatus
-                                , period
-                                , socialCode
-                                , socialName
-                                , familyHomeZipCode
-                                , familyHomeAddress
-                ))
-                .residenceSemester(residenceSemester)
-                .room(room)
-                .build();
+        Resident.PersonalInfo personalInfo = new Resident.PersonalInfo(
+                name, gender, new PhoneNumber(phoneNumber), dateOfBirth
+        );
+        Resident.StudentInfo studentInfo = new Resident.StudentInfo(
+                studentId
+                , major
+                , grade
+        );
+        Resident.ResidenceDateInfo dateInfo = new Resident.ResidenceDateInfo(
+                admissionDate
+                , "".equals(leavingDate) ? null :
+                LocalDate.parse(leavingDate, DateTimeFormatter.ofPattern("yyyyMMdd"))
+                , semesterStartDate
+                , semesterEndDate
+        );
+        Resident.ResidenceInfo residenceInfo = new Resident.ResidenceInfo(
+                semester
+                , currentStatus
+                , period
+                , socialCode
+                , socialName
+                , familyHomeZipCode
+                , familyHomeAddress
+        );
+        return new Resident(personalInfo, studentInfo, dateInfo, residenceInfo, residenceSemester, room);
     }
 }

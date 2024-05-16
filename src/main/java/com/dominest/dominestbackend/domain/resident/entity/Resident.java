@@ -50,8 +50,8 @@ public class Resident extends BaseEntity {
     @JoinColumn(name = "room_id")
     private Room room;
 
-    @Builder
-    private Resident(
+    @Builder(access = AccessLevel.PRIVATE)
+    public Resident(
             PersonalInfo personalInfo, StudentInfo studentInfo
             , ResidenceDateInfo residenceDateInfo, ResidenceInfo residenceInfo
             , ResidenceSemester residenceSemester, Room room
