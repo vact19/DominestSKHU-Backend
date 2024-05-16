@@ -67,8 +67,8 @@ public class Room extends BaseEntity {
         // 미가엘, 행복기숙사
         MICHAEL(1, "A"), HAENGBOK(2, "B")
         ;
-        final int roomNo;
-        final String dormitoryCode;
+        public final int roomNo;
+        public final String dormitoryCode;
 
         Dormitory(int roomNo, String dormitoryCode) {
             this.roomNo = roomNo;

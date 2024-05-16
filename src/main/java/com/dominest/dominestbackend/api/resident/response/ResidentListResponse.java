@@ -33,7 +33,7 @@ public class ResidentListResponse {
         private String currentStatus;
         private String dormitory;
         private String period;
-        private Integer roomNumber;
+        private int roomNumber;
         private String assignedRoom;
         private LocalDate admissionDate;
         private String leavingDate; // null일 경우 빈 칸으로 반환하기 위해 String 사용
@@ -59,11 +59,11 @@ public class ResidentListResponse {
                     .semester(residenceInfo.getSemester())
                     .currentStatus(residenceInfo.getCurrentStatus())
                     .dateOfBirth(personalInfo.getDateOfBirth())
-                    .dormitory(resident.getRoom().getDormitory())
+                    .dormitory(resident.getRoom().getDormitory().dormitoryCode)
                     .major(studentInfo.getMajor())
                     .grade(studentInfo.getGrade())
                     .period(residenceInfo.getPeriod())
-                    .roomNumber(resident.getRoom().getRoomNo())
+                    .roomNumber(resident.getRoom().getDormitory().roomNo)
                     .assignedRoom(resident.getRoom().getAssignedRoom())
                     .admissionDate(residenceDateInfo.getAdmissionDate())
                     .leavingDate(residenceDateInfo.getLeavingDate() == null ? "" :
