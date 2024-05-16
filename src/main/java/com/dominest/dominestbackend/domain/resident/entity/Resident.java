@@ -6,6 +6,7 @@ import com.dominest.dominestbackend.domain.resident.support.ResidentExcelParser;
 import com.dominest.dominestbackend.domain.resident.entity.component.ResidenceSemester;
 import com.dominest.dominestbackend.domain.room.entity.Room;
 import com.dominest.dominestbackend.global.util.DatePatternParser;
+import com.dominest.dominestbackend.global.util.UuidHolder;
 import lombok.*;
 
 import javax.persistence.*;
@@ -117,7 +118,7 @@ public class Resident extends BaseEntity {
         this.room = resident.getRoom();
     }
 
-    // 이름 중복될 경우 이름 뒤에 전화번호 뒷자리를 붙인다.
+    // 이름 뒤에 전화번호 뒷자리를 붙여 변경한다. 중복을 피하기 위해 사용할 수 있음
     public void changeNameWithPhoneNumber() {
         String[] splitNumber = personalInfo.phoneNumber.getValue().split("-");
         if (splitNumber.length != 3)
@@ -126,8 +127,8 @@ public class Resident extends BaseEntity {
         this.personalInfo.name = personalInfo.name + "(" + lastFourDigits + ")";
     }
 
-    public String generateFileNameToStore(String fileExt) {
-        return this.personalInfo.name + "-" + UUID.randomUUID() + "." + fileExt;
+    public String generateFileNameToStore(String fileExt, UuidHolder uuidHolder) {
+        return this.personalInfo.name + "-" + uuidHolder.random() + "." + fileExt;
     }
 
     @Getter

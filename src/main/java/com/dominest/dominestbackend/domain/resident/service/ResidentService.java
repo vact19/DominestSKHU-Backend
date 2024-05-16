@@ -20,6 +20,7 @@ import com.dominest.dominestbackend.global.exception.exceptions.business.Busines
 import com.dominest.dominestbackend.global.exception.exceptions.external.db.ResourceNotFoundException;
 import com.dominest.dominestbackend.global.util.FileManager;
 import com.dominest.dominestbackend.global.util.FileManager.FileExt;
+import com.dominest.dominestbackend.global.util.UuidHolder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -44,6 +45,7 @@ public class ResidentService {
     private final RoomService roomService;
     private final RoomHistoryService roomHistoryService;
     private final ResidentFilePathManager residentFilePathManager;
+    private final UuidHolder uuidHolder;
 
     /** return 저장한 파일명 */
     @Transactional
@@ -53,7 +55,7 @@ public class ResidentService {
         }
 
         Resident resident = findById(id);
-        String fileNameToUpload = resident.generateFileNameToStore(FileExt.PDF.label);
+        String fileNameToUpload = resident.generateFileNameToStore(FileExt.PDF.label, uuidHolder);
 
         fileManager.save(filePrefix, file, fileNameToUpload);
 
@@ -86,7 +88,7 @@ public class ResidentService {
                 continue;
             }
 
-            String fileNameToUpload = resident.generateFileNameToStore(FileExt.PDF.label);
+            String fileNameToUpload = resident.generateFileNameToStore(FileExt.PDF.label, uuidHolder);
             fileManager.save(filePrefix, file, fileNameToUpload);
 
             String prevFilename = residentFilePathManager.getFilename(resident, filePrefix);
