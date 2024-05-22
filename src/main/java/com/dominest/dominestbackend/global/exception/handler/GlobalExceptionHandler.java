@@ -12,6 +12,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -58,8 +59,15 @@ public class GlobalExceptionHandler {
         return createErrorResponse(HttpStatus.BAD_REQUEST, message);
     }
 
-    @ExceptionHandler({IllegalArgumentException.class})
-    public ResponseEntity<ErrorResponseDto<String>> handleBusinessException(IllegalArgumentException e, HttpServletRequest request){
+    @ExceptionHandler(MissingServletRequestPartException.class)
+    public ResponseEntity<ErrorResponseDto<String>> handleMissingServletRequestParameterException(MissingServletRequestPartException e, HttpServletRequest request) {
+        printLog(e, request);
+        String message = "파라미터 '" + e.getRequestPartName() + "'이 누락되었습니다.";
+        return createErrorResponse(HttpStatus.BAD_REQUEST, message);
+    }
+
+    @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class})
+    public ResponseEntity<ErrorResponseDto<String>> handleBusinessException(Exception e, HttpServletRequest request){
         printLog(e, request);
         return createErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
     }
