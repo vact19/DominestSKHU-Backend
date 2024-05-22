@@ -77,8 +77,8 @@ public class ComplaintController {
     @GetMapping("/categories/{categoryId}/posts/complaint")
     public ResponseTemplate<ComplaintListResponse> handleGetComplaints(
             @PathVariable Long categoryId, @RequestParam(defaultValue = "1") int page
-            , @RequestParam(required = false) String roomNoSch
-            , @RequestParam(required = false) String complSchText
+            , @RequestParam(required = false) String roomNoSearch
+            , @RequestParam(required = false) String complaintSearch
     ) {
         final int COMPLAINT_TYPE_PAGE_SIZE = 20;
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
@@ -86,7 +86,7 @@ public class ComplaintController {
 
         Category category = categoryService.validateCategoryType(categoryId, Type.COMPLAINT);
 
-        Page<Complaint> complaintPage = complaintService.getPage(category.getId(), pageable, complSchText, roomNoSch);
+        Page<Complaint> complaintPage = complaintService.getPage(category.getId(), pageable, complaintSearch, roomNoSearch);
 
         ComplaintListResponse response = ComplaintListResponse.from(complaintPage, category);
         return new ResponseTemplate<>(HttpStatus.OK

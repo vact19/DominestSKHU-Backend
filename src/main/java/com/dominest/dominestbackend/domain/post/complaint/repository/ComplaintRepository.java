@@ -21,18 +21,18 @@ public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
 
     @Query(nativeQuery = true,
             value = "SELECT * FROM complaint c" +
-            " WHERE c.category_id = :categoryId AND MATCH(complaint_cause, complaint_resolution) AGAINST(:complSchText IN BOOLEAN MODE)"
+            " WHERE c.category_id = :categoryId AND MATCH(complaint_cause, complaint_resolution) AGAINST(:complaintSearch IN BOOLEAN MODE)"
 
-            , countQuery = "SELECT count(*) FROM complaint c WHERE c.category_id = :categoryId AND MATCH(complaint_cause, complaint_resolution) AGAINST(:complSchText IN BOOLEAN MODE)"
+            , countQuery = "SELECT count(*) FROM complaint c WHERE c.category_id = :categoryId AND MATCH(complaint_cause, complaint_resolution) AGAINST(:complaintSearch IN BOOLEAN MODE)"
     )
-    Page<Complaint> findAllByCategoryIdSearch(@Param("categoryId")Long categoryId, @Param("complSchText") String complSchText, Pageable pageable);
+    Page<Complaint> findAllByCategoryIdSearch(@Param("categoryId")Long categoryId, @Param("complaintSearch") String complaintSearch, Pageable pageable);
 
     @Query(value = "SELECT c FROM Complaint c" +
-            " WHERE c.category.id = :categoryId AND c.roomNo = :roomNoSch"
+            " WHERE c.category.id = :categoryId AND c.roomNo = :roomNoSearch"
 
-            , countQuery = "SELECT count(c) FROM Complaint c WHERE c.category.id = :categoryId AND c.roomNo = :roomNoSch"
+            , countQuery = "SELECT count(c) FROM Complaint c WHERE c.category.id = :categoryId AND c.roomNo = :roomNoSearch"
     )
-    Page<Complaint> findAllByCategoryIdAndRoomNo(@Param("categoryId") Long categoryId, @Param("roomNoSch") String roomNoSch, Pageable pageable);
+    Page<Complaint> findAllByCategoryIdAndRoomNo(@Param("categoryId") Long categoryId, @Param("roomNoSearch") String roomNoSearch, Pageable pageable);
 
     void deleteByCategoryId(Long categoryId);
 

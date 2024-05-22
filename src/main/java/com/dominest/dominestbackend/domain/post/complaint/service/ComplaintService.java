@@ -79,13 +79,13 @@ public class ComplaintService {
         return complaint.getId();
     }
 
-    public Page<Complaint> getPage(Long categoryId, Pageable pageable, String complSchText, String roomNoSch) {
-        if (StringUtils.hasText(roomNoSch)) {
-            return complaintRepository.findAllByCategoryIdAndRoomNo(categoryId, roomNoSch, pageable);
+    public Page<Complaint> getPage(Long categoryId, Pageable pageable, String complaintSearch, String roomNoSearch) {
+        if (StringUtils.hasText(roomNoSearch)) {
+            return complaintRepository.findAllByCategoryIdAndRoomNo(categoryId, roomNoSearch, pageable);
         }
 
-        if (StringUtils.hasText(complSchText)) {
-            return complaintRepository.findAllByCategoryIdSearch(categoryId, complSchText + "*", pageable);
+        if (StringUtils.hasText(complaintSearch)) {
+            return complaintRepository.findAllByCategoryIdSearch(categoryId, complaintSearch + "*", pageable);
         }
         return complaintRepository.findPageAllByCategoryId(categoryId, pageable);
     }
