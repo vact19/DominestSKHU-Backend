@@ -1,6 +1,6 @@
 package com.dominest.dominestbackend.domain.post.undeliveredparcelpost.component.service;
 
-import com.dominest.dominestbackend.api.post.undeliveredparcel.request.CreateUndelivParcelRequest;
+import com.dominest.dominestbackend.api.post.undeliveredparcel.request.CreateUndeliveredParcelRequest;
 import com.dominest.dominestbackend.api.post.undeliveredparcel.request.UpdateUndelivParcelDtoRequest;
 import com.dominest.dominestbackend.domain.common.Datasource;
 import com.dominest.dominestbackend.domain.post.undeliveredparcelpost.entity.UndeliveredParcelPost;
@@ -24,7 +24,7 @@ public class UndeliveredParcelService {
      * 관리물품 저장 전에 관리대장 게시글을 찾아서 영속화시켜야 함. */
     @Transactional
     public Long create(Long undelivParcelPostId,
-                       CreateUndelivParcelRequest request) {
+                       CreateUndeliveredParcelRequest request) {
         // 관리대장 게시글 찾기
         UndeliveredParcelPost undelivParcelPost = undeliveredParcelPostService.getById(undelivParcelPostId);
 

@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @NoArgsConstructor
-public class CreateUndelivParcelRequest {
+public class CreateUndeliveredParcelRequest {
     @Length(max = 50, message = "수취인 이름은 50자를 넘을 수 없습니다")
     String recipientName = "";
     @Length(max = 50, message = "수취인 전화번호는 50자를 넘을 수 없습니다")

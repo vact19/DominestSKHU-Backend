@@ -12,40 +12,40 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class UndelivParcelPostListResponse {
+public class UndeliveredParcelPostListResponse {
     CategoryResponse category;
     PageInfo page;
 
-    List<UndelivParcelPostDto> posts;
+    List<UndeliveredParcelPostDto> posts;
 
-    public static UndelivParcelPostListResponse from(Page<UndeliveredParcelPost> postPage, Category category){
+    public static UndeliveredParcelPostListResponse from(Page<UndeliveredParcelPost> postPage, Category category){
         CategoryResponse categoryResponse = CategoryResponse.from(category);
         PageInfo pageInfo = PageInfo.from(postPage);
 
-        List<UndelivParcelPostDto> posts
-                = UndelivParcelPostDto.from(postPage);
+        List<UndeliveredParcelPostDto> posts
+                = UndeliveredParcelPostDto.from(postPage);
 
-        return new UndelivParcelPostListResponse(categoryResponse, pageInfo, posts);
+        return new UndeliveredParcelPostListResponse(categoryResponse, pageInfo, posts);
     }
 
     @Builder
     @Getter
-    private static class UndelivParcelPostDto {
+    private static class UndeliveredParcelPostDto {
         long id;
         String title;
         AuditLog auditLog;
 
-        static UndelivParcelPostDto from(UndeliveredParcelPost post){
-            return UndelivParcelPostListResponse.UndelivParcelPostDto.builder()
+        static UndeliveredParcelPostDto from(UndeliveredParcelPost post){
+            return UndeliveredParcelPostDto.builder()
                     .id(post.getId())
                     .title(post.getTitle())
                     .auditLog(AuditLog.from(post))
                     .build();
         }
 
-        static List<UndelivParcelPostDto> from(Page<UndeliveredParcelPost> posts){
+        static List<UndeliveredParcelPostDto> from(Page<UndeliveredParcelPost> posts){
             return posts
-                    .map(UndelivParcelPostDto::from)
+                    .map(UndeliveredParcelPostDto::from)
                     .toList();
         }
     }

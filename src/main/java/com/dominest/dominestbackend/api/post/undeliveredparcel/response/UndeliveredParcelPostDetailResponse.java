@@ -13,29 +13,29 @@ import java.util.stream.Collectors;
 
 @Getter
 @AllArgsConstructor
-public class UndelivParcelPostDetailResponse {
-    UndelivParcelPostDto postDetail;
+public class UndeliveredParcelPostDetailResponse {
+    UndeliveredParcelPostDto postDetail;
 
-    public static UndelivParcelPostDetailResponse from(UndeliveredParcelPost post) {
-        UndelivParcelPostDto postDto = UndelivParcelPostDto.from(post);
-        return new UndelivParcelPostDetailResponse(postDto);
+    public static UndeliveredParcelPostDetailResponse from(UndeliveredParcelPost post) {
+        UndeliveredParcelPostDto postDto = UndeliveredParcelPostDto.from(post);
+        return new UndeliveredParcelPostDetailResponse(postDto);
     }
 
     @Getter
     @Builder
-    private static class UndelivParcelPostDto {
+    private static class UndeliveredParcelPostDto {
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
         LocalDateTime createTime;
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
         LocalDateTime lastModifiedTime;
         String title;
         String lastModifiedBy;
-        List<UndelivParcelDto> undelivParcels;
+        List<UndeliveredParcelDto> undelivParcels;
 
-        static UndelivParcelPostDto from(UndeliveredParcelPost post) {
-            List<UndelivParcelDto> parcelDtos = UndelivParcelDto.from(post.getUndelivParcels());
+        static UndeliveredParcelPostDto from(UndeliveredParcelPost post) {
+            List<UndeliveredParcelDto> parcelDtos = UndeliveredParcelDto.from(post.getUndelivParcels());
 
-            return UndelivParcelPostDto.builder()
+            return UndeliveredParcelPostDto.builder()
                     .createTime(post.getCreateTime())
                     .lastModifiedTime(post.getLastModifiedTime())
                     .title(post.getTitle())
@@ -47,7 +47,7 @@ public class UndelivParcelPostDetailResponse {
 
     @Getter
     @Builder
-    private static class UndelivParcelDto {
+    private static class UndeliveredParcelDto {
         Long id;
         String recipientName;
         String recipientPhoneNum;
@@ -58,8 +58,8 @@ public class UndelivParcelPostDetailResponse {
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
         LocalDateTime lastModifiedTime;
 
-        static UndelivParcelDto from(UndeliveredParcel undelivParcel) {
-            return UndelivParcelDto.builder()
+        static UndeliveredParcelDto from(UndeliveredParcel undelivParcel) {
+            return UndeliveredParcelDto.builder()
                     .id(undelivParcel.getId())
                     .recipientName(undelivParcel.getRecipientName())
                     .recipientPhoneNum(undelivParcel.getRecipientPhoneNum())
@@ -69,10 +69,10 @@ public class UndelivParcelPostDetailResponse {
                     .lastModifiedTime(undelivParcel.getLastModifiedTime())
                     .build();
         }
-        static List<UndelivParcelDto> from(List<UndeliveredParcel> undelivParcels) {
+        static List<UndeliveredParcelDto> from(List<UndeliveredParcel> undelivParcels) {
             return undelivParcels.stream()
                     .sorted(Comparator.comparing(UndeliveredParcel::getId).reversed())
-                    .map(UndelivParcelDto::from)
+                    .map(UndeliveredParcelDto::from)
                     .collect(Collectors.toList());
         }
     }
