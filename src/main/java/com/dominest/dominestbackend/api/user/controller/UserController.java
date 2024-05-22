@@ -76,7 +76,7 @@ public class UserController {
         return new ResponseTemplate<>(HttpStatus.OK, "토큰 재발급", tokenDto);
     }
 
-    @PostMapping("/myPage/password") // 비밀번호 변경
+    @PostMapping("/my-page/password") // 비밀번호 변경
     public ResponseTemplate<Void> changePassword(@RequestBody ChangePasswordRequest request
             , Principal principal) {
         String logInUserEmail = PrincipalParser.toEmail(principal);
