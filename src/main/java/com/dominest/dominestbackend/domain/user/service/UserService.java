@@ -35,7 +35,7 @@ public class UserService {
     private final TokenManager tokenManager;
 
     @Transactional
-    public void create(JoinRequest request) {
+    public void save(JoinRequest request) {
         String encodedPassword = passwordEncoder.encode(request.getPassword());
         Email email = new Email(request.getEmail());
         PhoneNumber phoneNumber = new PhoneNumber(request.getPhoneNumber());

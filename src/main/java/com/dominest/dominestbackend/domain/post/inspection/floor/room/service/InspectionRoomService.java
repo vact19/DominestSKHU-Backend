@@ -21,7 +21,7 @@ public class InspectionRoomService {
     private final InspectionRoomRepository inspectionRoomRepository;
 
     @Transactional
-    public List<InspectionRoom> create(List<InspectionRoom> inspectionRooms) {
+    public List<InspectionRoom> save(List<InspectionRoom> inspectionRooms) {
         try {
             return inspectionRoomRepository.saveAll(inspectionRooms);
         } catch (DataIntegrityViolationException e) {

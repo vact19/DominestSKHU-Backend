@@ -34,7 +34,7 @@ public class ImageTypeService {
     private final RecentPostService recentPostService;
 
     @Transactional
-    public Long create(SaveImageTypeRequest request
+    public Long save(SaveImageTypeRequest request
                                     , Long categoryId, String uploaderEmail) {
         Category category = categoryService.getById(categoryId);
         // 이미지 게시물이 작성될 카테고리의 타입 검사
@@ -53,7 +53,7 @@ public class ImageTypeService {
                 .categoryType(saved.getCategory().getType())
                 .link(saved.getCategory().getPostsLink() + "/" + saved.getId())
                 .build();
-        recentPostService.create(recentPost);
+        recentPostService.save(recentPost);
 
         return saved.getId();
     }

@@ -18,7 +18,7 @@ public class InspectionFloorService {
     private final InspectionFloorRepository inspectionFloorRepository;
 
     @Transactional
-    public List<InspectionFloor> create(List<InspectionFloor> inspectionFloors) {
+    public List<InspectionFloor> save(List<InspectionFloor> inspectionFloors) {
         try {
             return inspectionFloorRepository.saveAll(inspectionFloors);
         } catch (DataIntegrityViolationException e) {

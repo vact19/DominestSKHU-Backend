@@ -33,7 +33,7 @@ public class CategoryService {
     private final ManualPostRepository manualPostRepository;
 
     @Transactional
-    public Category create(String categoryName, Type categoryType, String explanation) {
+    public Category save(String categoryName, Type categoryType, String explanation) {
         Category category = Category.builder()
                 .name(categoryName)
                 .type(categoryType)

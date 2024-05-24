@@ -58,7 +58,7 @@ public class CategoryController {
     public ResponseEntity<ResponseTemplate<Void>> createCategory(
             @RequestBody @Valid final CreateCategoryRequest reqDto
     ) {
-        Category category = categoryService.create(reqDto.getCategoryName(), reqDto.getCategoryType(), reqDto.getExplanation());
+        Category category = categoryService.save(reqDto.getCategoryName(), reqDto.getCategoryType(), reqDto.getExplanation());
 
         ResponseTemplate<Void> responseTemplate = new ResponseTemplate<>(
                 HttpStatus.CREATED

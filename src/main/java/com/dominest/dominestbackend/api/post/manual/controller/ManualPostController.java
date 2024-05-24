@@ -49,7 +49,7 @@ public class ManualPostController {
     ) {
         String email = PrincipalParser.toEmail(principal);
 
-        long manualPostId = manualPostService.create(categoryId, reqDto, email);
+        long manualPostId = manualPostService.save(categoryId, reqDto, email);
 
         ResponseTemplate<Void> responseTemplate = new ResponseTemplate<>(HttpStatus.CREATED,
                 manualPostId + "번 게시글 작성");

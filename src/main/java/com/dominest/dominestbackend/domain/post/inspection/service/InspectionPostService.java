@@ -27,7 +27,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +57,7 @@ public class InspectionPostService {
      * @return 생성된 게시글의 id
      */
     @Transactional
-    public long create(@NotNull(message = "학기를 선택해주세요.") ResidenceSemester residenceSemester, Long categoryId, String email) {
+    public long save(ResidenceSemester residenceSemester, Long categoryId, String email) {
         // InspectionPost 연관 객체인 category, user 찾기
         User user = userService.getUserByEmail(email);
         Category category = categoryService.validateCategoryType(
@@ -84,7 +83,7 @@ public class InspectionPostService {
             inspectionFloors.add(inspectionFloor);
         }
 
-        inspectionFloors = inspectionFloorService.create(inspectionFloors);
+        inspectionFloors = inspectionFloorService.save(inspectionFloors);
 
         // InspectionRoom 객체 생성. 저장시 Room 객체와 Floor객체가 필요함.
         ArrayList<InspectionRoom> inspectionRooms = new ArrayList<>();
@@ -105,7 +104,7 @@ public class InspectionPostService {
                 inspectionRooms.add(inspectionRoom);
             }
         }
-        inspectionRoomService.create(inspectionRooms);
+        inspectionRoomService.save(inspectionRooms);
 
         RecentPost recentPost = RecentPost.builder()
                 .title(inspectionPost.getTitle())
@@ -113,7 +112,7 @@ public class InspectionPostService {
                 .categoryType(inspectionPost.getCategory().getType())
                 .link("/posts/inspection/" + inspectionPost.getId() + "/floors")
                 .build();
-        recentPostService.create(recentPost);
+        recentPostService.save(recentPost);
 
         return inspectionPost.getId();
     }

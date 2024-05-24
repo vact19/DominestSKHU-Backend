@@ -32,7 +32,7 @@ public class UserController {
 
     @PostMapping("/join") // 회원가입
     public ResponseTemplate<Void> signUp(@RequestBody @Valid final JoinRequest request){
-        userService.create(request);
+        userService.save(request);
 
         return new ResponseTemplate<>(HttpStatus.OK, "회원가입에 성공하였습니다.");
     }

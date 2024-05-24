@@ -30,7 +30,7 @@ public class ComplaintService {
     private final RecentPostService recentPostService;
 
     @Transactional
-    public long create(CreateComplaintRequest request, Long categoryId, String email) {
+    public long save(CreateComplaintRequest request, Long categoryId, String email) {
         // Complaint 연관 객체인 category, user 찾기
         User user = userService.getUserByEmail(email);
         // Complaint 연관 객체인 category 찾기
@@ -46,7 +46,7 @@ public class ComplaintService {
                 .categoryType(compl.getCategory().getType())
                 .link(null)
                 .build();
-        recentPostService.create(recentPost);
+        recentPostService.save(recentPost);
 
         // Complaint 객체 생성 후 저장
         return compl.getId();

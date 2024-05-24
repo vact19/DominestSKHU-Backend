@@ -46,7 +46,7 @@ public class ImageTypeController {
             @PathVariable Long categoryId, Principal principal) {
         // 이미지 저장
         String email = PrincipalParser.toEmail(principal);
-        long imageTypeId = imageTypeService.create(request, categoryId, email);
+        long imageTypeId = imageTypeService.save(request, categoryId, email);
         ResponseTemplate<Void> responseTemplate = new ResponseTemplate<>(HttpStatus.CREATED, imageTypeId + "번 게시글 작성");
 
         return ResponseEntity

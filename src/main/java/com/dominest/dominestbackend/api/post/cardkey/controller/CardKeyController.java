@@ -35,7 +35,7 @@ public class CardKeyController {
             , @PathVariable Long categoryId, Principal principal
     ) {
         String email = PrincipalParser.toEmail(principal);
-        long cardKeyId = cardKeyService.create(request, categoryId, email);
+        long cardKeyId = cardKeyService.save(request, categoryId, email);
         ResponseTemplate<Void> responseTemplate = new ResponseTemplate<>(HttpStatus.CREATED
                 , cardKeyId + "번 카드키 기록 작성");
 

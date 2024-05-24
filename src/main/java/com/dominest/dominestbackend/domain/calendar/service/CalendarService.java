@@ -25,7 +25,7 @@ public class CalendarService {
     private final CalendarRepository calendarRepository;
 
     @Transactional
-    public void addCalendar(CalendarSaveRequest request) { // 캘린더에 일정 추가
+    public void save(CalendarSaveRequest request) { // 캘린더에 일정 추가
         Calendar calender = Calendar.builder()
                 .date(request.getDate())
                 .content(request.getContent())

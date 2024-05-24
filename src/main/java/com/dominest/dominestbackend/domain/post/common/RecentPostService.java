@@ -13,7 +13,7 @@ public class RecentPostService {
     private final RecentPostRepository recentPostRepository;
 
     @Transactional
-    public void create(RecentPost recentPost) {
+    public void save(RecentPost recentPost) {
         recentPostRepository.save(recentPost);
     }
 

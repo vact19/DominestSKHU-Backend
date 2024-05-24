@@ -20,7 +20,7 @@ public class CalendarController {
 
     @PostMapping // 일정 저장 postMapping이므로 url에 save 삭제
     public ResponseTemplate<String> saveCalendar(@RequestBody @Valid CalendarSaveRequest request) {
-        calendarService.addCalendar(request);
+        calendarService.save(request);
         return new ResponseTemplate<>(HttpStatus.OK
                 , "일정을 저장했습니다.", request.getDate() + " 날짜의 [" + request.getContent() + "] 내용을 저장하였습니다.");
     }

@@ -37,7 +37,7 @@ public class ManualPostService {
     private static final String FILE_PATH_SUFFIX = "/";
 
     @Transactional
-    public Long create(Long categoryId, CreateManualPostDto.Req reqDto, String email) {
+    public Long save(Long categoryId, CreateManualPostDto.Req reqDto, String email) {
         Category category = categoryService.validateCategoryType(categoryId, Type.MANUAL);
         User user = userService.getUserByEmail(email);
         ManualPost manualPost = ManualPost.builder().

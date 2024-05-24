@@ -45,7 +45,7 @@ public class ComplaintController {
             , @PathVariable Long categoryId, Principal principal
     ) {
         String email = PrincipalParser.toEmail(principal);
-        long complaintId = complaintService.create(request, categoryId, email);
+        long complaintId = complaintService.save(request, categoryId, email);
         ResponseTemplate<Void> responseTemplate = new ResponseTemplate<>(HttpStatus.CREATED, complaintId + "번 민원 작성");
 
         return ResponseEntity

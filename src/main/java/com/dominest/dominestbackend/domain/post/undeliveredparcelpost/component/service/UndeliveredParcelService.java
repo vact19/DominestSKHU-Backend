@@ -23,8 +23,8 @@ public class UndeliveredParcelService {
     /**관리물품 등록
      * 관리물품 저장 전에 관리대장 게시글을 찾아서 영속화시켜야 함. */
     @Transactional
-    public Long create(Long undelivParcelPostId,
-                       CreateUndeliveredParcelRequest request) {
+    public Long save(Long undelivParcelPostId,
+                     CreateUndeliveredParcelRequest request) {
         // 관리대장 게시글 찾기
         UndeliveredParcelPost undelivParcelPost = undeliveredParcelPostService.getById(undelivParcelPostId);
 

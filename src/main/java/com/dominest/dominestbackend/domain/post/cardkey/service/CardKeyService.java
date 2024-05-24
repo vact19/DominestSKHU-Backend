@@ -30,7 +30,7 @@ public class CardKeyService {
     private final RecentPostService recentPostService;
 
     @Transactional
-    public long create(CreateCardKeyRequest request, Long categoryId, String email) {
+    public long save(CreateCardKeyRequest request, Long categoryId, String email) {
         // CardKey 연관 객체인 category, user 찾기
         User user = userService.getUserByEmail(email);
         Category category = categoryService.validateCategoryType(categoryId, Type.CARD_KEY);
@@ -45,7 +45,7 @@ public class CardKeyService {
                 .categoryType(key.getCategory().getType())
                 .link(null)
                 .build();
-        recentPostService.create(recentPost);
+        recentPostService.save(recentPost);
 
         return key.getId();
     }

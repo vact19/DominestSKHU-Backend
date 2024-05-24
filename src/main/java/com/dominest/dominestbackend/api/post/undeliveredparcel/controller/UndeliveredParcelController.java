@@ -41,7 +41,7 @@ public class UndeliveredParcelController {
             @PathVariable Long categoryId, Principal principal
     ) {
         String email = PrincipalParser.toEmail(principal);
-        long unDeliParcelId = undelivParcelPostService.create(categoryId, email);
+        long unDeliParcelId = undelivParcelPostService.save(categoryId, email);
         ResponseTemplate<Void> responseTemplate = new ResponseTemplate<>(HttpStatus.CREATED, unDeliParcelId + "번 게시글 작성");
 
         return ResponseEntity
@@ -114,7 +114,7 @@ public class UndeliveredParcelController {
                 @PathVariable Long undelivParcelPostId,
                 @RequestBody @Valid CreateUndeliveredParcelRequest request
     ) {
-        Long undelivParcelId = undeliveredParcelService.create(undelivParcelPostId, request);
+        Long undelivParcelId = undeliveredParcelService.save(undelivParcelPostId, request);
 
         ResponseTemplate<Void> responseTemplate = new ResponseTemplate<>(HttpStatus.CREATED,
                 undelivParcelPostId + "번 관리대장 게시글에" +  undelivParcelId + "번 관리물품 작성");

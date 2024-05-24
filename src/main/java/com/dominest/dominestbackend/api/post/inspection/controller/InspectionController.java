@@ -58,7 +58,7 @@ public class InspectionController {
     ) {
         String email = PrincipalParser.toEmail(principal);
 
-        long inspectionPostId = inspectionPostService.create(
+        long inspectionPostId = inspectionPostService.save(
                 residenceSemesterDto.getResidenceSemester()
                 , categoryId, email);
 

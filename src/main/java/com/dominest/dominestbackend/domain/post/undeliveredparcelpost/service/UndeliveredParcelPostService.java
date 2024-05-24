@@ -27,7 +27,7 @@ public class UndeliveredParcelPostService {
     private final RecentPostService recentPostService;
 
     @Transactional
-    public Long create(Long categoryId, String email) {
+    public Long save(Long categoryId, String email) {
         // Undeli...의 연관 객체인 category, user 찾기
         User user = userService.getUserByEmail(email);
         // Undeli...의 연관 객체인 category 찾기
@@ -47,7 +47,7 @@ public class UndeliveredParcelPostService {
                 .categoryType(post.getCategory().getType())
                 .link("/posts/undelivered-parcel/" + post.getId())
                 .build();
-        recentPostService.create(recentPost);
+        recentPostService.save(recentPost);
 
         return post.getId();
     }
