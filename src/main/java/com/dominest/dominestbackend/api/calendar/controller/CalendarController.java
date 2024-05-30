@@ -3,7 +3,7 @@ package com.dominest.dominestbackend.api.calendar.controller;
 import com.dominest.dominestbackend.api.calendar.request.CalendarSaveRequest;
 import com.dominest.dominestbackend.api.common.ResponseTemplate;
 import com.dominest.dominestbackend.api.calendar.response.CalendarMonthResponse;
-import com.dominest.dominestbackend.domain.calendar.Calendar;
+import com.dominest.dominestbackend.domain.calendar.entity.Calendar;
 import com.dominest.dominestbackend.domain.calendar.service.CalendarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,7 @@ public class CalendarController {
 
     @PostMapping // 일정 저장 postMapping이므로 url에 save 삭제
     public ResponseTemplate<String> saveCalendar(@RequestBody @Valid CalendarSaveRequest request) {
-        calendarService.addCalendar(request);
+        calendarService.save(request);
         return new ResponseTemplate<>(HttpStatus.OK
                 , "일정을 저장했습니다.", request.getDate() + " 날짜의 [" + request.getContent() + "] 내용을 저장하였습니다.");
     }
@@ -43,6 +43,5 @@ public class CalendarController {
     public ResponseTemplate<Void> deleteCalendar(@PathVariable("date") String dateString) {
         calendarService.deleteEventsByDate(dateString);
         return new ResponseTemplate<>(HttpStatus.OK, dateString + " 날짜의 일정을 삭제하였습니다.");
-
     }
 }

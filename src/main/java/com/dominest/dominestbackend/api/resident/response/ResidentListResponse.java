@@ -1,6 +1,6 @@
 package com.dominest.dominestbackend.api.resident.response;
 
-import com.dominest.dominestbackend.domain.resident.Resident;
+import com.dominest.dominestbackend.domain.resident.entity.Resident;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -33,7 +33,7 @@ public class ResidentListResponse {
         private String currentStatus;
         private String dormitory;
         private String period;
-        private Integer roomNumber;
+        private int roomNumber;
         private String assignedRoom;
         private LocalDate admissionDate;
         private String leavingDate; // null일 경우 빈 칸으로 반환하기 위해 String 사용
@@ -42,37 +42,40 @@ public class ResidentListResponse {
         private String phoneNumber;
         private String socialCode;
         private String socialName;
-        private String zipCode;
-        private String address;
+        private String familyHomeZipCode;
+        private String familyHomeAddress;
 
         //from
         public static ResidentDto from(Resident resident){
+            Resident.PersonalInfo personalInfo = resident.getPersonalInfo();
+            Resident.StudentInfo studentInfo = resident.getStudentInfo();
+            Resident.ResidenceDateInfo residenceDateInfo = resident.getResidenceDateInfo();
+            Resident.ResidenceInfo residenceInfo = resident.getResidenceInfo();
             return ResidentDto.builder()
                     .id(resident.getId())
-                    .name(resident.getName())
-                    .gender(resident.getGender())
-                    .studentId(resident.getStudentId())
-                    .semester(resident.getSemester())
-                    .currentStatus(resident.getCurrentStatus())
-                    .dateOfBirth(resident.getDateOfBirth())
-                    .dormitory(resident.getRoom().getDormitory())
-                    .major(resident.getMajor())
-                    .grade(resident.getGrade())
-                    .period(resident.getPeriod())
-                    .roomNumber(resident.getRoom().getRoomNo())
+                    .name(personalInfo.getName())
+                    .gender(personalInfo.getGender())
+                    .studentId(studentInfo.getStudentId())
+                    .semester(residenceInfo.getSemester())
+                    .currentStatus(residenceInfo.getCurrentStatus())
+                    .dateOfBirth(personalInfo.getDateOfBirth())
+                    .dormitory(resident.getRoom().getDormitory().dormitoryCode)
+                    .major(studentInfo.getMajor())
+                    .grade(studentInfo.getGrade())
+                    .period(residenceInfo.getPeriod())
+                    .roomNumber(resident.getRoom().getDormitory().roomNo)
                     .assignedRoom(resident.getRoom().getAssignedRoom())
-                    .admissionDate(resident.getAdmissionDate())
-                    .leavingDate(resident.getLeavingDate() == null ? "" :
-                            resident.getLeavingDate().toString())
-                    .semesterStartDate(resident.getSemesterStartDate())
-                    .semesterEndDate(resident.getSemesterEndDate())
-                    .phoneNumber(resident.getPhoneNumber())
-                    .socialCode(resident.getSocialCode())
-                    .socialName(resident.getSocialName())
-                    .zipCode(resident.getZipCode())
-                    .address(resident.getAddress())
+                    .admissionDate(residenceDateInfo.getAdmissionDate())
+                    .leavingDate(residenceDateInfo.getLeavingDate() == null ? "" :
+                            residenceDateInfo.getLeavingDate().toString())
+                    .semesterStartDate(residenceDateInfo.getSemesterStartDate())
+                    .semesterEndDate(residenceDateInfo.getSemesterEndDate())
+                    .phoneNumber(personalInfo.getPhoneNumber().getValue())
+                    .socialCode(residenceInfo.getSocialCode())
+                    .socialName(residenceInfo.getSocialName())
+                    .familyHomeZipCode(residenceInfo.getFamilyHomeZipCode())
+                    .familyHomeAddress(residenceInfo.getFamilyHomeAddress())
                     .build();
         }
     }
 }
-

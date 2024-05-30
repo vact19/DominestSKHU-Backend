@@ -1,9 +1,9 @@
 package com.dominest.dominestbackend.api.resident.request;
 
-import com.dominest.dominestbackend.domain.resident.Resident;
-import com.dominest.dominestbackend.domain.resident.component.ResidenceSemester;
-import com.dominest.dominestbackend.domain.room.Room;
-import com.dominest.dominestbackend.global.validation.PhoneNumber;
+import com.dominest.dominestbackend.domain.common.vo.PhoneNumber;
+import com.dominest.dominestbackend.domain.resident.entity.Resident;
+import com.dominest.dominestbackend.domain.resident.entity.component.ResidenceSemester;
+import com.dominest.dominestbackend.domain.room.entity.Room;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -56,40 +56,42 @@ public class SaveResidentRequest {
     @NotNull(message = "학기 종료일을 입력해주세요.")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd")
     LocalDate semesterEndDate;
-    @PhoneNumber
+    @NotBlank(message = "전화번호를 입력해주세요.")
     String phoneNumber;
     @NotBlank(message = "사회코드를 입력해주세요.")
     String socialCode;
     @NotBlank(message = "사회명을 입력해주세요.")
     String socialName;
     @NotBlank(message = "우편번호를 입력해주세요.")
-    String zipCode;
+    String familyHomeZipCode;
     @NotBlank(message = "주소를 입력해주세요.")
-    String address;
+    String familyHomeAddress;
 
     public Resident toEntity(Room room){
-        return Resident.builder()
-                .name(name)
-                .gender(gender)
-                .studentId(studentId)
-                .semester(semester)
-                .currentStatus(currentStatus)
-                .dateOfBirth(dateOfBirth)
-                .residenceSemester(residenceSemester)
-                .major(major)
-                .grade(grade)
-                .period(period)
-                .room(room)
-                .admissionDate(admissionDate)
-                .leavingDate("".equals(leavingDate) ?  null :
-                        LocalDate.parse(leavingDate, DateTimeFormatter.ofPattern("yyyyMMdd")))
-                .semesterStartDate(semesterStartDate)
-                .semesterEndDate(semesterEndDate)
-                .phoneNumber(phoneNumber)
-                .socialCode(socialCode)
-                .socialName(socialName)
-                .zipCode(zipCode)
-                .address(address)
-                .build();
+        Resident.PersonalInfo personalInfo = new Resident.PersonalInfo(
+                name, gender, new PhoneNumber(phoneNumber), dateOfBirth
+        );
+        Resident.StudentInfo studentInfo = new Resident.StudentInfo(
+                studentId
+                , major
+                , grade
+        );
+        Resident.ResidenceDateInfo dateInfo = new Resident.ResidenceDateInfo(
+                admissionDate
+                , "".equals(leavingDate) ? null :
+                LocalDate.parse(leavingDate, DateTimeFormatter.ofPattern("yyyyMMdd"))
+                , semesterStartDate
+                , semesterEndDate
+        );
+        Resident.ResidenceInfo residenceInfo = new Resident.ResidenceInfo(
+                semester
+                , currentStatus
+                , period
+                , socialCode
+                , socialName
+                , familyHomeZipCode
+                , familyHomeAddress
+        );
+        return new Resident(personalInfo, studentInfo, dateInfo, residenceInfo, residenceSemester, room);
     }
 }

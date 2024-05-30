@@ -5,7 +5,7 @@ import com.dominest.dominestbackend.domain.jwt.constant.AuthScheme;
 import com.dominest.dominestbackend.domain.jwt.constant.TokenType;
 import com.dominest.dominestbackend.domain.jwt.dto.TokenDto;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
-import com.dominest.dominestbackend.global.exception.exceptions.external.auth.JwtAuthException;
+import com.dominest.dominestbackend.global.exception.exceptions.auth.jwt.JwtAuthenticationException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -45,7 +45,7 @@ public class TokenManager {
         String accessToken = createAccessToken(audience, accessTokenExp);
         String refreshToken = createRefreshToken(audience, refreshTokenExp);
         return TokenDto.builder()
-                .authScheme(AuthScheme.BEARER.getType())
+                .authScheme(AuthScheme.BEARER.getLabel())
                 .accessToken(accessToken)
                 .accessTokenExp(accessTokenExp)
                 .refreshToken(refreshToken)
@@ -58,7 +58,7 @@ public class TokenManager {
         String accessToken = createAccessToken(audience, tokenExp);
         String refreshToken = createRefreshToken(audience, tokenExp);
         return TokenDto.builder()
-                .authScheme(AuthScheme.BEARER.getType())
+                .authScheme(AuthScheme.BEARER.getLabel())
                 .accessToken(accessToken)
                 .accessTokenExp(tokenExp)
                 .refreshToken(refreshToken)
@@ -107,7 +107,7 @@ public class TokenManager {
                     .setSigningKey(key).build()
                     .parseClaimsJws(token).getBody();
         } catch (JwtException e) {
-            throw new JwtAuthException(ErrorCode.NOT_VALID_TOKEN, e);
+            throw new JwtAuthenticationException(ErrorCode.NOT_VALID_TOKEN, e);
         }
     }
 

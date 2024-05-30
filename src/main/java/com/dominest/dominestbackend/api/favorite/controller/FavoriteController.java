@@ -2,9 +2,9 @@ package com.dominest.dominestbackend.api.favorite.controller;
 
 import com.dominest.dominestbackend.api.common.ResponseTemplate;
 import com.dominest.dominestbackend.api.favorite.response.FavoriteListResponse;
-import com.dominest.dominestbackend.domain.favorite.Favorite;
-import com.dominest.dominestbackend.domain.favorite.FavoriteService;
-import com.dominest.dominestbackend.global.util.PrincipalUtil;
+import com.dominest.dominestbackend.domain.favorite.entity.Favorite;
+import com.dominest.dominestbackend.domain.favorite.service.FavoriteService;
+import com.dominest.dominestbackend.global.util.PrincipalParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -26,7 +26,7 @@ public class FavoriteController {
     @PostMapping("/categories/{categoryId}/favorites")
     public ResponseTemplate<String> handleAddOrUndoFavorite(@PathVariable Long categoryId, Principal principal) {
 
-        boolean isOn = favoriteService.addOrUndo(categoryId, PrincipalUtil.toEmail(principal));
+        boolean isOn = favoriteService.addOrUndo(categoryId, PrincipalParser.toEmail(principal));
 
         String resMsg = isOn ? "즐겨찾기 추가" : "즐겨찾기 취소";
         return new ResponseTemplate<>(HttpStatus.OK, resMsg);
@@ -37,30 +37,10 @@ public class FavoriteController {
     public ResponseTemplate<FavoriteListResponse> handleGetAllFavorites(@NotNull(message = "인증 정보가 없습니다.") Principal principal) {
 
         Sort sort = Sort.by(Sort.Direction.DESC, "lastModifiedTime");
-        List<Favorite> favorites = favoriteService.getAllByUserEmail(PrincipalUtil.toEmail(principal), sort);
+        List<Favorite> favorites = favoriteService.getAllByUserEmail(PrincipalParser.toEmail(principal), sort);
 
         FavoriteListResponse response = FavoriteListResponse.from(favorites);
         return new ResponseTemplate<>(HttpStatus.OK, "즐겨찾기 목록 조회"
                 , response);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

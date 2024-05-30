@@ -1,8 +1,8 @@
 package com.dominest.dominestbackend.api.post.complaint.request;
 
-import com.dominest.dominestbackend.domain.post.complaint.Complaint;
-import com.dominest.dominestbackend.domain.post.component.category.Category;
-import com.dominest.dominestbackend.domain.user.User;
+import com.dominest.dominestbackend.domain.post.complaint.entity.Complaint;
+import com.dominest.dominestbackend.domain.post.component.category.entity.Category;
+import com.dominest.dominestbackend.domain.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

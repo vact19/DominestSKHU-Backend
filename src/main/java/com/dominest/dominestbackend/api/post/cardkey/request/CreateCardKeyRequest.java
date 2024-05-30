@@ -1,8 +1,8 @@
 package com.dominest.dominestbackend.api.post.cardkey.request;
 
-import com.dominest.dominestbackend.domain.post.cardkey.CardKey;
-import com.dominest.dominestbackend.domain.post.component.category.Category;
-import com.dominest.dominestbackend.domain.user.User;
+import com.dominest.dominestbackend.domain.post.cardkey.entity.CardKey;
+import com.dominest.dominestbackend.domain.post.component.category.entity.Category;
+import com.dominest.dominestbackend.domain.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +26,7 @@ public class CreateCardKeyRequest {
     LocalDate dateOfBirth; // 생년월일
     @NotNull(message = "재발급 횟수를 입력해주세요.")
     @PositiveOrZero(message = "재발급 횟수는 0 이상이어야 합니다.")
-    Integer reIssueCnt; // 재발급 횟수
+    int reIssueCnt; // 재발급 횟수
 
     String etc = ""; // 비고. 검증하지 않고 값이 없으면 EMPTY STRING 처리함.
 

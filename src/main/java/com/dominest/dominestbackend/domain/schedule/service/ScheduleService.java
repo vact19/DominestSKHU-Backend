@@ -6,13 +6,13 @@ import com.dominest.dominestbackend.api.schedule.response.ScheduleInfo;
 import com.dominest.dominestbackend.api.schedule.response.TimeSlotInfo;
 import com.dominest.dominestbackend.api.schedule.response.UserScheduleResponse;
 import com.dominest.dominestbackend.domain.common.Datasource;
-import com.dominest.dominestbackend.domain.schedule.Schedule;
+import com.dominest.dominestbackend.domain.schedule.entity.Schedule;
 import com.dominest.dominestbackend.domain.schedule.repository.ScheduleRepository;
-import com.dominest.dominestbackend.domain.user.User;
+import com.dominest.dominestbackend.domain.user.entity.User;
 import com.dominest.dominestbackend.domain.user.repository.UserRepository;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
-import com.dominest.dominestbackend.global.exception.exceptions.domain.DomainException;
-import com.dominest.dominestbackend.global.exception.exceptions.external.common.ResourceNotFoundException;
+import com.dominest.dominestbackend.global.exception.exceptions.business.BusinessException;
+import com.dominest.dominestbackend.global.exception.exceptions.external.db.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -72,7 +72,7 @@ public class ScheduleService {
         // 가져온 스케줄 정보를 요일별로 분류
         for (Schedule schedule : schedules) {
             Schedule.DayOfWeek dayOfWeek = schedule.getDayOfWeek();
-            String timeSlot = schedule.getTimeSlot().value;
+            String timeSlot = schedule.getTimeSlot().label;
             List<String> usernames = schedule.getUsernames(); // 모든 사용자 이름 가져오기
 
             TimeSlotInfo timeSlotInfo = new TimeSlotInfo(timeSlot, usernames); // 사용자 이름 리스트를 TimeSlotInfo에 전달
@@ -95,7 +95,7 @@ public class ScheduleService {
         List<User> users = userRepository.findAll();
 
         return users.stream()
-                .map(user -> new UserScheduleResponse(user.getName(), user.getPhoneNumber()))
+                .map(user -> new UserScheduleResponse(user.getName(), user.getPhoneNumber().getValue()))
                 .collect(Collectors.toList());
     }
 
@@ -111,7 +111,7 @@ public class ScheduleService {
         if (optionalSchedule.isEmpty()) {  // 결과가 없다면
             throw new ResourceNotFoundException(Datasource.SCHEDULE
                     , Datasource.DAY_OF_WEEK.label +", " + Datasource.TIME_SLOT
-                    , dayOfWeek.value + ", " + timeslot.value);
+                    , dayOfWeek.label + ", " + timeslot.label);
         }
 
         Schedule schedule = optionalSchedule.get();
@@ -119,9 +119,7 @@ public class ScheduleService {
         boolean removed = schedule.getUsernames().remove(username); // 스케줄에서 사용자 제거
 
         if (!removed) {  // 해당 사용자가 스케줄에 존재하지 않는다면
-            throw new DomainException(ErrorCode.USER_NOT_FOUND_IN_SCHEDULE);
+            throw new BusinessException(ErrorCode.USER_NOT_FOUND_IN_SCHEDULE);
         }
     }
-
-
 }

@@ -32,9 +32,9 @@ public enum Datasource {
     , CATEGORY("카테고리")
     , COMPLAINT("민원내역")
     , IMAGE_TYPE("이미지 게시글")
-    , SANITATION_CHECK_POST("방역점검 게시글")
-    , FLOOR("방역점검층")
-    , CHECKED_ROOM("방역점검호실")
+    , INSPECTION_POST("방역점검 게시글")
+    , INSPECTION_FLOOR("방역점검층")
+    , INSPECTION_ROOM("방역점검호실")
     , UNDELIVERED_PARCEL_POST("장기 미수령 택배 게시글")
     , UNDELIVERED_PARCEL("장기 미수령 택배")
     , MANUAL_POST("공지사항")
@@ -42,10 +42,6 @@ public enum Datasource {
     // 입사생
     , RESIDENT("입사자")
     , ROOM("방")
-
-
-
-
 
     ;
     public final String label;

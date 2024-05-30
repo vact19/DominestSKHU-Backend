@@ -4,16 +4,16 @@ import com.dominest.dominestbackend.api.common.ResponseTemplate;
 import com.dominest.dominestbackend.api.post.complaint.response.ComplaintListResponse;
 import com.dominest.dominestbackend.api.post.complaint.request.CreateComplaintRequest;
 import com.dominest.dominestbackend.api.post.complaint.request.UpdateComplaintRequest;
-import com.dominest.dominestbackend.domain.post.complaint.Complaint;
-import com.dominest.dominestbackend.domain.post.complaint.ComplaintRepository;
-import com.dominest.dominestbackend.domain.post.complaint.ComplaintService;
-import com.dominest.dominestbackend.domain.post.component.category.Category;
+import com.dominest.dominestbackend.domain.post.complaint.entity.Complaint;
+import com.dominest.dominestbackend.domain.post.complaint.support.ComplaintExcelParser;
+import com.dominest.dominestbackend.domain.post.complaint.repository.ComplaintRepository;
+import com.dominest.dominestbackend.domain.post.complaint.service.ComplaintService;
+import com.dominest.dominestbackend.domain.post.component.category.entity.Category;
 import com.dominest.dominestbackend.domain.post.component.category.component.Type;
 import com.dominest.dominestbackend.domain.post.component.category.service.CategoryService;
-import com.dominest.dominestbackend.global.util.ExcelUtil;
-import com.dominest.dominestbackend.global.util.FileService;
-import com.dominest.dominestbackend.global.util.PageableUtil;
-import com.dominest.dominestbackend.global.util.PrincipalUtil;
+import com.dominest.dominestbackend.global.util.FileManager;
+import com.dominest.dominestbackend.global.util.PageBaseConverter;
+import com.dominest.dominestbackend.global.util.PrincipalParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,6 +33,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 public class ComplaintController {
+    private final ComplaintExcelParser complaintExcelParser;
     private final ComplaintService complaintService;
     private final CategoryService categoryService;
     private final ComplaintRepository complaintRepository;
@@ -43,8 +44,8 @@ public class ComplaintController {
             @RequestBody @Valid CreateComplaintRequest request
             , @PathVariable Long categoryId, Principal principal
     ) {
-        String email = PrincipalUtil.toEmail(principal);
-        long complaintId = complaintService.create(request, categoryId, email);
+        String email = PrincipalParser.toEmail(principal);
+        long complaintId = complaintService.save(request, categoryId, email);
         ResponseTemplate<Void> responseTemplate = new ResponseTemplate<>(HttpStatus.CREATED, complaintId + "번 민원 작성");
 
         return ResponseEntity
@@ -76,16 +77,16 @@ public class ComplaintController {
     @GetMapping("/categories/{categoryId}/posts/complaint")
     public ResponseTemplate<ComplaintListResponse> handleGetComplaints(
             @PathVariable Long categoryId, @RequestParam(defaultValue = "1") int page
-            , @RequestParam(required = false) String roomNoSch
-            , @RequestParam(required = false) String complSchText
+            , @RequestParam(required = false) String roomNoSearch
+            , @RequestParam(required = false) String complaintSearch
     ) {
         final int COMPLAINT_TYPE_PAGE_SIZE = 20;
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        Pageable pageable = PageableUtil.of(page, COMPLAINT_TYPE_PAGE_SIZE, sort);
+        Pageable pageable = PageBaseConverter.of(page, COMPLAINT_TYPE_PAGE_SIZE, sort);
 
         Category category = categoryService.validateCategoryType(categoryId, Type.COMPLAINT);
 
-        Page<Complaint> complaintPage = complaintService.getPage(category.getId(), pageable, complSchText, roomNoSch);
+        Page<Complaint> complaintPage = complaintService.getPage(category.getId(), pageable, complaintSearch, roomNoSearch);
 
         ComplaintListResponse response = ComplaintListResponse.from(complaintPage, category);
         return new ResponseTemplate<>(HttpStatus.OK
@@ -113,39 +114,22 @@ public class ComplaintController {
             filename = sb.append(formattedDate)
                     .append(" 민원접수내역 전체 ")
                     .append(complaintCnt).append("건")
-                    .append(".").append(FileService.FileExt.XLSX.value)
+                    .append(".").append(FileManager.FileExt.XLSX.label)
                     .toString();
         } else {
             complaints = complaintRepository.findAllByCategoryId(
                     category.getId(),
-                    PageableUtil.of(1, downloadCnt)
+                    PageBaseConverter.of(1, downloadCnt)
             );
             filename = sb.append(formattedDate)
                     .append(" 민원접수내역 최신 ")
                     .append(downloadCnt).append("건")
-                    .append(".").append(FileService.FileExt.XLSX.value)
+                    .append(".").append(FileManager.FileExt.XLSX.label)
                     .toString();
         }
         String sheetName = "민원접수내역";
 
-        ExcelUtil.createAndRespondAllDataWitehComplaint(filename, sheetName, response, complaints);
+        complaintExcelParser.createAndRespondAllDataWithComplaint(filename, sheetName, response, complaints);
     }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

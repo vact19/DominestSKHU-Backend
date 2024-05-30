@@ -4,16 +4,16 @@ import com.dominest.dominestbackend.api.common.ResponseTemplate;
 import com.dominest.dominestbackend.api.post.image.response.ImageTypeDetailResponse;
 import com.dominest.dominestbackend.api.post.image.response.ImageTypeListResponse;
 import com.dominest.dominestbackend.api.post.image.request.SaveImageTypeRequest;
-import com.dominest.dominestbackend.domain.post.component.category.Category;
+import com.dominest.dominestbackend.domain.post.component.category.entity.Category;
 import com.dominest.dominestbackend.domain.post.component.category.component.Type;
 import com.dominest.dominestbackend.domain.post.component.category.service.CategoryService;
-import com.dominest.dominestbackend.domain.post.image.ImageType;
-import com.dominest.dominestbackend.domain.post.image.ImageTypeService;
+import com.dominest.dominestbackend.domain.post.image.entity.ImageType;
+import com.dominest.dominestbackend.domain.post.image.service.ImageTypeService;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.exceptions.external.file.FileIOException;
-import com.dominest.dominestbackend.global.util.FileService;
-import com.dominest.dominestbackend.global.util.PageableUtil;
-import com.dominest.dominestbackend.global.util.PrincipalUtil;
+import com.dominest.dominestbackend.global.util.FileManager;
+import com.dominest.dominestbackend.global.util.PageBaseConverter;
+import com.dominest.dominestbackend.global.util.PrincipalParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +33,7 @@ import java.util.List;
 public class ImageTypeController {
 
     private final ImageTypeService imageTypeService;
-    private final FileService fileService;
+    private final FileManager fileManager;
     private final CategoryService categoryService;
 
     //    1. 제목
@@ -45,8 +45,8 @@ public class ImageTypeController {
             @Valid SaveImageTypeRequest request,
             @PathVariable Long categoryId, Principal principal) {
         // 이미지 저장
-        String email = PrincipalUtil.toEmail(principal);
-        long imageTypeId = imageTypeService.create(request, categoryId, email);
+        String email = PrincipalParser.toEmail(principal);
+        long imageTypeId = imageTypeService.save(request, categoryId, email);
         ResponseTemplate<Void> responseTemplate = new ResponseTemplate<>(HttpStatus.CREATED, imageTypeId + "번 게시글 작성");
 
         return ResponseEntity
@@ -76,7 +76,7 @@ public class ImageTypeController {
         ImageType imageType = imageTypeService.deleteById(imageTypeId);
 
         List<String> imageUrlsToDelete = imageType.getImageUrls();
-        fileService.deleteFile(FileService.FilePrefix.POST_IMAGE_TYPE, imageUrlsToDelete);
+        fileManager.deleteFile(FileManager.FilePrefix.POST_IMAGE_TYPE, imageUrlsToDelete);
 
         return new ResponseTemplate<>(HttpStatus.OK, imageType.getId() + "번 게시글 삭제");
     }
@@ -84,7 +84,7 @@ public class ImageTypeController {
     // 게시물 이미지 조회
     @GetMapping("/posts/image-types/images")
     public void getImage(HttpServletResponse response, @RequestParam(required = true) String filename) {
-        byte[] bytes = fileService.getByteArr(FileService.FilePrefix.POST_IMAGE_TYPE, filename);
+        byte[] bytes = fileManager.getByteArr(FileManager.FilePrefix.POST_IMAGE_TYPE, filename);
 
         response.setContentType("image/*");
         try {
@@ -111,7 +111,7 @@ public class ImageTypeController {
     @GetMapping("/categories/{categoryId}/posts/image-types")
     public ResponseTemplate<ImageTypeListResponse> handleGetImageTypes(@PathVariable Long categoryId, @RequestParam(defaultValue = "1") int page) {
         final int IMAGE_TYPE_PAGE_SIZE = 20;
-        Pageable pageable = PageableUtil.of(page, IMAGE_TYPE_PAGE_SIZE);
+        Pageable pageable = PageBaseConverter.of(page, IMAGE_TYPE_PAGE_SIZE);
 
         Category category = categoryService.validateCategoryType(categoryId, Type.IMAGE);
         // 카테고리 내 게시글이 1건도 없는 경우도 있으므로, 게시글과 함께 카테고리를 Join해서 데이터를 찾아오지 않는다.

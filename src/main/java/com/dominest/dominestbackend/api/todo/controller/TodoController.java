@@ -2,7 +2,7 @@ package com.dominest.dominestbackend.api.todo.controller;
 
 import com.dominest.dominestbackend.api.common.ResponseTemplate;
 import com.dominest.dominestbackend.api.todo.request.TodoSaveRequest;
-import com.dominest.dominestbackend.domain.todo.Todo;
+import com.dominest.dominestbackend.domain.todo.entity.Todo;
 import com.dominest.dominestbackend.domain.todo.service.TodoService;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

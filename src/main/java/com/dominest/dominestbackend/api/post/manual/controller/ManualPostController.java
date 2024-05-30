@@ -5,16 +5,16 @@ import com.dominest.dominestbackend.api.post.manual.dto.CreateManualPostDto;
 import com.dominest.dominestbackend.api.post.manual.dto.ManualPostListDto;
 import com.dominest.dominestbackend.api.post.manual.dto.ReadManualDto;
 import com.dominest.dominestbackend.api.post.manual.dto.UpdateManualPostDto;
-import com.dominest.dominestbackend.domain.post.component.category.Category;
+import com.dominest.dominestbackend.domain.post.component.category.entity.Category;
 import com.dominest.dominestbackend.domain.post.component.category.component.Type;
 import com.dominest.dominestbackend.domain.post.component.category.service.CategoryService;
-import com.dominest.dominestbackend.domain.post.manual.ManualPost;
-import com.dominest.dominestbackend.domain.post.manual.ManualPostService;
+import com.dominest.dominestbackend.domain.post.manual.entity.ManualPost;
+import com.dominest.dominestbackend.domain.post.manual.service.ManualPostService;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.exceptions.external.file.FileIOException;
-import com.dominest.dominestbackend.global.util.FileService;
-import com.dominest.dominestbackend.global.util.PageableUtil;
-import com.dominest.dominestbackend.global.util.PrincipalUtil;
+import com.dominest.dominestbackend.global.util.FileManager;
+import com.dominest.dominestbackend.global.util.PageBaseConverter;
+import com.dominest.dominestbackend.global.util.PrincipalParser;
 import com.dominest.dominestbackend.global.util.VideoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.support.ResourceRegion;
@@ -38,7 +38,7 @@ import java.util.Optional;
 public class ManualPostController {
     private final ManualPostService manualPostService;
     private final CategoryService categoryService;
-    private final FileService fileService;
+    private final FileManager fileManager;
     private final VideoService videoService;
 
     //게시글 작성
@@ -47,9 +47,9 @@ public class ManualPostController {
             @PathVariable Long categoryId, Principal principal, @Valid CreateManualPostDto.Req reqDto
 
     ) {
-        String email = PrincipalUtil.toEmail(principal);
+        String email = PrincipalParser.toEmail(principal);
 
-        long manualPostId = manualPostService.create(categoryId, reqDto, email);
+        long manualPostId = manualPostService.save(categoryId, reqDto, email);
 
         ResponseTemplate<Void> responseTemplate = new ResponseTemplate<>(HttpStatus.CREATED,
                 manualPostId + "번 게시글 작성");
@@ -62,7 +62,7 @@ public class ManualPostController {
             @PathVariable Long categoryId, @RequestParam(defaultValue = "1") int page) {
         final int MANUAL_TYPE_PAGE_SIZE = 20;
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        Pageable pageable = PageableUtil.of(page, MANUAL_TYPE_PAGE_SIZE, sort);
+        Pageable pageable = PageBaseConverter.of(page, MANUAL_TYPE_PAGE_SIZE, sort);
 
         Category category = categoryService.validateCategoryType(categoryId, Type.MANUAL);
         Page<ManualPost> postsPage = manualPostService.getPage(category.getId(), pageable);
@@ -134,7 +134,7 @@ public class ManualPostController {
     }
 
     public void getAnyFile(HttpServletResponse response, String filePath) {
-        byte[] bytes = fileService.getByteArr(filePath);
+        byte[] bytes = fileManager.getByteArr(filePath);
         try {
             response.getOutputStream().write(bytes);
         } catch (IOException e) {

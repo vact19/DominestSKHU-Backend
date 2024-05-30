@@ -29,14 +29,19 @@ public enum ErrorCode {
     NOT_VALID_TOKEN(401, "유효하지 않은 토큰입니다."),
     NO_ACCESS_USER(403, "권한이 없습니다."),
 
+    // 인증 - Spring Security
+    ANONYMOUS_USER(401, "인증되지 않은 사용자입니다."),
+
     // 엑셀 업로드
     COLUMN_COUNT_MISMATCHED(400, "컬럼의 개수가 일치하지 않습니다."),
     INVALID_FILE_EXTENSION(400, "파일 확장자가 유효하지 않습니다."),
+    DUPLICATED_RESIDENT_ON_UPLOAD(400, "엑셀 데이터 중 중복된 사생 데이터가 존재합니다."),
 
     // 파일
     FILE_CANNOT_BE_STORED(500, "파일을 저장할 수 없습니다."),
     FILE_CANNOT_BE_READ(500, "파일을 읽을 수 없습니다."),
     FILE_CANNOT_BE_SENT(500, "읽어들인 파일을 전송할 수 없습니다"),
+    UNSAVED_FILE_EXISTS(500, "저장되지 않은 파일이 존재합니다."),
     MULTIPART_FILE_CANNOT_BE_READ(500, "업로드한 파일을 읽을 수 없습니다."),
     NO_FILE_UPLOADED(400, "파일명과 현재 입사자 이름이 일치하지 않아 파일이 업로드되지 않았습니다."),
     FILE_NOT_FOUND(400, "해당 파일이 존재하지 않습니다."),
@@ -59,8 +64,6 @@ public enum ErrorCode {
     NOT_CORRECT_DAY(400, "요일 정보가 잘못되었습니다. 1(월요일)에서 7(일요일) 사이의 숫자를 입력해주세요.")
     ;
 
-
-
     private final int statusCode;
     private final String message;
 
@@ -68,5 +71,4 @@ public enum ErrorCode {
         this.statusCode = status;
         this.message = message;
     }
-
 }

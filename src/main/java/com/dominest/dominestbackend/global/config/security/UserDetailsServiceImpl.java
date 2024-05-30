@@ -1,6 +1,6 @@
 package com.dominest.dominestbackend.global.config.security;
 
-import com.dominest.dominestbackend.domain.user.User;
+import com.dominest.dominestbackend.domain.user.entity.User;
 import com.dominest.dominestbackend.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,7 +29,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         // Spring Security의 UserDetails로 변환하여 반환
         return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
+                user.getEmail().getValue(),
                 user.getPassword(),
                 user.getAuthorities()
         );

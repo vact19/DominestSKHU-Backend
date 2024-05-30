@@ -7,9 +7,9 @@ public enum AuthScheme {
 
     BEARER("Bearer");
 
-    AuthScheme(String type) {
-        this.type = type;
-    }
+    private final String label;
 
-    private String type;
+    AuthScheme(String label) {
+        this.label = label;
+    }
 }

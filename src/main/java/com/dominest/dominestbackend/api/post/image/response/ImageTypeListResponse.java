@@ -2,9 +2,9 @@ package com.dominest.dominestbackend.api.post.image.response;
 
 import com.dominest.dominestbackend.api.common.CategoryResponse;
 import com.dominest.dominestbackend.api.common.PageInfo;
-import com.dominest.dominestbackend.domain.post.component.category.Category;
-import com.dominest.dominestbackend.domain.post.image.ImageType;
-import com.dominest.dominestbackend.global.util.PrincipalUtil;
+import com.dominest.dominestbackend.domain.post.component.category.entity.Category;
+import com.dominest.dominestbackend.domain.post.image.entity.ImageType;
+import com.dominest.dominestbackend.global.util.PrincipalParser;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.springframework.data.domain.Page;
@@ -41,7 +41,7 @@ public class ImageTypeListResponse {
                     .id(imageType.getId())
                     .createTime(imageType.getCreateTime())
                     .title(imageType.getTitle())
-                    .writer(PrincipalUtil.strToName(imageType.getCreatedBy()))
+                    .writer(PrincipalParser.toName(imageType.getCreatedBy()))
                     .build();
         }
 

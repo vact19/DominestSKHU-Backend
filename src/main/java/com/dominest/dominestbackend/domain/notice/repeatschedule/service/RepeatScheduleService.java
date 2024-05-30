@@ -5,11 +5,11 @@ import com.dominest.dominestbackend.api.notice.repeatschedule.request.RepeatSche
 import com.dominest.dominestbackend.api.notice.repeatschedule.resopnse.AllRepeatScheduleResponse;
 import com.dominest.dominestbackend.api.notice.repeatschedule.resopnse.RepeatScheduleResponse;
 import com.dominest.dominestbackend.domain.common.Datasource;
-import com.dominest.dominestbackend.domain.notice.repeatnotice.RepeatNotice;
+import com.dominest.dominestbackend.domain.notice.repeatnotice.entity.RepeatNotice;
 import com.dominest.dominestbackend.domain.notice.repeatnotice.repository.RepeatNoticeRepository;
-import com.dominest.dominestbackend.domain.notice.repeatschedule.RepeatSchedule;
+import com.dominest.dominestbackend.domain.notice.repeatschedule.entity.RepeatSchedule;
 import com.dominest.dominestbackend.domain.notice.repeatschedule.repository.RepeatScheduleRepository;
-import com.dominest.dominestbackend.global.exception.exceptions.external.common.ResourceNotFoundException;
+import com.dominest.dominestbackend.global.exception.exceptions.external.db.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 public class RepeatScheduleService {
 
     private final RepeatScheduleRepository repeatScheduleRepository;
-
     private final RepeatNoticeRepository repeatNoticeRepository;
 
     @Transactional // 반복일정 글 저장
@@ -94,7 +93,6 @@ public class RepeatScheduleService {
                 .collect(Collectors.toList());
     }
 
-
     public RepeatScheduleResponse getRepeatScheduleById(Long id) { // 해당 반복일정 글 상세조회
         RepeatSchedule repeatSchedule = repeatScheduleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(Datasource.REPEAT_SCHEDULE, id));
@@ -103,5 +101,4 @@ public class RepeatScheduleService {
 
         return createResponse(repeatSchedule, repeatNotices);
     }
-
 }

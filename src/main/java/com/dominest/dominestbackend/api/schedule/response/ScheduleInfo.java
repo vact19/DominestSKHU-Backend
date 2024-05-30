@@ -1,6 +1,6 @@
 package com.dominest.dominestbackend.api.schedule.response;
 
-import com.dominest.dominestbackend.domain.schedule.Schedule;
+import com.dominest.dominestbackend.domain.schedule.entity.Schedule;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

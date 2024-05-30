@@ -2,10 +2,10 @@ package com.dominest.dominestbackend.domain.calendar.service;
 
 import com.dominest.dominestbackend.api.calendar.request.CalendarSaveRequest;
 import com.dominest.dominestbackend.api.calendar.response.CalendarMonthResponse;
-import com.dominest.dominestbackend.domain.calendar.Calendar;
+import com.dominest.dominestbackend.domain.calendar.entity.Calendar;
 import com.dominest.dominestbackend.domain.calendar.repository.CalendarRepository;
 import com.dominest.dominestbackend.domain.common.Datasource;
-import com.dominest.dominestbackend.global.exception.exceptions.external.common.ResourceNotFoundException;
+import com.dominest.dominestbackend.global.exception.exceptions.external.db.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +25,7 @@ public class CalendarService {
     private final CalendarRepository calendarRepository;
 
     @Transactional
-    public void addCalendar(CalendarSaveRequest request) { // 캘린더에 일정 추가
+    public void save(CalendarSaveRequest request) { // 캘린더에 일정 추가
         Calendar calender = Calendar.builder()
                 .date(request.getDate())
                 .content(request.getContent())

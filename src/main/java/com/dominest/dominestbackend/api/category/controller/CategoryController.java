@@ -5,11 +5,11 @@ import com.dominest.dominestbackend.api.category.request.CreateCategoryRequest;
 import com.dominest.dominestbackend.api.category.response.CategoryListResponse;
 import com.dominest.dominestbackend.api.category.response.CategoryListWithFavoriteResponse;
 import com.dominest.dominestbackend.api.common.ResponseTemplate;
-import com.dominest.dominestbackend.domain.post.component.category.Category;
+import com.dominest.dominestbackend.domain.post.component.category.entity.Category;
 import com.dominest.dominestbackend.domain.post.component.category.repository.CategoryRepository;
 import com.dominest.dominestbackend.domain.post.component.category.service.CategoryService;
-import com.dominest.dominestbackend.global.exception.exceptions.domain.DomainException;
-import com.dominest.dominestbackend.global.util.PrincipalUtil;
+import com.dominest.dominestbackend.global.exception.exceptions.business.BusinessException;
+import com.dominest.dominestbackend.global.util.PrincipalParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
@@ -24,7 +24,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping()
+@RequestMapping
 public class CategoryController {
     private final CategoryService categoryService;
     private final CategoryRepository categoryRepository;
@@ -45,7 +45,7 @@ public class CategoryController {
     public ResponseTemplate<CategoryListWithFavoriteResponse> handleGetMyCategoryList(Principal principal) {
         // 즐찾목록 다 조회해서 카테고리 ID들을 찾아낸다.
         // 찾아낸 카테고리 ID들과 전체 카테고리 목록 중 일치하는 것들은 즐겨찾기가 되어있는 것이다.
-        List<Long> categoryIdsFromFavorites = categoryService.getIdAllByUserEmail(PrincipalUtil.toEmail(principal));
+        List<Long> categoryIdsFromFavorites = categoryService.getIdAllByUserEmail(PrincipalParser.toEmail(principal));
 
         Sort sort = Sort.by("orderKey");
         List<Category> categories = categoryRepository.findAll(sort);
@@ -58,7 +58,7 @@ public class CategoryController {
     public ResponseEntity<ResponseTemplate<Void>> createCategory(
             @RequestBody @Valid final CreateCategoryRequest reqDto
     ) {
-        Category category = categoryService.create(reqDto.getCategoryName(), reqDto.getCategoryType(), reqDto.getExplanation());
+        Category category = categoryService.save(reqDto.getCategoryName(), reqDto.getCategoryType(), reqDto.getExplanation());
 
         ResponseTemplate<Void> responseTemplate = new ResponseTemplate<>(
                 HttpStatus.CREATED
@@ -76,7 +76,7 @@ public class CategoryController {
         try {
             updateCount = categoryService.update(reqDto);
         } catch (DataIntegrityViolationException e) {
-            throw new DomainException("카테고리 수정 실패, name 중복 혹은 값의 누락을 확인해주세요", HttpStatus.BAD_REQUEST, e);
+            throw new BusinessException("카테고리 수정 실패, name 중복 혹은 값의 누락을 확인해주세요", HttpStatus.BAD_REQUEST, e);
         }
 
         return new ResponseTemplate<>(HttpStatus.OK

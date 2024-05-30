@@ -1,18 +1,18 @@
 package com.dominest.dominestbackend.api.post.undeliveredparcel.controller;
 
 import com.dominest.dominestbackend.api.common.ResponseTemplate;
-import com.dominest.dominestbackend.api.post.undeliveredparcel.request.CreateUndelivParcelRequest;
-import com.dominest.dominestbackend.api.post.undeliveredparcel.response.UndelivParcelPostDetailResponse;
-import com.dominest.dominestbackend.api.post.undeliveredparcel.response.UndelivParcelPostListResponse;
+import com.dominest.dominestbackend.api.post.undeliveredparcel.request.CreateUndeliveredParcelRequest;
+import com.dominest.dominestbackend.api.post.undeliveredparcel.response.UndeliveredParcelPostDetailResponse;
+import com.dominest.dominestbackend.api.post.undeliveredparcel.response.UndeliveredParcelPostListResponse;
 import com.dominest.dominestbackend.api.post.undeliveredparcel.request.UpdateUndelivParcelDtoRequest;
-import com.dominest.dominestbackend.domain.post.component.category.Category;
+import com.dominest.dominestbackend.domain.post.component.category.entity.Category;
 import com.dominest.dominestbackend.domain.post.component.category.component.Type;
 import com.dominest.dominestbackend.domain.post.component.category.service.CategoryService;
-import com.dominest.dominestbackend.domain.post.undeliveredparcel.UndeliveredParcelPost;
-import com.dominest.dominestbackend.domain.post.undeliveredparcel.UndeliveredParcelPostService;
-import com.dominest.dominestbackend.domain.post.undeliveredparcel.component.UndeliveredParcelService;
-import com.dominest.dominestbackend.global.util.PageableUtil;
-import com.dominest.dominestbackend.global.util.PrincipalUtil;
+import com.dominest.dominestbackend.domain.post.undeliveredparcelpost.entity.UndeliveredParcelPost;
+import com.dominest.dominestbackend.domain.post.undeliveredparcelpost.service.UndeliveredParcelPostService;
+import com.dominest.dominestbackend.domain.post.undeliveredparcelpost.component.service.UndeliveredParcelService;
+import com.dominest.dominestbackend.global.util.PageBaseConverter;
+import com.dominest.dominestbackend.global.util.PrincipalParser;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -40,8 +40,8 @@ public class UndeliveredParcelController {
     public ResponseEntity<ResponseTemplate<Void>> handleCreateParcelPost(
             @PathVariable Long categoryId, Principal principal
     ) {
-        String email = PrincipalUtil.toEmail(principal);
-        long unDeliParcelId = undelivParcelPostService.create(categoryId, email);
+        String email = PrincipalParser.toEmail(principal);
+        long unDeliParcelId = undelivParcelPostService.save(categoryId, email);
         ResponseTemplate<Void> responseTemplate = new ResponseTemplate<>(HttpStatus.CREATED, unDeliParcelId + "번 게시글 작성");
 
         return ResponseEntity
@@ -51,17 +51,17 @@ public class UndeliveredParcelController {
 
     //  게시글 목록 조회
     @GetMapping("/categories/{categoryId}/posts/undelivered-parcel")
-    public ResponseTemplate<UndelivParcelPostListResponse> handleGetParcelPosts(
+    public ResponseTemplate<UndeliveredParcelPostListResponse> handleGetParcelPosts(
             @PathVariable Long categoryId, @RequestParam(defaultValue = "1") int page
     ) {
         final int IMAGE_TYPE_PAGE_SIZE = 20;
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        Pageable pageable = PageableUtil.of(page, IMAGE_TYPE_PAGE_SIZE, sort);
+        Pageable pageable = PageBaseConverter.of(page, IMAGE_TYPE_PAGE_SIZE, sort);
 
         Category category = categoryService.validateCategoryType(categoryId, Type.UNDELIVERED_PARCEL_REGISTER);
         Page<UndeliveredParcelPost> postsPage = undelivParcelPostService.getPage(category.getId(), pageable);
 
-        UndelivParcelPostListResponse response = UndelivParcelPostListResponse.from(postsPage, category);
+        UndeliveredParcelPostListResponse response = UndeliveredParcelPostListResponse.from(postsPage, category);
         return new ResponseTemplate<>(HttpStatus.OK
                 , "페이지 게시글 목록 조회 - " + response.getPage().getCurrentPage() + "페이지"
                 , response);
@@ -69,18 +69,18 @@ public class UndeliveredParcelController {
 
     // 게시글 상세 조회
     @GetMapping("/posts/undelivered-parcel/{undelivParcelPostId}")
-    public ResponseTemplate<UndelivParcelPostDetailResponse> handleGetParcels(
+    public ResponseTemplate<UndeliveredParcelPostDetailResponse> handleGetParcels(
             @PathVariable Long undelivParcelPostId
     ) {
         UndeliveredParcelPost undelivParcelPost = undelivParcelPostService.getByIdFetchParcels(undelivParcelPostId);
 
-        UndelivParcelPostDetailResponse response = UndelivParcelPostDetailResponse.from(undelivParcelPost);
+        UndeliveredParcelPostDetailResponse response = UndeliveredParcelPostDetailResponse.from(undelivParcelPost);
         return new ResponseTemplate<>(HttpStatus.OK, "택배 관리대장 게시물 상세조회", response);
     }
 
     // 제목 변경
     @PatchMapping("/posts/undelivered-parcel/{undelivParcelPostId}")
-    public ResponseTemplate<UndelivParcelPostDetailResponse> handleRenamePost(
+    public ResponseTemplate<UndeliveredParcelPostDetailResponse> handleRenamePost(
             @PathVariable Long undelivParcelPostId,
             @RequestBody @Valid UndeliveredParcelController.PostTitleRequest request
     ) {
@@ -112,9 +112,9 @@ public class UndeliveredParcelController {
     @PostMapping("/posts/undelivered-parcel/{undelivParcelPostId}")
     public ResponseEntity<ResponseTemplate<Void>> handleCreateParcel(
                 @PathVariable Long undelivParcelPostId,
-                @RequestBody @Valid CreateUndelivParcelRequest request
+                @RequestBody @Valid CreateUndeliveredParcelRequest request
     ) {
-        Long undelivParcelId = undeliveredParcelService.create(undelivParcelPostId, request);
+        Long undelivParcelId = undeliveredParcelService.save(undelivParcelPostId, request);
 
         ResponseTemplate<Void> responseTemplate = new ResponseTemplate<>(HttpStatus.CREATED,
                 undelivParcelPostId + "번 관리대장 게시글에" +  undelivParcelId + "번 관리물품 작성");
@@ -122,7 +122,7 @@ public class UndeliveredParcelController {
     }
 
     // 관리물품 단건 수정
-    @PatchMapping("/undeliv-parcels/{undelivParcelId}")
+    @PatchMapping("/undelivered-parcels/{undelivParcelId}")
     public ResponseTemplate<Void> handleUpdateParcel(
             @PathVariable Long undelivParcelId, @RequestBody @Valid UpdateUndelivParcelDtoRequest request
     ) {
@@ -133,7 +133,7 @@ public class UndeliveredParcelController {
     }
 
     // 관리물품 단건 삭제
-    @DeleteMapping("/undeliv-parcels/{undelivParcelId}")
+    @DeleteMapping("/undelivered-parcels/{undelivParcelId}")
     public ResponseTemplate<Void> handleDeleteParcel(
             @PathVariable Long undelivParcelId
     ) {
@@ -141,20 +141,4 @@ public class UndeliveredParcelController {
 
         return new ResponseTemplate<>(HttpStatus.OK, deleteId + "번 관리물품 삭제");
     }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,6 +1,6 @@
 package com.dominest.dominestbackend.domain.calendar.repository;
 
-import com.dominest.dominestbackend.domain.calendar.Calendar;
+import com.dominest.dominestbackend.domain.calendar.entity.Calendar;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
@@ -12,6 +12,4 @@ public interface CalendarRepository extends JpaRepository<Calendar, Long> {
     void deleteByDate(LocalDate date);
 
     List<Calendar> findByDateBetween(LocalDate start, LocalDate end);
-
-
 }

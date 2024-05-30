@@ -3,7 +3,6 @@ package com.dominest.dominestbackend.api.user.controller;
 import com.dominest.dominestbackend.api.user.request.ChangePasswordRequest;
 import com.dominest.dominestbackend.api.user.request.JoinRequest;
 import com.dominest.dominestbackend.api.user.request.LoginRequest;
-import com.dominest.dominestbackend.api.user.response.JoinResponse;
 import com.dominest.dominestbackend.api.common.ResponseTemplate;
 import com.dominest.dominestbackend.api.schedule.response.UserScheduleResponse;
 import com.dominest.dominestbackend.api.todo.response.TodoUserResponse;
@@ -12,7 +11,7 @@ import com.dominest.dominestbackend.domain.jwt.service.TokenValidator;
 import com.dominest.dominestbackend.domain.schedule.service.ScheduleService;
 import com.dominest.dominestbackend.domain.todo.service.TodoService;
 import com.dominest.dominestbackend.domain.user.service.UserService;
-import com.dominest.dominestbackend.global.util.PrincipalUtil;
+import com.dominest.dominestbackend.global.util.PrincipalParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -28,17 +27,14 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
     private final TokenValidator tokenValidator;
-
     private final ScheduleService scheduleService;
-
     private final TodoService todoService;
 
     @PostMapping("/join") // 회원가입
-    public ResponseTemplate<JoinResponse> signUp(@RequestBody @Valid final JoinRequest request){
-        JoinResponse joinResponse = userService.create(request);
+    public ResponseTemplate<Void> signUp(@RequestBody @Valid final JoinRequest request){
+        userService.save(request);
 
-        return new ResponseTemplate<>(HttpStatus.OK, "회원가입에 성공하였습니다.", joinResponse);
-
+        return new ResponseTemplate<>(HttpStatus.OK, "회원가입에 성공하였습니다.");
     }
 
     @PostMapping("/login") // 로그인
@@ -59,7 +55,7 @@ public class UserController {
     @PostMapping("/logout")
     public ResponseTemplate<Void> logout(Principal principal) {
         // 액세스 토큰 검증은 필터에서 거치므로 바로 로그아웃 처리
-        userService.logout(PrincipalUtil.toEmail(principal));
+        userService.logout(PrincipalParser.toEmail(principal));
 
         return new ResponseTemplate<>(HttpStatus.OK, "로그아웃 성공");
     }
@@ -80,10 +76,10 @@ public class UserController {
         return new ResponseTemplate<>(HttpStatus.OK, "토큰 재발급", tokenDto);
     }
 
-    @PostMapping("/myPage/password") // 비밀번호 변경
+    @PostMapping("/my-page/password") // 비밀번호 변경
     public ResponseTemplate<Void> changePassword(@RequestBody ChangePasswordRequest request
             , Principal principal) {
-        String logInUserEmail = PrincipalUtil.toEmail(principal);
+        String logInUserEmail = PrincipalParser.toEmail(principal);
 
         userService.changePassword(logInUserEmail, request.getPassword(), request.getNewPassword());
 
@@ -101,5 +97,4 @@ public class UserController {
         List<TodoUserResponse> nameResponse = todoService.getUserNameTodo();
         return new ResponseTemplate<>(HttpStatus.OK, "유저의 이름을 모두 불러오는데 성공했습니다.", nameResponse);
     }
-
 }

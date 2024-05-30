@@ -1,20 +1,22 @@
 package com.dominest.dominestbackend.global.util;
 
 
-import com.dominest.dominestbackend.domain.post.cardkey.CardKeyRepository;
-import com.dominest.dominestbackend.domain.post.complaint.ComplaintRepository;
-import com.dominest.dominestbackend.domain.post.component.category.Category;
+import com.dominest.dominestbackend.domain.common.vo.Email;
+import com.dominest.dominestbackend.domain.common.vo.PhoneNumber;
+import com.dominest.dominestbackend.domain.post.cardkey.repository.CardKeyRepository;
+import com.dominest.dominestbackend.domain.post.complaint.repository.ComplaintRepository;
+import com.dominest.dominestbackend.domain.post.component.category.entity.Category;
 import com.dominest.dominestbackend.domain.post.component.category.component.Type;
 import com.dominest.dominestbackend.domain.post.component.category.repository.CategoryRepository;
-import com.dominest.dominestbackend.domain.post.image.ImageTypeRepository;
-import com.dominest.dominestbackend.domain.post.manual.ManualPostRepository;
-import com.dominest.dominestbackend.domain.post.undeliveredparcel.UndeliveredParcelPostRepository;
-import com.dominest.dominestbackend.domain.post.undeliveredparcel.component.UndeliveredParcelRepository;
-import com.dominest.dominestbackend.domain.room.Room;
-import com.dominest.dominestbackend.domain.room.RoomRepository;
-import com.dominest.dominestbackend.domain.schedule.Schedule;
+import com.dominest.dominestbackend.domain.post.image.repository.ImageTypeRepository;
+import com.dominest.dominestbackend.domain.post.manual.repository.ManualPostRepository;
+import com.dominest.dominestbackend.domain.post.undeliveredparcelpost.repository.UndeliveredParcelPostRepository;
+import com.dominest.dominestbackend.domain.post.undeliveredparcelpost.component.repository.UndeliveredParcelRepository;
+import com.dominest.dominestbackend.domain.room.entity.Room;
+import com.dominest.dominestbackend.domain.room.repository.RoomRepository;
+import com.dominest.dominestbackend.domain.schedule.entity.Schedule;
 import com.dominest.dominestbackend.domain.schedule.repository.ScheduleRepository;
-import com.dominest.dominestbackend.domain.user.User;
+import com.dominest.dominestbackend.domain.user.entity.User;
 import com.dominest.dominestbackend.domain.user.component.Role;
 import com.dominest.dominestbackend.domain.user.repository.UserRepository;
 import lombok.Builder;
@@ -27,11 +29,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
 
 @Profile({"local", "dev"})
 @Component
@@ -111,10 +110,10 @@ public class InitDB {
         for (int i = 0; i < INIT_USER_CNT; i++) {
             InitUser initUser = initUsers.get(i);
             User user = User.builder()
-                    .email(initUser.getEmail())
+                    .email(new Email(initUser.getEmail()))
                     .password(passwordEncoder.encode(initUser.getPassword()))
                     .name(initUser.getName())
-                    .phoneNumber(initUser.getPhoneNumber())
+                    .phoneNumber(new PhoneNumber(initUser.getPhoneNumber()))
                     .role(initUser.getRole())
                     .build();
             users.add(user);
@@ -145,13 +144,13 @@ public class InitDB {
                 .build();
         categoryRepository.save(cardKeyCategoryNO3);
 
-        Category sanitationCheckCategoryNO4 = Category.builder()
+        Category inspectionCategoryNO4 = Category.builder()
                 .name("방역호실점검")
-                .type(Type.SANITATION_CHECK)
+                .type(Type.INSPECTION)
                 .explanation("방역호실점검")
                 .orderKey(4)
                 .build();
-        categoryRepository.save(sanitationCheckCategoryNO4);
+        categoryRepository.save(inspectionCategoryNO4);
 
         Category imageCategoryNo5 = Category.builder()
                 .name("사진 업로드")
@@ -179,7 +178,6 @@ public class InitDB {
 
         
 //        UndeliveredParcelPost unDeliParcelPost = UndeliveredParcelPost.builder()
-//                .titleWithCurrentDate(createTitle())
 //                .category(undelivCategoryNo1)
 //                .writer(firstUser)
 //                .build();
@@ -257,67 +255,52 @@ public class InitDB {
     }
 
     private static List<Room> createRooms() {
-        int roomCount2To3 = 26;
-        int roomCount4To10 = 17;
+        int roomAmount2To3 = 26; // 2~3층에는 26개의 방이 있음
+        int roomAmount4To10 = 17; // 4~10층에는 17개의 방이 있음
         List<Room> rooms = new ArrayList<>();
 
-        // 2층
-        createRoomsFor(roomCount2To3, "02",rooms);
-        createRoomsFor(roomCount2To3, "03",rooms);
-
-        // 4~10층
-        createRoomsFor(roomCount4To10, "04",rooms);
-        createRoomsFor(roomCount4To10, "05",rooms);
-        createRoomsFor(roomCount4To10, "06",rooms);
-        createRoomsFor(roomCount4To10, "07",rooms);
-        createRoomsFor(roomCount4To10, "08",rooms);
-        createRoomsFor(roomCount4To10, "09",rooms);
-        createRoomsFor(roomCount4To10, "10",rooms);
-
+        // 2층과 3층에 대한 방 추가
+        for (int floor = 2; floor <= 3; floor += 1) {
+            rooms.addAll(
+                    createRoomsFor(roomAmount2To3, String.format("%02d", floor))
+            );
+        }
+        // 4층부터 10층까지 방 추가
+        for (int floor = 4; floor <= 10; floor++) {
+            rooms.addAll(
+                    createRoomsFor(roomAmount4To10, String.format("%02d", floor))
+            );
+        }
         return rooms;
     }
 
-    private static void createRoomsFor(int roomCount, String floor, List<Room> rooms) {
-        for (int i = 1; i <= roomCount; i++) {
+    // 애초에 빈 Room List를 넘겨서, 함수 내부에서 Room List를 변경하도록 하면 안됨. 빌려준걸 바꿔버리면 안돼
+    private static List<Room> createRoomsFor(int roomAmount, String floor) {
+        List<Room> roomsForFloor = new ArrayList<>();
+        for (int i = 1; i <= roomAmount; i++) {
             String roomNo = String.format("%02d", i);
-            Integer floorNo = Integer.valueOf(floor);
+            int floorNo = Integer.parseInt(floor);
             StringBuilder sb = new StringBuilder();
 
-            Room roomA = Room.builder()
-                    .assignedRoom(
-                            sb.append("B")
-                                    .append(floor)
-                                    .append(roomNo)
-                                    .append("A")
-                                    .toString())
-                    .floorNo(floorNo)
+            Room roomA = new Room(sb.append("B")
+                    .append(floor)
+                    .append(roomNo)
+                    .append("A")
+                    .toString()
+                    , floorNo, Room.Dormitory.HAENGBOK);
 
-                    .dormitory("B")
-                    .roomNo(2)
-                    .build();
-            rooms.add(roomA);
+            roomsForFloor.add(roomA);
             sb.setLength(0);
 
-            Room roomB = Room.builder()
-                    .assignedRoom(sb
+            Room roomB = new Room(sb
                             .append("B")
                             .append(floor)
                             .append(roomNo)
                             .append("B")
-                            .toString())
-                    .floorNo(floorNo)
-                    .dormitory("B")
-                    .roomNo(2)
-                    .build();
-
-            rooms.add(roomB);
+                            .toString()
+                    , floorNo, Room.Dormitory.HAENGBOK);
+            roomsForFloor.add(roomB);
         }
-    }
-
-    private String createTitle() {
-        // 원하는 형식의 문자열로 변환
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String formattedDate = LocalDateTime.now().format(formatter);
-        return formattedDate + " 장기미수령 택배";
+        return roomsForFloor;
     }
 }

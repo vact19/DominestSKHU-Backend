@@ -5,12 +5,12 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public class ErrorResponseDto<T> {
-    private int statusCode;
-    private String httpStatus;
-    private T errorMessage;
+    private final int statusCode;
+    private final String httpStatus;
+    private final T errorMessage;
 
-    public ErrorResponseDto(int statusCode, HttpStatus httpStatus, T errorMessage) {
-        this.statusCode = statusCode;
+    public ErrorResponseDto(HttpStatus httpStatus, T errorMessage) {
+        this.statusCode = httpStatus.value();
         this.httpStatus = httpStatus.getReasonPhrase();
         this.errorMessage = errorMessage;
     }

@@ -1,8 +1,8 @@
 package com.dominest.dominestbackend.api.post.image.request;
 
-import com.dominest.dominestbackend.domain.post.component.category.Category;
-import com.dominest.dominestbackend.domain.post.image.ImageType;
-import com.dominest.dominestbackend.domain.user.User;
+import com.dominest.dominestbackend.domain.post.component.category.entity.Category;
+import com.dominest.dominestbackend.domain.post.image.entity.ImageType;
+import com.dominest.dominestbackend.domain.user.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;

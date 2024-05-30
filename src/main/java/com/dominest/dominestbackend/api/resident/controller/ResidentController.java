@@ -5,17 +5,17 @@ import com.dominest.dominestbackend.api.common.ResponseTemplate;
 import com.dominest.dominestbackend.api.resident.request.ExcelUploadRequest;
 import com.dominest.dominestbackend.api.resident.request.SaveResidentRequest;
 import com.dominest.dominestbackend.api.resident.response.ExcelUploadResponse;
-import com.dominest.dominestbackend.api.resident.response.PdfBulkUploadResponse;
+import com.dominest.dominestbackend.api.resident.response.FileBulkUploadResponse;
 import com.dominest.dominestbackend.api.resident.response.ResidentListResponse;
-import com.dominest.dominestbackend.api.resident.response.ResidentPdfListResponse;
-import com.dominest.dominestbackend.api.resident.util.PdfType;
-import com.dominest.dominestbackend.domain.resident.Resident;
-import com.dominest.dominestbackend.domain.resident.ResidentService;
-import com.dominest.dominestbackend.domain.resident.component.ResidenceSemester;
+import com.dominest.dominestbackend.api.resident.response.ResidentDocumentListResponse;
+import com.dominest.dominestbackend.domain.resident.support.ResidentDocumentType;
+import com.dominest.dominestbackend.domain.resident.entity.Resident;
+import com.dominest.dominestbackend.domain.resident.service.ResidentService;
+import com.dominest.dominestbackend.domain.resident.entity.component.ResidenceSemester;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.exceptions.external.file.FileIOException;
-import com.dominest.dominestbackend.global.util.ExcelUtil;
-import com.dominest.dominestbackend.global.util.FileService;
+import com.dominest.dominestbackend.global.util.ExcelParser;
+import com.dominest.dominestbackend.global.util.FileManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -35,7 +35,8 @@ import java.util.List;
 public class ResidentController {
 
     private final ResidentService residentService;
-    private final FileService fileService;
+    private final FileManager fileManager;
+    private final ExcelParser excelParser;
 
     // 엑셀로 업로드
     @PostMapping("/residents/upload-excel")
@@ -43,8 +44,7 @@ public class ResidentController {
             @ModelAttribute @Valid ExcelUploadRequest request
     ){
         // 엑셀 파싱
-        List<List<String>> sheet= ExcelUtil.parseExcel(request.getFile());
-        ExcelUtil.checkResidentColumnCount(sheet);
+        List<List<String>> sheet= excelParser.parse(request.getFile());
 
         ExcelUploadResponse response = residentService.excelUpload(sheet, request.getResidenceSemester());
         String resultMsg = response.getResultMsg();
@@ -68,7 +68,7 @@ public class ResidentController {
     public ResponseTemplate<ResidentListResponse> handleGetAllResident(
             @RequestParam(required = true) ResidenceSemester residenceSemester
     ){
-        List<Resident> residents = residentService.getAllResidentByResidenceSemesterFetchRoom(residenceSemester);
+        List<Resident> residents = residentService.getAllResidentByResidenceSemester(residenceSemester);
 
         ResidentListResponse response = ResidentListResponse.from(residents);
         return new ResponseTemplate<>(HttpStatus.OK, "입사생 목록 조회 성공", response);
@@ -83,7 +83,9 @@ public class ResidentController {
 
     // 입사생 단건 등록. 단순 DTO 변환 후 저장만 하면 될듯
     @PostMapping("/residents")
-    public ResponseEntity<ResponseTemplate<Void>> handleSaveResident(@RequestBody @Valid SaveResidentRequest request){
+    public ResponseEntity<ResponseTemplate<Void>> handleSaveResident(
+            @RequestBody @Valid SaveResidentRequest request
+    ){
         residentService.save(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -105,19 +107,19 @@ public class ResidentController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    // 특정 입사생의 PDF 조회
-    @GetMapping("/residents/{id}/pdf")
-    public void handleGetPdf(@PathVariable Long id, @RequestParam(required = true) PdfType pdfType,
-                                       HttpServletResponse response){
-        // filename 가져오기.
+    // 특정 입사생의 서류 조회
+    @GetMapping("/residents/{id}/documents")
+    public void handleGetDocument(
+            @PathVariable Long id
+            , @RequestParam(required = true) ResidentDocumentType residentDocumentType
+            , HttpServletResponse response
+    ){
         Resident resident = residentService.findById(id);
 
-        // PdfType에 따라 입사 혹은 퇴사신청서 filename 가져오기
-        String filename = pdfType.getPdfFileName(resident);
-        FileService.FilePrefix filePrefix = pdfType.toFilePrefix();
+        String filename = residentDocumentType.getDocumentFileName(resident);
+        FileManager.FilePrefix filePrefix = residentDocumentType.toFilePrefix();
 
-        // PDF 파일 읽기
-        byte[] bytes = fileService.getByteArr(filePrefix, filename);
+        byte[] bytes = fileManager.getByteArr(filePrefix, filename);
 
         response.setContentType(MediaType.APPLICATION_PDF_VALUE);
 
@@ -128,45 +130,50 @@ public class ResidentController {
         }
     }
 
-    // PDF 단건 업로드
-    @PostMapping("/residents/{id}/pdf")
-    public ResponseEntity<ResponseTemplate<String>> handlePdfUpload(@PathVariable Long id, @RequestParam(required = true) MultipartFile pdf,
-                                                                    @RequestParam(required = true) PdfType pdfType){
-        FileService.FilePrefix filePrefix = pdfType.toFilePrefix();
-
-        residentService.uploadPdf(id, filePrefix, pdf);
-        ResponseTemplate<String> responseTemplate = new ResponseTemplate<>(HttpStatus.CREATED, "pdf 업로드 완료");
-        return ResponseEntity
-                .created(URI.create("/residents/"+id+"/pdf"))
-                .body(responseTemplate);
-    }
-
-    // PDF 전체 업로드
-    @PostMapping("/residents/pdf")
-    public ResponseEntity<ResponseTemplate<PdfBulkUploadResponse>> handlePdfUpload(
-            @RequestParam(required = true) List<MultipartFile> pdfs
-            , @RequestParam(required = true) ResidenceSemester residenceSemester
-            , @RequestParam(required = true) PdfType pdfType
+    // 입사생 서류 단건 업로드
+    @PostMapping("/residents/{id}/documents")
+    public ResponseEntity<ResponseTemplate<String>> handleDocumentUpload(
+            @PathVariable Long id
+            , @RequestParam(required = true) MultipartFile documentFile
+            , @RequestParam(required = true) ResidentDocumentType residentDocumentType
     ){
-        FileService.FilePrefix filePrefix = pdfType.toFilePrefix();
-        PdfBulkUploadResponse response = residentService.uploadPdfs(filePrefix, pdfs, residenceSemester);
+        FileManager.FilePrefix filePrefix = residentDocumentType.toFilePrefix();
 
-        ResponseTemplate<PdfBulkUploadResponse> responseTemplate = new ResponseTemplate<>(HttpStatus.CREATED,
-                "pdf 업로드 완료. 저장된 파일 수: " + response.getSuccessCount() + "개", response);
+        residentService.uploadDocument(id, filePrefix, documentFile);
+        ResponseTemplate<String> responseTemplate = new ResponseTemplate<>(
+                HttpStatus.CREATED, "입사생 서류 업로드 완료");
         return ResponseEntity
-                .created(URI.create("/residents/pdf"))
+                .created(URI.create("/residents/"+id+"/documents"))
                 .body(responseTemplate);
     }
 
-    // 해당차수 입사생 전체 PDF 조회
-    @GetMapping("/residents/pdf")
-    public ResponseTemplate<ResidentPdfListResponse> handleGetAllPdfs(@RequestParam(required = true) ResidenceSemester residenceSemester){
+    // 특정학기 입사생 서류 전체 업로드
+    @PostMapping("/residents/documents")
+    public ResponseEntity<ResponseTemplate<FileBulkUploadResponse>> handleDocumentUpload(
+            @RequestParam(required = true) List<MultipartFile> documentFiles
+            , @RequestParam(required = true) ResidenceSemester residenceSemester
+            , @RequestParam(required = true) ResidentDocumentType residentDocumentType
+    ){
+        FileManager.FilePrefix filePrefix = residentDocumentType.toFilePrefix();
+        FileBulkUploadResponse response = residentService.uploadDocuments(filePrefix, documentFiles, residenceSemester);
 
+        ResponseTemplate<FileBulkUploadResponse> responseTemplate = new ResponseTemplate<>(HttpStatus.CREATED,
+                "입사생 서류 업로드 완료. 저장된 파일 수: " + response.getSuccessCount() + "개", response);
+        return ResponseEntity
+                .created(URI.create("/residents/documents"))
+                .body(responseTemplate);
+    }
+
+    // 해당차수 입사생 전체 서류 조회
+    @GetMapping("/residents/documents")
+    public ResponseTemplate<ResidentDocumentListResponse> handleGetAllDocuments(
+            @RequestParam(required = true) ResidenceSemester residenceSemester
+    ){
         List<Resident> residents = residentService.findAllByResidenceSemester(residenceSemester);
 
-        ResidentPdfListResponse response = ResidentPdfListResponse.from(residents);
+        ResidentDocumentListResponse response = ResidentDocumentListResponse.from(residents);
         return new ResponseTemplate<>(HttpStatus.OK
-                , "pdf url 조회 성공"
+                , "입사생 서류 url 조회 성공"
                 , response);
     }
 }

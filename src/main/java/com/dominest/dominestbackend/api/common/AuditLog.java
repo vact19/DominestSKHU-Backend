@@ -1,7 +1,7 @@
 package com.dominest.dominestbackend.api.common;
 
-import com.dominest.dominestbackend.domain.common.BaseEntity;
-import com.dominest.dominestbackend.global.util.PrincipalUtil;
+import com.dominest.dominestbackend.domain.common.jpa.BaseEntity;
+import com.dominest.dominestbackend.global.util.PrincipalParser;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -21,8 +21,8 @@ public class AuditLog {
 
     public static AuditLog from(BaseEntity baseEntity){
         return AuditLog.builder()
-                .createdBy(PrincipalUtil.strToName(baseEntity.getCreatedBy()))
-                .lastModifiedBy(PrincipalUtil.strToName(baseEntity.getLastModifiedBy()))
+                .createdBy(PrincipalParser.toName(baseEntity.getCreatedBy()))
+                .lastModifiedBy(PrincipalParser.toName(baseEntity.getLastModifiedBy()))
                 .createTime(baseEntity.getCreateTime())
                 .lastModifiedTime(baseEntity.getLastModifiedTime())
                 .build();

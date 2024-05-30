@@ -2,17 +2,17 @@ package com.dominest.dominestbackend.domain.post.component.category.service;
 
 import com.dominest.dominestbackend.api.category.request.CategoryUpdateRequest;
 import com.dominest.dominestbackend.domain.common.Datasource;
-import com.dominest.dominestbackend.domain.post.cardkey.CardKeyRepository;
-import com.dominest.dominestbackend.domain.post.complaint.ComplaintRepository;
-import com.dominest.dominestbackend.domain.post.component.category.Category;
+import com.dominest.dominestbackend.domain.post.cardkey.repository.CardKeyRepository;
+import com.dominest.dominestbackend.domain.post.complaint.repository.ComplaintRepository;
+import com.dominest.dominestbackend.domain.post.component.category.entity.Category;
 import com.dominest.dominestbackend.domain.post.component.category.component.Type;
 import com.dominest.dominestbackend.domain.post.component.category.repository.CategoryRepository;
-import com.dominest.dominestbackend.domain.post.image.ImageTypeRepository;
-import com.dominest.dominestbackend.domain.post.manual.ManualPostRepository;
-import com.dominest.dominestbackend.domain.post.undeliveredparcel.UndeliveredParcelPostRepository;
+import com.dominest.dominestbackend.domain.post.image.repository.ImageTypeRepository;
+import com.dominest.dominestbackend.domain.post.manual.repository.ManualPostRepository;
+import com.dominest.dominestbackend.domain.post.undeliveredparcelpost.repository.UndeliveredParcelPostRepository;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
-import com.dominest.dominestbackend.global.exception.exceptions.domain.DomainException;
-import com.dominest.dominestbackend.global.exception.exceptions.external.common.ResourceNotFoundException;
+import com.dominest.dominestbackend.global.exception.exceptions.business.BusinessException;
+import com.dominest.dominestbackend.global.exception.exceptions.external.db.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -33,7 +33,7 @@ public class CategoryService {
     private final ManualPostRepository manualPostRepository;
 
     @Transactional
-    public Category create(String categoryName, Type categoryType, String explanation) {
+    public Category save(String categoryName, Type categoryType, String explanation) {
         Category category = Category.builder()
                 .name(categoryName)
                 .type(categoryType)
@@ -44,7 +44,7 @@ public class CategoryService {
         try {
             return categoryRepository.save(category); // Identity 전략이므로 즉시 flush
         } catch (DataIntegrityViolationException e) {
-            throw new DomainException("카테고리 저장 실패, name 중복 혹은 값의 누락을 확인해주세요", HttpStatus.BAD_REQUEST, e);
+            throw new BusinessException("카테고리 저장 실패, name 중복 혹은 값의 누락을 확인해주세요", HttpStatus.BAD_REQUEST, e);
         }
     }
 
@@ -70,7 +70,7 @@ public class CategoryService {
             // If this set already contains the element, the call leaves the set unchanged and returns false
             // nullable false. orderKeys에 null 없음
             if (!set.add(key)) {
-                throw new DomainException(ErrorCode.CATEGORY_ORDER_KEY_DUPLICATED);
+                throw new BusinessException(ErrorCode.CATEGORY_ORDER_KEY_DUPLICATED);
             }
         });
 
@@ -108,7 +108,7 @@ public class CategoryService {
         } else if(Type.MANUAL.equals(type)) {
             manualPostRepository.deleteByCategoryId(categoryId);
         }
-        throw new DomainException(ErrorCode.CANNOT_DELETE_ASSOCIATED_POST);
+        throw new BusinessException(ErrorCode.CANNOT_DELETE_ASSOCIATED_POST);
     }
 
     public Category validateCategoryType(Long categoryId, Type type) {
@@ -117,24 +117,3 @@ public class CategoryService {
         return category;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

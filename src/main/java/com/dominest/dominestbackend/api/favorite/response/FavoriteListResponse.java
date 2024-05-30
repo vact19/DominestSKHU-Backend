@@ -1,7 +1,7 @@
 package com.dominest.dominestbackend.api.favorite.response;
 
-import com.dominest.dominestbackend.domain.favorite.Favorite;
-import com.dominest.dominestbackend.domain.post.component.category.Category;
+import com.dominest.dominestbackend.domain.favorite.entity.Favorite;
+import com.dominest.dominestbackend.domain.post.component.category.entity.Category;
 import lombok.*;
 
 import java.util.List;

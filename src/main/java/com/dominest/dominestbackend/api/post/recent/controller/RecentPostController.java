@@ -4,7 +4,7 @@ import com.dominest.dominestbackend.api.common.ResponseTemplate;
 import com.dominest.dominestbackend.api.post.recent.dto.RecentPostListDto;
 import com.dominest.dominestbackend.domain.post.common.RecentPost;
 import com.dominest.dominestbackend.domain.post.common.RecentPostService;
-import com.dominest.dominestbackend.global.util.PageableUtil;
+import com.dominest.dominestbackend.global.util.PageBaseConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +23,7 @@ public class RecentPostController {
     public ResponseTemplate<RecentPostListDto.Res> handleGetRecentPosts(@RequestParam(defaultValue = "1") int page) {
         final int IMAGE_TYPE_PAGE_SIZE = 20;
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        Pageable pageable = PageableUtil.of(page, IMAGE_TYPE_PAGE_SIZE, sort);
+        Pageable pageable = PageBaseConverter.of(page, IMAGE_TYPE_PAGE_SIZE, sort);
 
         Page<RecentPost> recentPost = recentPostService.getRecentPosts(pageable);
 
@@ -31,19 +31,3 @@ public class RecentPostController {
         return new ResponseTemplate<>(HttpStatus.OK, "최근등록게시물 카테고리 링크 - 내림차순 조회", resDto);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

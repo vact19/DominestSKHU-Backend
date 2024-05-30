@@ -25,7 +25,6 @@ public class RepeatNoticeController {
                 , "알림이 성공적으로 생성되었습니다.", repeatNotices);
     }
 
-
     @GetMapping("/repeat-notice")
     public ResponseTemplate<List<String>> getDayNoticeContent(@RequestParam int dayOfWeek, @RequestParam String time) {
         LocalTime requestTime = LocalTime.parse(time);
@@ -33,5 +32,4 @@ public class RepeatNoticeController {
 
         return new ResponseTemplate<>(HttpStatus.OK, "알림을 성공적으로 불러왔습니다.", contents);
     }
-
 }

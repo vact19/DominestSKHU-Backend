@@ -38,6 +38,4 @@ public class EmailConfig {
         properties.setProperty("mail.debug", "true"); // 디버그 사용
         return properties;
     }
-
-
 }

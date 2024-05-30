@@ -15,8 +15,4 @@ public class ExcelUploadResponse {
     public static ExcelUploadResponse of(int originalRow, int successRow) {
         return new ExcelUploadResponse(originalRow, successRow);
     }
-
 }
-
-
-

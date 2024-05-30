@@ -4,13 +4,13 @@ import com.dominest.dominestbackend.api.common.ResponseTemplate;
 import com.dominest.dominestbackend.api.post.cardkey.response.CardKeyListResponse;
 import com.dominest.dominestbackend.api.post.cardkey.request.CreateCardKeyRequest;
 import com.dominest.dominestbackend.api.post.cardkey.request.UpdateCardKeyRequest;
-import com.dominest.dominestbackend.domain.post.cardkey.CardKey;
-import com.dominest.dominestbackend.domain.post.cardkey.CardKeyService;
-import com.dominest.dominestbackend.domain.post.component.category.Category;
+import com.dominest.dominestbackend.domain.post.cardkey.entity.CardKey;
+import com.dominest.dominestbackend.domain.post.cardkey.service.CardKeyService;
+import com.dominest.dominestbackend.domain.post.component.category.entity.Category;
 import com.dominest.dominestbackend.domain.post.component.category.component.Type;
 import com.dominest.dominestbackend.domain.post.component.category.service.CategoryService;
-import com.dominest.dominestbackend.global.util.PageableUtil;
-import com.dominest.dominestbackend.global.util.PrincipalUtil;
+import com.dominest.dominestbackend.global.util.PageBaseConverter;
+import com.dominest.dominestbackend.global.util.PrincipalParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,8 +34,8 @@ public class CardKeyController {
             @RequestBody @Valid CreateCardKeyRequest request
             , @PathVariable Long categoryId, Principal principal
     ) {
-        String email = PrincipalUtil.toEmail(principal);
-        long cardKeyId = cardKeyService.create(request, categoryId, email);
+        String email = PrincipalParser.toEmail(principal);
+        long cardKeyId = cardKeyService.save(request, categoryId, email);
         ResponseTemplate<Void> responseTemplate = new ResponseTemplate<>(HttpStatus.CREATED
                 , cardKeyId + "번 카드키 기록 작성");
 
@@ -72,7 +72,7 @@ public class CardKeyController {
     ) {
         final int COMPLAINT_TYPE_PAGE_SIZE = 20;
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        Pageable pageable = PageableUtil.of(page, COMPLAINT_TYPE_PAGE_SIZE, sort);
+        Pageable pageable = PageBaseConverter.of(page, COMPLAINT_TYPE_PAGE_SIZE, sort);
 
         Category category = categoryService.validateCategoryType(categoryId, Type.CARD_KEY);
 
