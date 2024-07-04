@@ -15,4 +15,10 @@ public class DateConverter {
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime();
     }
+
+    public static Date convertToDate(LocalDateTime dateToConvert) {
+        return Date.from(dateToConvert
+                .atZone(ZoneId.systemDefault())
+                .toInstant());
+    }
 }
