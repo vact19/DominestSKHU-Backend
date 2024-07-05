@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 import static org.assertj.core.api.Assertions.*;
 
-class PageBaseConverterTest {
+class PagingUtilTest {
 
     @DisplayName("1-based page를 0-based pageable로 변환한다")
     @Test
@@ -20,7 +20,7 @@ class PageBaseConverterTest {
         Pageable pageable = PageRequest.of(zeroBasedPage, size);
 
         //when
-        Pageable pageableFromConverter = PageBaseConverter.of(oneBasedPage, size);
+        Pageable pageableFromConverter = PagingUtil.getPageable(oneBasedPage, size);
         //then
         assertThat(pageableFromConverter).isEqualTo(pageable);
     }
@@ -33,7 +33,7 @@ class PageBaseConverterTest {
         int oneBasedPage = 0;
 
         //when, then
-        assertThatThrownBy(() -> PageBaseConverter.of(oneBasedPage, size))
+        assertThatThrownBy(() -> PagingUtil.getPageable(oneBasedPage, size))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }
