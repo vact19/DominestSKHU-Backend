@@ -12,11 +12,8 @@ import com.dominest.dominestbackend.domain.post.image.service.ImageTypeService;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.exceptions.external.file.FileIOException;
 import com.dominest.dominestbackend.global.util.FileManager;
-import com.dominest.dominestbackend.global.util.PageBaseConverter;
 import com.dominest.dominestbackend.global.util.PrincipalParser;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -109,15 +106,17 @@ public class ImageTypeController {
 
     // 게시물 목록을 조회한다.
     @GetMapping("/categories/{categoryId}/posts/image-types")
-    public ResponseTemplate<ImageTypeListResponse> handleGetImageTypes(@PathVariable Long categoryId, @RequestParam(defaultValue = "1") int page) {
+    public ResponseTemplate<ImageTypeListResponse> handleGetImageTypes(
+            @PathVariable Long categoryId,
+            @RequestParam(defaultValue = "1") int page
+    ) {
         final int IMAGE_TYPE_PAGE_SIZE = 20;
-        Pageable pageable = PageBaseConverter.of(page, IMAGE_TYPE_PAGE_SIZE);
+        final int PAGE_DISPLAY_LIMIT = 10;
 
         Category category = categoryService.validateCategoryType(categoryId, Type.IMAGE);
         // 카테고리 내 게시글이 1건도 없는 경우도 있으므로, 게시글과 함께 카테고리를 Join해서 데이터를 찾아오지 않는다.
-        Page<ImageType> imageTypes = imageTypeService.getPage(categoryId, pageable);
+        ImageTypeListResponse response = imageTypeService.getPage(category, page, IMAGE_TYPE_PAGE_SIZE, PAGE_DISPLAY_LIMIT);
 
-        ImageTypeListResponse response = ImageTypeListResponse.from(imageTypes, category);
         return new ResponseTemplate<>(HttpStatus.OK
                 , "페이지 게시글 목록 조회 - " + response.getPage().getCurrentPage() + "페이지"
                 , response);

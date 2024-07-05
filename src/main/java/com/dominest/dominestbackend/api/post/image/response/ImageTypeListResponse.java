@@ -7,10 +7,10 @@ import com.dominest.dominestbackend.domain.post.image.entity.ImageType;
 import com.dominest.dominestbackend.global.util.PrincipalParser;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @AllArgsConstructor
@@ -19,9 +19,8 @@ public class ImageTypeListResponse {
     List<ImageTypeDto> posts; // 게시글 목록
     CategoryResponse category; // 카테고리 정보
 
-    public static ImageTypeListResponse from(Page<ImageType> imageTypes, Category category){
+    public static ImageTypeListResponse from(List<ImageType> imageTypes, Category category, PageInfo pageInfo){
         CategoryResponse categoryResponse = CategoryResponse.from(category);
-        PageInfo pageInfo = PageInfo.from(imageTypes);
         List<ImageTypeDto> imageTypeDtos = ImageTypeDto.from(imageTypes);
 
         return new ImageTypeListResponse(pageInfo, imageTypeDtos, categoryResponse);
@@ -45,10 +44,10 @@ public class ImageTypeListResponse {
                     .build();
         }
 
-        static List<ImageTypeDto> from(Page<ImageType> imageTypes){
-            return imageTypes
+        static List<ImageTypeDto> from(List<ImageType> imageTypes){
+            return imageTypes.stream()
                     .map(ImageTypeDto::from)
-                    .toList();
+                    .collect(Collectors.toList());
         }
     }
 }
