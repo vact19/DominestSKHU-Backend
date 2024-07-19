@@ -13,7 +13,6 @@ import com.dominest.dominestbackend.domain.post.image.entity.ImageType;
 import com.dominest.dominestbackend.domain.post.image.repository.ImageTypeRepository;
 import com.dominest.dominestbackend.domain.user.entity.User;
 import com.dominest.dominestbackend.domain.user.repository.UserRepository;
-import com.dominest.dominestbackend.domain.user.service.UserService;
 import com.dominest.dominestbackend.global.exception.exceptions.external.db.ResourceNotFoundException;
 import com.dominest.dominestbackend.global.util.FileManager;
 import com.dominest.dominestbackend.global.util.PagingUtil;
@@ -21,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,7 +29,6 @@ import java.util.stream.Collectors;
 @Service
 public class ImageTypeService {
     private final ImageTypeRepository imageTypeRepository;
-    private final UserService userService;
     private final CategoryService categoryService;
     private final FileManager fileManager;
     private final RecentPostService recentPostService;
@@ -44,7 +41,7 @@ public class ImageTypeService {
         // 이미지 게시물이 작성될 카테고리의 타입 검사
         Type.IMAGE.validateEqualTo(category.getType());
 
-        User writer = userService.getUserByEmail(uploaderEmail);
+        User writer = userRepository.getByEmail(uploaderEmail);
 
         List<Optional<String>> savedImgUrls = fileManager.save(FileManager.FilePrefix.POST_IMAGE_TYPE, request.getPostImages());
         List<String> validImgUrls = extractValidImgUrls(savedImgUrls);
@@ -108,24 +105,5 @@ public class ImageTypeService {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toUnmodifiableList());
-    }
-
-    @Transactional
-    public void dummyInsert(int batchSize) {
-        List<User> users = userRepository.findAll();
-        Category category = categoryService.getById(5L);
-
-        List<ImageType> imageTypesToSave = new ArrayList<>();
-
-        for (int i = 0; i < batchSize; i++) {
-            User user = users.get(i % users.size());
-            ImageType imageType = ImageType.builder()
-                    .title("dummy" + i)
-                    .writer(user)
-                    .category(category)
-                    .build();
-            imageTypesToSave.add(imageType);
-        }
-        imageTypesToSave.stream().parallel().forEach(imageTypeRepository::save);
     }
 }

@@ -9,7 +9,7 @@ import com.dominest.dominestbackend.domain.post.component.category.service.Categ
 import com.dominest.dominestbackend.domain.post.manual.repository.ManualPostRepository;
 import com.dominest.dominestbackend.domain.post.manual.entity.ManualPost;
 import com.dominest.dominestbackend.domain.user.entity.User;
-import com.dominest.dominestbackend.domain.user.service.UserService;
+import com.dominest.dominestbackend.domain.user.repository.UserRepository;
 import com.dominest.dominestbackend.global.exception.exceptions.external.db.ResourceNotFoundException;
 import com.dominest.dominestbackend.global.util.FileManager;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ import static com.dominest.dominestbackend.global.util.FileManager.FilePrefix.*;
 @Service
 public class ManualPostService {
     private final CategoryService categoryService;
-    private final UserService userService;
+    private final UserRepository userRepository;
     private final ManualPostRepository manualPostRepository;
     private final FileManager fileManager;
 
@@ -39,7 +39,7 @@ public class ManualPostService {
     @Transactional
     public Long save(Long categoryId, CreateManualPostDto.Req reqDto, String email) {
         Category category = categoryService.validateCategoryType(categoryId, Type.MANUAL);
-        User user = userService.getUserByEmail(email);
+        User user = userRepository.getByEmail(email);
         ManualPost manualPost = ManualPost.builder().
                 title(reqDto.getTitle()).
                 writer(user).

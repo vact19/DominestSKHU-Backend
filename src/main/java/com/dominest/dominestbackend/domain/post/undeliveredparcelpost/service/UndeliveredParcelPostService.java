@@ -9,7 +9,7 @@ import com.dominest.dominestbackend.domain.post.component.category.service.Categ
 import com.dominest.dominestbackend.domain.post.undeliveredparcelpost.entity.UndeliveredParcelPost;
 import com.dominest.dominestbackend.domain.post.undeliveredparcelpost.repository.UndeliveredParcelPostRepository;
 import com.dominest.dominestbackend.domain.user.entity.User;
-import com.dominest.dominestbackend.domain.user.service.UserService;
+import com.dominest.dominestbackend.domain.user.repository.UserRepository;
 import com.dominest.dominestbackend.global.exception.exceptions.external.db.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,14 +22,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UndeliveredParcelPostService {
     private final UndeliveredParcelPostRepository undelivParcelPostRepository;
-    private final UserService userService;
+    private final UserRepository userRepository;
     private final CategoryService categoryService;
     private final RecentPostService recentPostService;
 
     @Transactional
     public Long save(Long categoryId, String email) {
         // Undeli...의 연관 객체인 category, user 찾기
-        User user = userService.getUserByEmail(email);
+        User user = userRepository.getByEmail(email);
         // Undeli...의 연관 객체인 category 찾기
         Category category = categoryService.validateCategoryType(categoryId, Type.UNDELIVERED_PARCEL_REGISTER);
 

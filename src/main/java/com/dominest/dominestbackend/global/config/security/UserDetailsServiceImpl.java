@@ -19,13 +19,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         // 사용자 정보를 이메일로 조회
-        Optional<User> userOptional = userRepository.findByEmailFetchRoles(email);
-
-        if (userOptional.isEmpty()) {
-            throw new UsernameNotFoundException("해당 이메일을 가진 사용자를 찾을 수 없습니다.");
-        }
-
-        User user = userOptional.get();
+        User user = userRepository.getByEmailFetchRoles(email);
 
         // Spring Security의 UserDetails로 변환하여 반환
         return new org.springframework.security.core.userdetails.User(
