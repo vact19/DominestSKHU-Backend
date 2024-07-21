@@ -18,7 +18,7 @@ import com.dominest.dominestbackend.domain.schedule.entity.Schedule;
 import com.dominest.dominestbackend.domain.schedule.repository.ScheduleRepository;
 import com.dominest.dominestbackend.domain.user.entity.User;
 import com.dominest.dominestbackend.domain.user.component.Role;
-import com.dominest.dominestbackend.domain.user.repository.UserRepository;
+import com.dominest.dominestbackend.domain.user.repository.UserJpaRepository;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +32,14 @@ import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
-@Profile({"local", "dev"})
+@Profile({
+//        "local",
+        "dev"
+})
 @Component
 public class InitDB {
     private final PasswordEncoder passwordEncoder;
-    private final UserRepository userRepository;
+    private final UserJpaRepository userJpaRepository;
     private final CategoryRepository categoryRepository;
     private final RoomRepository roomRepository;
     private final List<InitUser> initUsers;
@@ -52,7 +55,7 @@ public class InitDB {
 
 
     @Autowired
-    public InitDB(PasswordEncoder passwordEncoder, UserRepository userRepository
+    public InitDB(PasswordEncoder passwordEncoder, UserJpaRepository userJpaRepository
             , CategoryRepository categoryRepository, RoomRepository roomRepository
             , @Value("${init.user1.email}") String email1, @Value("${init.user1.pwd}") String pwd1, @Value("${init.user1.name}") String name1, @Value("${init.user1.phone}") String phone1, @Value("${init.user1.role}") Role role1
             , @Value("${init.user2.email}") String email2, @Value("${init.user2.pwd}") String pwd2, @Value("${init.user2.name}") String name2, @Value("${init.user2.phone}") String phone2, @Value("${init.user2.role}") Role role2
@@ -64,7 +67,7 @@ public class InitDB {
             , @Value("${init.user8.email}") String email8, @Value("${init.user8.pwd}") String pwd8, @Value("${init.user8.name}") String name8, @Value("${init.user8.phone}") String phone8, @Value("${init.user8.role}") Role role8,
                   UndeliveredParcelPostRepository undeliveredParcelPostRepository, UndeliveredParcelRepository undeliveredParcelRepository, ImageTypeRepository imageTypeRepository, ComplaintRepository complaintRepository, CardKeyRepository cardKeyRepository, ScheduleRepository scheduleRepository, ManualPostRepository manualPostRepository) {
         this.passwordEncoder = passwordEncoder;
-        this.userRepository = userRepository;
+        this.userJpaRepository = userJpaRepository;
         this.categoryRepository = categoryRepository;
         this.roomRepository = roomRepository;
 
@@ -118,7 +121,7 @@ public class InitDB {
                     .build();
             users.add(user);
         }
-        userRepository.saveAll(users);
+        userJpaRepository.saveAll(users);
 
         Category undelivCategoryNo1 = Category.builder()
                 .name("장기 미수령 택배 관리대장")
