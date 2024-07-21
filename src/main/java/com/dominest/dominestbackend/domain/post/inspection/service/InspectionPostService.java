@@ -18,7 +18,7 @@ import com.dominest.dominestbackend.domain.resident.entity.component.ResidenceSe
 import com.dominest.dominestbackend.domain.room.entity.Room;
 import com.dominest.dominestbackend.domain.room.repository.RoomRepository;
 import com.dominest.dominestbackend.domain.user.entity.User;
-import com.dominest.dominestbackend.domain.user.service.UserService;
+import com.dominest.dominestbackend.domain.user.repository.UserRepository;
 import com.dominest.dominestbackend.global.exception.exceptions.external.db.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +37,7 @@ import java.util.List;
 public class InspectionPostService {
     private final RoomRepository roomRepository;
     private final InspectionPostRepository inspectionPostRepository;
-    private final UserService userService;
+    private final UserRepository userRepository;
     private final CategoryService categoryService;
     private final InspectionRoomService inspectionRoomService;
     private final InspectionFloorService inspectionFloorService;
@@ -59,7 +59,7 @@ public class InspectionPostService {
     @Transactional
     public long save(ResidenceSemester residenceSemester, Long categoryId, String email) {
         // InspectionPost 연관 객체인 category, user 찾기
-        User user = userService.getUserByEmail(email);
+        User user = userRepository.getByEmail(email);
         Category category = categoryService.validateCategoryType(
                 categoryId, Type.INSPECTION);
 

@@ -33,4 +33,18 @@ public class PageInfo {
                 .totalPages(page.getTotalPages())
                 .build();
     }
+
+    public static PageInfo from(int defaultPageSize, int currentPageNum, int currentPageSize, int totalElements) {
+        return PageInfo.builder()
+                .currentPage(currentPageNum)
+                .size(currentPageSize)
+                .isFirst(currentPageNum == 1)
+                .isLast(currentPageNum >= Math.ceil((double) totalElements / defaultPageSize))
+                .hasPrevious(currentPageNum > 1)
+                .hasNext(currentPageNum < Math.ceil((double) totalElements / defaultPageSize))
+                .totalPages((int) Math.ceil((double) totalElements / defaultPageSize))
+                .numberOfElements(currentPageSize)
+                .totalElements(totalElements)
+                .build();
+    }
 }

@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.util.Optional;
-
 
 @Service
 @RequiredArgsConstructor
@@ -78,13 +76,9 @@ public class EmailService {
     private MimeMessage createChangeMessage(String email)  { // 임시 비밀번호 발송 메일 만들기
         String authNum = emailVerificationService.generateCode(email);
 
-        Optional<User> user = userRepository.findByEmailValue(email);
-
-        if(user.isPresent()){
-            User foundUser = user.get();
-            foundUser.changePassword(passwordEncoder.encode(authNum));
-            userRepository.save(foundUser);
-        }
+        User user = userRepository.getByEmail(email);
+        user.changePassword(passwordEncoder.encode(authNum));
+        userRepository.save(user);
 
         String setFrom = "gjwldud0719@naver.com";
         String title = "임시 비밀번호";

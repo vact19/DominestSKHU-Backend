@@ -12,7 +12,7 @@ import com.dominest.dominestbackend.domain.post.component.category.entity.Catego
 import com.dominest.dominestbackend.domain.post.component.category.component.Type;
 import com.dominest.dominestbackend.domain.post.component.category.service.CategoryService;
 import com.dominest.dominestbackend.global.util.FileManager;
-import com.dominest.dominestbackend.global.util.PageBaseConverter;
+import com.dominest.dominestbackend.global.util.PagingUtil;
 import com.dominest.dominestbackend.global.util.PrincipalParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -82,7 +82,7 @@ public class ComplaintController {
     ) {
         final int COMPLAINT_TYPE_PAGE_SIZE = 20;
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        Pageable pageable = PageBaseConverter.of(page, COMPLAINT_TYPE_PAGE_SIZE, sort);
+        Pageable pageable = PagingUtil.getPageable(page, COMPLAINT_TYPE_PAGE_SIZE, sort);
 
         Category category = categoryService.validateCategoryType(categoryId, Type.COMPLAINT);
 
@@ -119,7 +119,7 @@ public class ComplaintController {
         } else {
             complaints = complaintRepository.findAllByCategoryId(
                     category.getId(),
-                    PageBaseConverter.of(1, downloadCnt)
+                    PagingUtil.getPageable(1, downloadCnt)
             );
             filename = sb.append(formattedDate)
                     .append(" 민원접수내역 최신 ")

@@ -1,6 +1,8 @@
 package com.dominest.dominestbackend.domain.post.image.service;
 
+import com.dominest.dominestbackend.api.common.PageInfo;
 import com.dominest.dominestbackend.api.post.image.request.SaveImageTypeRequest;
+import com.dominest.dominestbackend.api.post.image.response.ImageTypeListResponse;
 import com.dominest.dominestbackend.domain.common.Datasource;
 import com.dominest.dominestbackend.domain.post.common.RecentPost;
 import com.dominest.dominestbackend.domain.post.common.RecentPostService;
@@ -10,12 +12,11 @@ import com.dominest.dominestbackend.domain.post.component.category.service.Categ
 import com.dominest.dominestbackend.domain.post.image.entity.ImageType;
 import com.dominest.dominestbackend.domain.post.image.repository.ImageTypeRepository;
 import com.dominest.dominestbackend.domain.user.entity.User;
-import com.dominest.dominestbackend.domain.user.service.UserService;
+import com.dominest.dominestbackend.domain.user.repository.UserRepository;
 import com.dominest.dominestbackend.global.exception.exceptions.external.db.ResourceNotFoundException;
 import com.dominest.dominestbackend.global.util.FileManager;
+import com.dominest.dominestbackend.global.util.PagingUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,10 +29,10 @@ import java.util.stream.Collectors;
 @Service
 public class ImageTypeService {
     private final ImageTypeRepository imageTypeRepository;
-    private final UserService userService;
     private final CategoryService categoryService;
     private final FileManager fileManager;
     private final RecentPostService recentPostService;
+    private final UserRepository userRepository;
 
     @Transactional
     public Long save(SaveImageTypeRequest request
@@ -40,7 +41,7 @@ public class ImageTypeService {
         // 이미지 게시물이 작성될 카테고리의 타입 검사
         Type.IMAGE.validateEqualTo(category.getType());
 
-        User writer = userService.getUserByEmail(uploaderEmail);
+        User writer = userRepository.getByEmail(uploaderEmail);
 
         List<Optional<String>> savedImgUrls = fileManager.save(FileManager.FilePrefix.POST_IMAGE_TYPE, request.getPostImages());
         List<String> validImgUrls = extractValidImgUrls(savedImgUrls);
@@ -63,8 +64,20 @@ public class ImageTypeService {
                 .orElseThrow(() -> new ResourceNotFoundException(Datasource.IMAGE_TYPE, imageTypeId));
     }
 
-    public Page<ImageType> getPage(Long categoryId, Pageable pageable) {
-        return imageTypeRepository.findAllByCategory(categoryId, pageable);
+    public ImageTypeListResponse getPage(Category category, int page, int pageSize, int pageDisplayLimit) {
+        final int PAGE_COUNT_SCAN_THRESHOLD = 10000; // 10000페이지 이상은 count full scan 이 빠를 가능성이 큼
+        List<ImageType> imageTypes = imageTypeRepository.findAllByCategory(category.getId(), pageSize, (long) page * pageSize);
+
+        int count;
+        if (page < PAGE_COUNT_SCAN_THRESHOLD) {
+            count = imageTypeRepository.countByPageInfo(category.getId(), PagingUtil.getPageGroupLimit(page, pageDisplayLimit, pageSize));
+        } else {
+            count = imageTypeRepository.countFullScan(category.getId());
+        }
+
+        PageInfo pageInfo = PageInfo.from(pageSize, page, imageTypes.size(), count);
+
+        return ImageTypeListResponse.from(imageTypes, category, pageInfo);
     }
 
     @Transactional

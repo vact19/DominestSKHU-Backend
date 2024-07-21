@@ -6,6 +6,7 @@ import com.dominest.dominestbackend.domain.jwt.constant.TokenType;
 import com.dominest.dominestbackend.domain.jwt.dto.TokenDto;
 import com.dominest.dominestbackend.global.exception.ErrorCode;
 import com.dominest.dominestbackend.global.exception.exceptions.auth.jwt.JwtAuthenticationException;
+import com.dominest.dominestbackend.global.util.DateConverter;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -22,20 +24,20 @@ import java.util.Date;
 @Component
 public class TokenManager {
 
-    private final long accessTokenExpMillis;
-    private final long refreshTokenExpMillis;
+    private final long accessTokenExpMinutes;
+    private final long refreshTokenExpDays;
     private final Key key;
 
     @Autowired
     public TokenManager(
-              @Value("${token.secret}") String tokenSecret
-            , @Value("${token.access-token-expiration-time}") long accessTokenExpMillis
-            , @Value("${token.refresh-token-expiration-time}") long refreshTokenExpMillis) {
+              @Value("${token.secret}") String tokenSecret,
+              @Value("${token.access-token-expiration-time}") long accessTokenExpMinutes,
+              @Value("${token.refresh-token-expiration-time}") long refreshTokenExpDays) {
         // Base64 Decode. String to Bin
         byte[] keyBytes = Decoders.BASE64.decode(tokenSecret);
         this.key = Keys.hmacShaKeyFor(keyBytes);
-        this.accessTokenExpMillis = accessTokenExpMillis;
-        this.refreshTokenExpMillis = refreshTokenExpMillis;
+        this.accessTokenExpMinutes = accessTokenExpMinutes;
+        this.refreshTokenExpDays = refreshTokenExpDays;
     }
 
     public TokenDto createTokenDto(String audience) {
@@ -67,11 +69,15 @@ public class TokenManager {
     }
 
     private Date createAccessTokenExp() {
-        return new Date(System.currentTimeMillis() + accessTokenExpMillis);
+        return DateConverter.convertToDate(
+                LocalDateTime
+                        .now()
+                        .plusMinutes(accessTokenExpMinutes)
+        );
     }
 
     private Date createRefreshTokenExp() {
-        return new Date(System.currentTimeMillis() + refreshTokenExpMillis);
+        return new Date(System.currentTimeMillis() + refreshTokenExpDays);
     }
 
     private String createAccessToken(String audience, Date exp) {

@@ -5,7 +5,7 @@ import com.dominest.dominestbackend.domain.favorite.entity.Favorite;
 import com.dominest.dominestbackend.domain.post.component.category.entity.Category;
 import com.dominest.dominestbackend.domain.post.component.category.service.CategoryService;
 import com.dominest.dominestbackend.domain.user.entity.User;
-import com.dominest.dominestbackend.domain.user.service.UserService;
+import com.dominest.dominestbackend.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import java.util.List;
 @Service
 public class FavoriteService {
     private final FavoriteRepository favoriteRepository;
-    private final UserService userService;
+    private final UserRepository userRepository;
     private final CategoryService categoryService;
 
     @Transactional
@@ -28,7 +28,7 @@ public class FavoriteService {
         Favorite favorite = favoriteRepository.findByCategoryIdAndUserEmail(categoryId, userEmail);
 
         if (favorite == null) {
-            User user = userService.getUserByEmail(userEmail);
+            User user = userRepository.getByEmail(userEmail);
             Category category = categoryService.getById(categoryId);
 
             Favorite newFavorite = Favorite.builder()

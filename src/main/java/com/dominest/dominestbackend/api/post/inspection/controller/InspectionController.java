@@ -18,7 +18,7 @@ import com.dominest.dominestbackend.domain.post.inspection.floor.room.service.In
 import com.dominest.dominestbackend.domain.resident.support.ResidentExcelParser;
 import com.dominest.dominestbackend.domain.resident.entity.component.ResidenceSemester;
 import com.dominest.dominestbackend.global.util.FileManager.FileExt;
-import com.dominest.dominestbackend.global.util.PageBaseConverter;
+import com.dominest.dominestbackend.global.util.PagingUtil;
 import com.dominest.dominestbackend.global.util.PrincipalParser;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -110,7 +110,7 @@ public class InspectionController {
     ) {
         final int IMAGE_TYPE_PAGE_SIZE = 20;
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        Pageable pageable = PageBaseConverter.of(page, IMAGE_TYPE_PAGE_SIZE, sort);
+        Pageable pageable = PagingUtil.getPageable(page, IMAGE_TYPE_PAGE_SIZE, sort);
 
         Category category = categoryService.validateCategoryType(categoryId, Type.INSPECTION);
         Page<InspectionPost> postPage = inspectionPostService.getPage(category.getId(), pageable);

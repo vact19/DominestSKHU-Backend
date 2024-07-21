@@ -1,4 +1,4 @@
-package com.dominest.dominestbackend.domain.user;
+package com.dominest.dominestbackend.domain.user.entity;
 
 import com.dominest.dominestbackend.domain.common.vo.PhoneNumber;
 import com.dominest.dominestbackend.domain.user.component.Role;
