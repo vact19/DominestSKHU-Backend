@@ -52,10 +52,10 @@ class UserServiceTest {
         userJpaRepository.deleteAllInBatch();
     }
 
-    final String dummyEmail = "email@example.com";
-    final String dummyPassword = "1234";
-    final String dummyName = "name";
-    final String dummyPhoneNumber = "010-0100-1234";
+    final String DUMMY_EMAIL = "email@example.com";
+    final String DUMMY_PASSWORD = "1234";
+    final String DUMMY_NAME = "name";
+    final String DUMMY_PHONE_NUMBER = "010-0100-1234";
 
     @DisplayName("JoinRequest 객체로 회원가입을 할 수 있다")
     @Test
@@ -165,10 +165,10 @@ class UserServiceTest {
     void when_expiredRefreshToken_should_throwEx() {
         //given
         User user = User.builder()
-                .email(new Email(dummyEmail))
-                .password(dummyPassword)
-                .name(dummyName)
-                .phoneNumber(new PhoneNumber(dummyPhoneNumber))
+                .email(new Email(DUMMY_EMAIL))
+                .password(DUMMY_PASSWORD)
+                .name(DUMMY_NAME)
+                .phoneNumber(new PhoneNumber(DUMMY_PHONE_NUMBER))
                 .role(Role.ROLE_ADMIN)
                 .build();
         String refreshToken = "refresh";
@@ -214,7 +214,7 @@ class UserServiceTest {
     }
 
     private User saveDummyUser() {
-        JoinRequest request = new JoinRequest(dummyEmail, dummyPassword, dummyName, dummyPhoneNumber);
+        JoinRequest request = new JoinRequest(DUMMY_EMAIL, DUMMY_PASSWORD, DUMMY_NAME, DUMMY_PHONE_NUMBER);
         return userService.save(request);
     }
 
