@@ -1,9 +1,10 @@
-package com.dominest.dominestbackend.global.util;
+package com.dominest.dominestbackend.global.util.mock;
 
+import com.dominest.dominestbackend.global.util.UuidHolder;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class TestUuidHolder implements UuidHolder {
+public class FixedUuidHolder implements UuidHolder {
     private final String uuid;
     @Override
     public String random() {

@@ -4,9 +4,8 @@ import com.dominest.dominestbackend.domain.common.vo.PhoneNumber;
 import com.dominest.dominestbackend.domain.resident.entity.Resident;
 import com.dominest.dominestbackend.domain.resident.entity.component.ResidenceSemester;
 import com.dominest.dominestbackend.domain.room.entity.Room;
-import com.dominest.dominestbackend.global.util.DatePatternParser;
 import com.dominest.dominestbackend.global.util.FileManager;
-import com.dominest.dominestbackend.global.util.TestUuidHolder;
+import com.dominest.dominestbackend.global.util.mock.FixedUuidHolder;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.StringUtils;
@@ -49,7 +48,7 @@ class ResidentTest {
 
         String generatedFileName = residentName + "-" + testUuid + "." + fileExt;
         // when
-        String result = resident.generateFileNameToStore(fileExt, new TestUuidHolder(testUuid));
+        String result = resident.generateFileNameToStore(fileExt, new FixedUuidHolder(testUuid));
         // then
         assertThat(result).isEqualTo(generatedFileName);
     }
