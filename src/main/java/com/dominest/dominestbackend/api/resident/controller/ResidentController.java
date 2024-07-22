@@ -114,7 +114,7 @@ public class ResidentController {
             , @RequestParam(required = true) ResidentDocumentType residentDocumentType
             , HttpServletResponse response
     ){
-        Resident resident = residentService.findById(id);
+        Resident resident = residentService.getById(id);
 
         String filename = residentDocumentType.getDocumentFileName(resident);
         FileManager.FilePrefix filePrefix = residentDocumentType.toFilePrefix();

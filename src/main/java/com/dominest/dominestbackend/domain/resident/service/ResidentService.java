@@ -54,7 +54,7 @@ public class ResidentService {
             throw new BusinessException(ErrorCode.INVALID_FILE_EXTENSION);
         }
 
-        Resident resident = findById(id);
+        Resident resident = getById(id);
         String fileNameToUpload = resident.generateFileNameToStore(FileExt.PDF.label, uuidHolder);
 
         fileManager.save(filePrefix, file, fileNameToUpload);
@@ -209,7 +209,7 @@ public class ResidentService {
         Room room = roomService.getByAssignedRoom(request.getAssignedRoom());
         Resident resident = request.toEntity(room);
 
-        Resident residentToUpdate = findById(id);
+        Resident residentToUpdate = getById(id);
         residentToUpdate.updateValueFrom(resident);
 
         try {
@@ -221,14 +221,14 @@ public class ResidentService {
         updateRoomHistory(residentToUpdate);
     }
 
-    public Resident findById(Long id) {
+    public Resident getById(Long id) {
         return residentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(Datasource.RESIDENT, id));
     }
 
     @Transactional
     public void deleteById(Long id) {
-        Resident resident = findById(id);
+        Resident resident = getById(id);
         residentRepository.delete(resident);
     }
 
