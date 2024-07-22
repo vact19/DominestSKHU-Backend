@@ -1,7 +1,6 @@
-package com.dominest.dominestbackend.domain.resident;
+package com.dominest.dominestbackend.domain.resident.entity;
 
 import com.dominest.dominestbackend.domain.common.vo.PhoneNumber;
-import com.dominest.dominestbackend.domain.resident.entity.Resident;
 import com.dominest.dominestbackend.domain.resident.entity.component.ResidenceSemester;
 import com.dominest.dominestbackend.domain.room.entity.Room;
 import com.dominest.dominestbackend.global.util.FileManager;
@@ -17,7 +16,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ResidentTest {
 
-    // changeNameWithPhoneNumber*, generateFileNameToStore*, updateValueFrom, 생성자 테스트해야함
     private final String phoneNumber = "010-1234-5678";
     private final String name = "홍길동";
 
